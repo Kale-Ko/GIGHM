@@ -1,6 +1,6 @@
 package io.github.kale_ko.gighm.rendering.textures;
 
-import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.*;
 import java.nio.ByteBuffer;
 import javax.validation.constraints.NotNull;
 
