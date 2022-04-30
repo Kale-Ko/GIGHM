@@ -1,0 +1,62 @@
+plugins {
+    id 'java'
+}
+
+sourceCompatibility = JavaVersion.toVersion(project.java_version)
+targetCompatibility = JavaVersion.toVersion(project.java_version)
+
+archivesBaseName = "gighm"
+group = "io.github.kale_ko"
+version = project.project_version
+
+configurations {
+    depencancy
+    depencancy.canBeResolved = true
+
+    compileOnly {
+        extendsFrom depencancy
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+	depencancy platform("org.lwjgl:lwjgl-bom:${project.lwjgl_version}")
+	depencancy "org.lwjgl:lwjgl"
+	depencancy "org.lwjgl:lwjgl-assimp"
+	depencancy "org.lwjgl:lwjgl-glfw"
+	depencancy "org.lwjgl:lwjgl-openal"
+	depencancy "org.lwjgl:lwjgl-opengl"
+	depencancy "org.lwjgl:lwjgl-opengles"
+	depencancy "org.lwjgl:lwjgl-stb"
+
+    project.lwjgl_natives.split(",").each {
+	    depencancy "org.lwjgl:lwjgl::${it}"
+    	depencancy "org.lwjgl:lwjgl-assimp::${it}"
+	    depencancy "org.lwjgl:lwjgl-glfw::${it}"
+    	depencancy "org.lwjgl:lwjgl-openal::${it}"
+    	depencancy "org.lwjgl:lwjgl-opengl::${it}"
+	    depencancy "org.lwjgl:lwjgl-opengles::${it}"
+    	depencancy "org.lwjgl:lwjgl-stb::${it}"
+    }
+
+	depencancy "org.joml:joml:${project.joml_version}"
+
+    depencancy "javax.validation:validation-api:1.0.0.GA"
+}
+
+tasks.register("buildFull", Jar) {
+    dependsOn tasks.build
+
+    sourceCompatibility = JavaVersion.toVersion(project.java_version)
+    targetCompatibility = JavaVersion.toVersion(project.java_version)
+
+    duplicatesStrategy = "exclude"
+    destinationDirectory = file("./")
+    archiveFileName = "${project.name}-${project.version}.jar"
+
+    from files(project.sourceSets.main.output)
+    from files(project.configurations.depencancy.collect { it.isDirectory() ? it : zipTree(it) })
+}
