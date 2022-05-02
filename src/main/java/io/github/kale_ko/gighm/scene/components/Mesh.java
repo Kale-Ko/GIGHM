@@ -1,4 +1,4 @@
-package io.github.kale_ko.gighm.components;
+package io.github.kale_ko.gighm.scene.components;
 
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.system.MemoryUtil.*;
@@ -6,13 +6,14 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import javax.validation.constraints.NotNull;
 import org.lwjgl.BufferUtils;
+import io.github.kale_ko.gighm.rendering.textures.Texture2D;
 
 /**
- * A 2d mesh to render
+ * A mesh to render
  * 
  * @since 1.0.0
  */
-public class Mesh {
+public class Mesh extends Component {
     /**
      * The vertices of the mesh
      * 
@@ -25,7 +26,14 @@ public class Mesh {
      * 
      * @since 1.0.0
      */
-    private int verticeSize;
+    private @NotNull int verticeSize;
+
+    /**
+     * The texture of the mesh
+     * 
+     * @since 1.0.0
+     */
+    private Texture2D texture;
 
     /**
      * The uvs of the mesh
@@ -77,30 +85,34 @@ public class Mesh {
     private @NotNull boolean initialized = false;
 
     /**
-     * Create a 2d mesh to render
+     * Create a mesh to render
      * 
      * @since 1.0.0
      */
     public Mesh(@NotNull float[] vertices, @NotNull int verticeSize) {
-        this(vertices, verticeSize, null, 0);
+        this(vertices, verticeSize, null, null, 0);
     }
 
     /**
-     * Create a 2d mesh to render
+     * Create a mesh to render
      * 
      * @since 1.0.0
      */
-    public Mesh(@NotNull float[] vertices, @NotNull int verticeSize, float[] uvs, int uvSize) {
-        this(vertices, verticeSize, uvs, uvSize, null);
+    public Mesh(@NotNull float[] vertices, @NotNull int verticeSize, Texture2D texture, float[] uvs, int uvSize) {
+        this(vertices, verticeSize, texture, uvs, uvSize, null);
     }
 
     /**
-     * Create a 2d mesh to render
+     * Create a mesh to render
      * 
      * @since 1.0.0
      */
-    public Mesh(@NotNull float[] vertices, @NotNull int verticeSize, float[] uvs, int uvSize, int[] triangles) {
+    public Mesh(@NotNull float[] vertices, @NotNull int verticeSize, Texture2D texture, float[] uvs, int uvSize, int[] triangles) {
+        super();
+
         this.vertices = vertices;
+
+        this.texture = texture;
         this.uvs = uvs;
 
         this.verticeSize = verticeSize;
@@ -201,7 +213,7 @@ public class Mesh {
      * 
      * @since 1.0.0
      */
-    public float[] getVertices() {
+    public @NotNull float[] getVertices() {
         return this.vertices;
     }
 
@@ -212,8 +224,19 @@ public class Mesh {
      * 
      * @since 1.0.0
      */
-    public int getVerticeSize() {
+    public @NotNull int getVerticeSize() {
         return this.verticeSize;
+    }
+
+    /**
+     * Get the texture of the mesh
+     * 
+     * @returns The texture of the mesh
+     * 
+     * @since 1.0.0
+     */
+    public Texture2D getTexture() {
+        return this.texture;
     }
 
     /**
@@ -291,5 +314,16 @@ public class Mesh {
      */
     public int getTrianglesBufferId() {
         return this.triId;
+    }
+
+    /**
+     * Get the name of the component
+     * 
+     * @return The name of the component
+     * 
+     * @since 1.0.0
+     */
+    public static @NotNull String getName() {
+        return "Mesh";
     }
 }
