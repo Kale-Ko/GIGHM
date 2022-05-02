@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import javax.validation.constraints.NotNull;
 
 /**
  * Utility for loading shader data from a file to use with shaders
@@ -24,7 +25,7 @@ public class ShaderLoader {
      * 
      * @since 1.0.0
      */
-    public static Shader loadShader(String vertexFile, String fragmentFile) throws IOException {
+    public static Shader loadShader(@NotNull String vertexFile, @NotNull String fragmentFile) throws IOException {
         return loadShader(new File(vertexFile), new File(fragmentFile));
     }
 
@@ -39,7 +40,7 @@ public class ShaderLoader {
      * 
      * @since 1.0.0
      */
-    public static Shader loadShader(File vertexFile, File fragmentFile) throws IOException {
+    public static Shader loadShader(@NotNull File vertexFile, @NotNull File fragmentFile) throws IOException {
         return new Shader(loadShaderData(vertexFile), loadShaderData(fragmentFile));
     }
 
@@ -54,7 +55,7 @@ public class ShaderLoader {
      * 
      * @since 1.0.0
      */
-    public static String loadShaderData(String file) throws IOException {
+    public static String loadShaderData(@NotNull String file) throws IOException {
         return loadShaderData(new File(file));
     }
 
@@ -69,7 +70,7 @@ public class ShaderLoader {
      * 
      * @since 1.0.0
      */
-    public static String loadShaderData(File file) throws IOException {
+    public static String loadShaderData(@NotNull File file) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(file));
         StringBuilder data = new StringBuilder();
 
@@ -94,7 +95,7 @@ public class ShaderLoader {
      * 
      * @since 1.0.0
      */
-    public static String loadShaderData(InputStream stream) throws IOException {
+    public static String loadShaderData(@NotNull InputStream stream) throws IOException {
         BufferedInputStream reader = new BufferedInputStream(stream);
         StringBuilder data = new StringBuilder();
 
