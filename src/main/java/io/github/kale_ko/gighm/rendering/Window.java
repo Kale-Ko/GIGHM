@@ -210,6 +210,8 @@ public class Window {
             renderer.init();
         }
 
+        // TODO Run on serperate thread
+
         while (!glfwWindowShouldClose(windowId)) {
             if (renderer != null) {
                 renderer.render(windowId);
