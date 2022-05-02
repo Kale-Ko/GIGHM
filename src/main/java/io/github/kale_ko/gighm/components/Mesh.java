@@ -123,6 +123,8 @@ public class Mesh {
 
         this.initialized = true;
 
+        // TODO Move to renderer
+
         this.vertId = glGenBuffers();
 
         FloatBuffer vertBuffer = BufferUtils.createFloatBuffer(vertices.length);
@@ -164,15 +166,17 @@ public class Mesh {
      * @since 1.0.0
      */
     public void render() {
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+        // TODO Move to renderer
+
+        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
 
         glBindBuffer(GL_ARRAY_BUFFER, this.vertId);
-        glVertexPointer(verticeSize, GL_FLOAT, 0, NULL);
+        glVertexAttribPointer(0, verticeSize, GL_FLOAT, false, 0, NULL);
 
         if (this.uvs != null) {
             glBindBuffer(GL_ARRAY_BUFFER, this.uvId);
-            glTexCoordPointer(uvSize, GL_FLOAT, 0, NULL);
+            glVertexAttribPointer(1, uvSize, GL_FLOAT, false, 0, NULL);
         }
 
         if (this.triangles != null) {
@@ -186,8 +190,8 @@ public class Mesh {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-        glDisableClientState(GL_VERTEX_ARRAY);
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
     }
 
     /**
