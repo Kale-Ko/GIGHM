@@ -3,12 +3,15 @@ package io.github.kale_ko.gighm.rendering;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL20.*;
 import javax.validation.constraints.NotNull;
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL;
 import io.github.kale_ko.gighm.rendering.shaders.Shader;
 import io.github.kale_ko.gighm.rendering.textures.Texture2D;
 import io.github.kale_ko.gighm.scene.GameObject;
 import io.github.kale_ko.gighm.scene.Scene;
+import io.github.kale_ko.gighm.scene.components.Camera;
 import io.github.kale_ko.gighm.scene.components.Mesh;
+import io.github.kale_ko.gighm.scene.components.Transform;
 
 /**
  * A renderer to render a scene
@@ -22,6 +25,13 @@ public class Renderer {
      * @since 1.0.0
      */
     private @NotNull Scene scene;
+
+    /**
+     * The camera to render from
+     * 
+     * @since 1.0.0
+     */
+    private @NotNull Camera camera;
 
     /**
      * Weather the window is initialized
@@ -44,8 +54,10 @@ public class Renderer {
      * 
      * @since 1.0.0
      */
-    public Renderer(@NotNull Scene scene, Shader shader) {
+    public Renderer(@NotNull Scene scene, Camera camera, Shader shader) {
         this.scene = scene;
+        this.camera = camera;
+
         this.shader = shader;
     }
 
@@ -81,7 +93,9 @@ public class Renderer {
             this.shader.init();
         }
 
-        glUseProgram(this.shader.getProgramId());
+        this.shader.bind();
+
+        Matrix4f cameraProjection = camera.getProjection();
 
         for (GameObject object : this.scene.getObjects()) {
             Mesh mesh = object.getComponent(Mesh.class);
@@ -96,15 +110,14 @@ public class Renderer {
                         texture.init();
                     }
 
-                    shader.setUniform("sampler", 0);
-
-                    glActiveTexture(GL_TEXTURE0);
-                    glBindTexture(GL_TEXTURE_2D, texture.getTextureId());
+                    texture.bind(this.shader);
                 } else {
                     // TODO Draw in white
                 }
 
-                mesh.render();
+                shader.setUniform("projection", cameraProjection.mul(object.getComponent(Transform.class).getMatrix()));
+
+                mesh.render(camera);
             }
         }
 
