@@ -61,7 +61,7 @@ public class Shader {
      * 
      * @since 1.0.0
      */
-    public Shader(String vertexSource, String fragmentSource) {
+    public Shader(@NotNull String vertexSource, @NotNull String fragmentSource) {
         this.vertexSource = vertexSource;
         this.fragmentSource = fragmentSource;
     }
@@ -116,7 +116,7 @@ public class Shader {
         }
     }
 
-    public void setUniform(String id, int value) {
+    public void setUniform(@NotNull String id, @NotNull int value) {
         int loc = glGetUniformLocation(this.programId, id);
         if (loc == -1) {
             throw new RuntimeException("Invalid uniform location: " + id);
