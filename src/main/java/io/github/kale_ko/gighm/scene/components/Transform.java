@@ -1,8 +1,12 @@
 package io.github.kale_ko.gighm.scene.components;
 
 import javax.validation.constraints.NotNull;
+import org.joml.Matrix4f;
 import org.joml.Quaterniond;
+import org.joml.Quaternionf;
+import org.joml.Vector2d;
 import org.joml.Vector3d;
+import org.joml.Vector3f;
 
 /**
  * An object transform
@@ -71,6 +75,17 @@ public class Transform extends Component {
     }
 
     /**
+     * Set the position of the object
+     * 
+     * @param position The position of the object
+     * 
+     * @since 1.0.0
+     */
+    public void setPosition(@NotNull Vector2d position) {
+        this.position = new Vector3d(position, 0);
+    }
+
+    /**
      * Get the rotation of the object
      * 
      * @return The rotation of the object
@@ -112,6 +127,26 @@ public class Transform extends Component {
      */
     public void setScale(@NotNull Vector3d scale) {
         this.scale = scale;
+    }
+
+    /**
+     * Set the scale of the object
+     * 
+     * @param scale The scale of the object
+     * 
+     * @since 1.0.0
+     */
+    public void setScale(@NotNull Vector2d scale) {
+        this.scale = new Vector3d(scale, 1);
+    }
+
+    /**
+     * Get the complete matrix of the transform
+     * 
+     * @return The complete matrix of the transform
+     */
+    public Matrix4f getMatrix() {
+        return new Matrix4f().translate(this.position.get(new Vector3f())).rotate(this.rotation.get(new Quaternionf())).scale(this.scale.get(new Vector3f()));
     }
 
     /**
