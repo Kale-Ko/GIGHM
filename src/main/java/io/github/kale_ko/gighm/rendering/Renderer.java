@@ -2,14 +2,13 @@ package io.github.kale_ko.gighm.rendering;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL20.*;
-import java.io.IOException;
 import javax.validation.constraints.NotNull;
 import org.lwjgl.opengl.GL;
-import io.github.kale_ko.gighm.components.Mesh;
 import io.github.kale_ko.gighm.rendering.shaders.Shader;
-import io.github.kale_ko.gighm.rendering.shaders.ShaderLoader;
 import io.github.kale_ko.gighm.rendering.textures.Texture2D;
-import io.github.kale_ko.gighm.rendering.textures.Texture2DLoader;
+import io.github.kale_ko.gighm.scene.GameObject;
+import io.github.kale_ko.gighm.scene.Scene;
+import io.github.kale_ko.gighm.scene.components.Mesh;
 
 /**
  * A renderer to render a scene
@@ -18,6 +17,13 @@ import io.github.kale_ko.gighm.rendering.textures.Texture2DLoader;
  */
 public class Renderer {
     /**
+     * The scene to render
+     * 
+     * @since 1.0.0
+     */
+    private @NotNull Scene scene;
+
+    /**
      * Weather the window is initialized
      * 
      * @since 1.0.0
@@ -25,11 +31,23 @@ public class Renderer {
     private @NotNull boolean initialized = false;
 
     /**
-     * Create a renderer to render a scene
+     * The shader to use
      * 
      * @since 1.0.0
      */
-    public Renderer() {}
+    private @NotNull Shader shader;
+
+    /**
+     * Create a renderer to render a scene
+     * 
+     * @param scene The scene to render
+     * 
+     * @since 1.0.0
+     */
+    public Renderer(@NotNull Scene scene, Shader shader) {
+        this.scene = scene;
+        this.shader = shader;
+    }
 
     /**
      * Initialize the renderer (Must be called from a {@link Window})
@@ -59,24 +77,36 @@ public class Renderer {
     public void render(@NotNull long windowId) {
         glClear(GL_COLOR_BUFFER_BIT);
 
-        try {
-            Shader shader = new Shader(ShaderLoader.loadShaderData(getClass().getResourceAsStream("/vertex.glsl")), ShaderLoader.loadShaderData(getClass().getResourceAsStream("/fragment.glsl")));
-            shader.init();
-            glUseProgram(shader.getProgramId());
-
-            Texture2D texture = Texture2DLoader.loadTexture("C:/Users/Kale Ko/Downloads/54416665.png");
-            texture.init();
-
-            shader.setUniform("sampler", 0);
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, texture.getTextureId());
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (!this.shader.getInitialized()) {
+            this.shader.init();
         }
 
-        Mesh mesh = new Mesh(new float[] { -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f }, 2, new float[] { 0, 0, 1, 0, 1, 1, 0, 1 }, 2, new int[] { 0, 1, 2, 2, 3, 0 });
-        mesh.init();
-        mesh.render();
+        glUseProgram(this.shader.getProgramId());
+
+        for (GameObject object : this.scene.getObjects()) {
+            Mesh mesh = object.getComponent(Mesh.class);
+            if (mesh != null) {
+                if (!mesh.getInitialized()) {
+                    mesh.init();
+                }
+
+                Texture2D texture = mesh.getTexture();
+                if (texture != null) {
+                    if (!texture.getInitialized()) {
+                        texture.init();
+                    }
+
+                    shader.setUniform("sampler", 0);
+
+                    glActiveTexture(GL_TEXTURE0);
+                    glBindTexture(GL_TEXTURE_2D, texture.getTextureId());
+                } else {
+                    // TODO Draw in white
+                }
+
+                mesh.render();
+            }
+        }
 
         glfwSwapBuffers(windowId);
     }
