@@ -6,6 +6,6 @@ import io.github.kale_ko.gighm.rendering.Window;
 public class RendererTest {
     public static void main(String[] args) {
         Renderer renderer = new Renderer();
-        new Window(renderer, "Test window", 800, 600);
+        new Window(renderer, "Test window", 800, 600, false, true);
     }
 }

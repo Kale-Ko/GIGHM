@@ -43,23 +43,7 @@ public class Texture2DLoader {
     public static @NotNull Texture2D loadTexture(@NotNull File file) throws IOException {
         BufferedImage img = ImageIO.read(file);
 
-        int[] pixelData = new int[img.getWidth() * img.getHeight() * 4];
-        pixelData = img.getRGB(0, 0, img.getWidth(), img.getHeight(), null, 0, img.getWidth());
-
-        ByteBuffer pixels = BufferUtils.createByteBuffer(pixelData.length * 4);
-
-        for (int i = 0; i < pixelData.length; i++) {
-            int pixel = pixelData[i];
-
-            pixels.put((byte) ((pixel >> 16) & 0xFF));
-            pixels.put((byte) ((pixel >> 8) & 0xFF));
-            pixels.put((byte) ((pixel >> 0) & 0xFF));
-            pixels.put((byte) ((pixel >> 24) & 0xFF));
-        }
-
-        pixels.flip();
-
-        return new Texture2D(img.getWidth(), img.getHeight(), pixels);
+        return new Texture2D(img.getWidth(), img.getHeight(), loadTextureData(file));
     }
 
     /**
@@ -99,10 +83,10 @@ public class Texture2DLoader {
         for (int i = 0; i < pixelData.length; i++) {
             int pixel = pixelData[i];
 
-            pixels.put((byte) ((pixel << 16) & 0xFF));
-            pixels.put((byte) ((pixel << 8) & 0xFF));
-            pixels.put((byte) ((pixel << 0) & 0xFF));
-            pixels.put((byte) ((pixel << 24) & 0xFF));
+            pixels.put((byte) ((pixel >> 16) & 0xFF));
+            pixels.put((byte) ((pixel >> 8) & 0xFF));
+            pixels.put((byte) ((pixel >> 0) & 0xFF));
+            pixels.put((byte) ((pixel >> 24) & 0xFF));
         }
 
         pixels.flip();
