@@ -80,6 +80,7 @@ public class GameObject {
      * @since 1.0.0
      */
     public <T extends Component> void addComponent(@NotNull T object) {
+        object._setGameObject(this);
         this.components.put(object.getClass(), object);
     }
 
@@ -88,7 +89,7 @@ public class GameObject {
      * 
      * @param clazz The type to get
      * 
-     * @returns The component requested or null
+     * @return The component requested or null
      * 
      * @since 1.0.0
      */

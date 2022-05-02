@@ -3,6 +3,7 @@ package io.github.kale_ko.gighm.rendering.textures;
 import static org.lwjgl.opengl.GL20.*;
 import java.nio.ByteBuffer;
 import javax.validation.constraints.NotNull;
+import io.github.kale_ko.gighm.rendering.shaders.Shader;
 
 /**
  * A 2D texture
@@ -86,6 +87,18 @@ public class Texture2D {
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    }
+
+    /**
+     * Bind the texture for use (Must be called from a {@link Renderer})
+     * 
+     * @since 1.0.0
+     */
+    public void bind(Shader shader) {
+        shader.setUniform("sampler", 0);
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, this.textureId);
     }
 
     /**

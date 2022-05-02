@@ -135,8 +135,6 @@ public class Mesh extends Component {
 
         this.initialized = true;
 
-        // TODO Move to renderer
-
         this.vertId = glGenBuffers();
 
         FloatBuffer vertBuffer = BufferUtils.createFloatBuffer(vertices.length);
@@ -177,9 +175,7 @@ public class Mesh extends Component {
      * 
      * @since 1.0.0
      */
-    public void render() {
-        // TODO Move to renderer
-
+    public void render(Camera camera) {
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
 
@@ -209,7 +205,7 @@ public class Mesh extends Component {
     /**
      * Get the vertices of the mesh
      * 
-     * @returns The vertices of the mesh
+     * @return The vertices of the mesh
      * 
      * @since 1.0.0
      */
@@ -220,7 +216,7 @@ public class Mesh extends Component {
     /**
      * Get the size of a vertice in the mesh
      * 
-     * @returns The size of a vertice in the mesh
+     * @return The size of a vertice in the mesh
      * 
      * @since 1.0.0
      */
@@ -231,7 +227,7 @@ public class Mesh extends Component {
     /**
      * Get the texture of the mesh
      * 
-     * @returns The texture of the mesh
+     * @return The texture of the mesh
      * 
      * @since 1.0.0
      */
@@ -242,7 +238,7 @@ public class Mesh extends Component {
     /**
      * Get the uvs of the mesh
      * 
-     * @returns The uvs of the mesh
+     * @return The uvs of the mesh
      * 
      * @since 1.0.0
      */
@@ -253,7 +249,7 @@ public class Mesh extends Component {
     /**
      * Get the size of a uv in the mesh
      * 
-     * @returns The size of a uv in the mesh
+     * @return The size of a uv in the mesh
      * 
      * @since 1.0.0
      */
@@ -264,7 +260,7 @@ public class Mesh extends Component {
     /**
      * Get the triangles of the mesh
      * 
-     * @returns The triangles of the mesh
+     * @return The triangles of the mesh
      * 
      * @since 1.0.0
      */
@@ -286,7 +282,7 @@ public class Mesh extends Component {
     /**
      * Get the id of the OpenGL vertices buffer
      * 
-     * @returns The id of the OpenGL vertices buffer
+     * @return The id of the OpenGL vertices buffer
      * 
      * @since 1.0.0
      */
@@ -297,7 +293,7 @@ public class Mesh extends Component {
     /**
      * Get the id of the OpenGL uvs buffer
      * 
-     * @returns The id of the OpenGL uvs buffer
+     * @return The id of the OpenGL uvs buffer
      * 
      * @since 1.0.0
      */
@@ -308,7 +304,7 @@ public class Mesh extends Component {
     /**
      * Get the id of the OpenGL triangles buffer
      * 
-     * @returns The id of the OpenGL triangles buffer
+     * @return The id of the OpenGL triangles buffer
      * 
      * @since 1.0.0
      */

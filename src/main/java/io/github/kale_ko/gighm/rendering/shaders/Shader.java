@@ -1,7 +1,18 @@
 package io.github.kale_ko.gighm.rendering.shaders;
 
 import static org.lwjgl.opengl.GL20.*;
+import java.nio.FloatBuffer;
 import javax.validation.constraints.NotNull;
+import org.joml.Matrix2f;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+import org.joml.Vector2f;
+import org.joml.Vector2i;
+import org.joml.Vector3f;
+import org.joml.Vector3i;
+import org.joml.Vector4f;
+import org.joml.Vector4i;
+import org.lwjgl.BufferUtils;
 
 /**
  * A shader
@@ -116,6 +127,23 @@ public class Shader {
         }
     }
 
+    /**
+     * Bind the shader for use (Must be called from a {@link Renderer})
+     * 
+     * @since 1.0.0
+     */
+    public void bind() {
+        glUseProgram(this.programId);
+    }
+
+    /**
+     * Set a uniform on the shader
+     * 
+     * @param id The uniform's id
+     * @param value The value of the uniform
+     * 
+     * @since 1.0.0
+     */
     public void setUniform(@NotNull String id, @NotNull int value) {
         int loc = glGetUniformLocation(this.programId, id);
         if (loc == -1) {
@@ -123,6 +151,216 @@ public class Shader {
         }
 
         glUniform1i(loc, value);
+    }
+
+    /**
+     * Set a uniform on the shader
+     * 
+     * @param id The uniform's id
+     * @param value The value of the uniform
+     * 
+     * @since 1.0.0
+     */
+    public void setUniform(@NotNull String id, @NotNull int[] value) {
+        int loc = glGetUniformLocation(this.programId, id);
+        if (loc == -1) {
+            throw new RuntimeException("Invalid uniform location: " + id);
+        }
+
+        glUniform1iv(loc, value);
+    }
+
+    /**
+     * Set a uniform on the shader
+     * 
+     * @param id The uniform's id
+     * @param value The value of the uniform
+     * 
+     * @since 1.0.0
+     */
+    public void setUniform(@NotNull String id, @NotNull Vector2i value) {
+        int loc = glGetUniformLocation(this.programId, id);
+        if (loc == -1) {
+            throw new RuntimeException("Invalid uniform location: " + id);
+        }
+
+        glUniform2i(loc, value.x, value.y);
+    }
+
+    /**
+     * Set a uniform on the shader
+     * 
+     * @param id The uniform's id
+     * @param value The value of the uniform
+     * 
+     * @since 1.0.0
+     */
+    public void setUniform(@NotNull String id, @NotNull Vector3i value) {
+        int loc = glGetUniformLocation(this.programId, id);
+        if (loc == -1) {
+            throw new RuntimeException("Invalid uniform location: " + id);
+        }
+
+        glUniform3i(loc, value.x, value.y, value.z);
+    }
+
+    /**
+     * Set a uniform on the shader
+     * 
+     * @param id The uniform's id
+     * @param value The value of the uniform
+     * 
+     * @since 1.0.0
+     */
+    public void setUniform(@NotNull String id, @NotNull Vector4i value) {
+        int loc = glGetUniformLocation(this.programId, id);
+        if (loc == -1) {
+            throw new RuntimeException("Invalid uniform location: " + id);
+        }
+
+        glUniform4i(loc, value.x, value.y, value.z, value.w);
+    }
+
+    /**
+     * Set a uniform on the shader
+     * 
+     * @param id The uniform's id
+     * @param value The value of the uniform
+     * 
+     * @since 1.0.0
+     */
+    public void setUniform(@NotNull String id, @NotNull float value) {
+        int loc = glGetUniformLocation(this.programId, id);
+        if (loc == -1) {
+            throw new RuntimeException("Invalid uniform location: " + id);
+        }
+
+        glUniform1f(loc, value);
+    }
+
+    /**
+     * Set a uniform on the shader
+     * 
+     * @param id The uniform's id
+     * @param value The value of the uniform
+     * 
+     * @since 1.0.0
+     */
+    public void setUniform(@NotNull String id, @NotNull float[] value) {
+        int loc = glGetUniformLocation(this.programId, id);
+        if (loc == -1) {
+            throw new RuntimeException("Invalid uniform location: " + id);
+        }
+
+        glUniform1fv(loc, value);
+    }
+
+    /**
+     * Set a uniform on the shader
+     * 
+     * @param id The uniform's id
+     * @param value The value of the uniform
+     * 
+     * @since 1.0.0
+     */
+    public void setUniform(@NotNull String id, @NotNull Vector2f value) {
+        int loc = glGetUniformLocation(this.programId, id);
+        if (loc == -1) {
+            throw new RuntimeException("Invalid uniform location: " + id);
+        }
+
+        glUniform2f(loc, value.x, value.y);
+    }
+
+    /**
+     * Set a uniform on the shader
+     * 
+     * @param id The uniform's id
+     * @param value The value of the uniform
+     * 
+     * @since 1.0.0
+     */
+    public void setUniform(@NotNull String id, @NotNull Vector3f value) {
+        int loc = glGetUniformLocation(this.programId, id);
+        if (loc == -1) {
+            throw new RuntimeException("Invalid uniform location: " + id);
+        }
+
+        glUniform3f(loc, value.x, value.y, value.z);
+    }
+
+    /**
+     * Set a uniform on the shader
+     * 
+     * @param id The uniform's id
+     * @param value The value of the uniform
+     * 
+     * @since 1.0.0
+     */
+    public void setUniform(@NotNull String id, @NotNull Vector4f value) {
+        int loc = glGetUniformLocation(this.programId, id);
+        if (loc == -1) {
+            throw new RuntimeException("Invalid uniform location: " + id);
+        }
+
+        glUniform4f(loc, value.x, value.y, value.z, value.w);
+    }
+
+    /**
+     * Set a uniform on the shader
+     * 
+     * @param id The uniform's id
+     * @param value The value of the uniform
+     * 
+     * @since 1.0.0
+     */
+    public void setUniform(@NotNull String id, @NotNull Matrix2f value) {
+        int loc = glGetUniformLocation(this.programId, id);
+        FloatBuffer buffer = BufferUtils.createFloatBuffer(4);
+        value.get(buffer);
+        if (loc == -1) {
+            throw new RuntimeException("Invalid uniform location: " + id);
+        }
+
+        glUniformMatrix2fv(loc, false, buffer);
+    }
+
+    /**
+     * Set a uniform on the shader
+     * 
+     * @param id The uniform's id
+     * @param value The value of the uniform
+     * 
+     * @since 1.0.0
+     */
+    public void setUniform(@NotNull String id, @NotNull Matrix3f value) {
+        int loc = glGetUniformLocation(this.programId, id);
+        FloatBuffer buffer = BufferUtils.createFloatBuffer(9);
+        value.get(buffer);
+        if (loc == -1) {
+            throw new RuntimeException("Invalid uniform location: " + id);
+        }
+
+        glUniformMatrix3fv(loc, false, buffer);
+    }
+
+    /**
+     * Set a uniform on the shader
+     * 
+     * @param id The uniform's id
+     * @param value The value of the uniform
+     * 
+     * @since 1.0.0
+     */
+    public void setUniform(@NotNull String id, @NotNull Matrix4f value) {
+        int loc = glGetUniformLocation(this.programId, id);
+        FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
+        value.get(buffer);
+        if (loc == -1) {
+            throw new RuntimeException("Invalid uniform location: " + id);
+        }
+
+        glUniformMatrix4fv(loc, false, buffer);
     }
 
     /**

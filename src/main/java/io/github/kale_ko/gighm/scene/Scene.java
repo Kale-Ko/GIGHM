@@ -37,7 +37,7 @@ public class Scene {
     /**
      * Get the name of the scene
      * 
-     * @returns The name of the scene
+     * @return The name of the scene
      * 
      * @since 1.0.0
      */
@@ -61,7 +61,7 @@ public class Scene {
      * 
      * @param name The name of the object
      * 
-     * @returns The gameobject requested or null
+     * @return The gameobject requested or null
      * 
      * @since 1.0.0
      */
@@ -75,7 +75,7 @@ public class Scene {
      * @param name The name of the object
      * @param caseSensitive Weather the name check is case sensitive or not
      * 
-     * @returns The gameobject requested or null
+     * @return The gameobject requested or null
      * 
      * @since 1.0.0
      */
@@ -94,7 +94,7 @@ public class Scene {
      * 
      * @param name The name of the objects
      * 
-     * @returns The gameobjects requested
+     * @return The gameobjects requested
      * 
      * @since 1.0.0
      */
@@ -108,7 +108,7 @@ public class Scene {
      * @param name The name of the objects
      * @param caseSensitive Weather the name check is case sensitive or not
      * 
-     * @returns The gameobjects requested
+     * @return The gameobjects requested
      * 
      * @since 1.0.0
      */
