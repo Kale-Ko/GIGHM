@@ -78,8 +78,6 @@ public class Texture2D {
 
         this.initialized = true;
 
-        // TODO Move into the renderer
-
         textureId = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, textureId);
 
@@ -95,9 +93,9 @@ public class Texture2D {
      * @since 1.0.0
      */
     public void bind(Shader shader) {
-        shader.setUniform("sampler", 0);
+        shader.setUniform("sampler", this.textureId);
 
-        glActiveTexture(GL_TEXTURE0);
+        glActiveTexture(GL_TEXTURE0 + this.textureId);
         glBindTexture(GL_TEXTURE_2D, this.textureId);
     }
 

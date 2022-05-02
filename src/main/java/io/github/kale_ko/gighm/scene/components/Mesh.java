@@ -191,12 +191,13 @@ public class Mesh extends Component {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this.triId);
 
             glDrawElements(GL_TRIANGLES, this.triangles.length, GL_UNSIGNED_INT, 0);
+
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         } else {
             glDrawArrays(GL_TRIANGLES, 0, this.vertices.length / this.verticeSize);
         }
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
