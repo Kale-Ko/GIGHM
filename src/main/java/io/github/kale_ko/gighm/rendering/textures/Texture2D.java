@@ -77,6 +77,8 @@ public class Texture2D {
 
         this.initialized = true;
 
+        // TODO Move into the renderer
+
         textureId = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, textureId);
 
@@ -87,9 +89,9 @@ public class Texture2D {
     }
 
     /**
-     * Get weather the window is initialized
+     * Get weather the texture is initialized
      * 
-     * @return Weather the window is initialized
+     * @return Weather the texture is initialized
      * 
      * @since 1.0.0
      */
