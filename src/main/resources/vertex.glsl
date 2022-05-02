@@ -5,7 +5,9 @@ in vec2 uvs;
 
 out vec2 uv;
 
+uniform mat4 projection;
+
 void main() {
     uv = uvs;
-    gl_Position = vec4(vec3(verticies, 0), 1);
+    gl_Position = projection * vec4(vec3(verticies, 0), 1);
 }

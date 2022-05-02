@@ -227,7 +227,7 @@ public class Window {
     /**
      * Get the title of the window
      * 
-     * @returns The title of the window
+     * @return The title of the window
      * 
      * @since 1.0.0
      */
