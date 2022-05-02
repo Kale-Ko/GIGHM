@@ -3,7 +3,6 @@ package io.github.kale_ko.gighm.rendering;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL20.*;
 import javax.validation.constraints.NotNull;
-import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL;
 import io.github.kale_ko.gighm.rendering.shaders.Shader;
 import io.github.kale_ko.gighm.rendering.textures.Texture2D;
@@ -95,8 +94,6 @@ public class Renderer {
 
         this.shader.bind();
 
-        Matrix4f cameraProjection = camera.getProjection();
-
         for (GameObject object : this.scene.getObjects()) {
             Mesh mesh = object.getComponent(Mesh.class);
             if (mesh != null) {
@@ -115,7 +112,7 @@ public class Renderer {
                     // TODO Draw in white
                 }
 
-                shader.setUniform("projection", cameraProjection.mul(object.getComponent(Transform.class).getMatrix()));
+                shader.setUniform("projection", camera.getProjection().mul(object.getComponent(Transform.class).getMatrix()));
 
                 mesh.render(camera);
             }
