@@ -6,6 +6,8 @@ import java.io.IOException;
 import javax.validation.constraints.NotNull;
 import org.lwjgl.opengl.GL;
 import io.github.kale_ko.gighm.components.Mesh;
+import io.github.kale_ko.gighm.rendering.shaders.Shader;
+import io.github.kale_ko.gighm.rendering.shaders.ShaderLoader;
 import io.github.kale_ko.gighm.rendering.textures.Texture2D;
 import io.github.kale_ko.gighm.rendering.textures.Texture2DLoader;
 
@@ -58,8 +60,15 @@ public class Renderer {
         glClear(GL_COLOR_BUFFER_BIT);
 
         try {
+            Shader shader = new Shader(ShaderLoader.loadShaderData(getClass().getResourceAsStream("/vertex.glsl")), ShaderLoader.loadShaderData(getClass().getResourceAsStream("/fragment.glsl")));
+            shader.init();
+            glUseProgram(shader.getProgramId());
+
             Texture2D texture = Texture2DLoader.loadTexture("C:/Users/Kale Ko/Downloads/54416665.png");
             texture.init();
+
+            shader.setUniform("sampler", 0);
+            glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, texture.getTextureId());
         } catch (IOException e) {
             e.printStackTrace();
