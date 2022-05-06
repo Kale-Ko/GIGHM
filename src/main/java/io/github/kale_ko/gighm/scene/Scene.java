@@ -6,6 +6,7 @@ import java.util.List;
 /**
  * A scene that can be rendered
  * 
+ * @version 1.0.1
  * @since 1.0.0
  */
 public class Scene {
@@ -57,39 +58,6 @@ public class Scene {
     }
 
     /**
-     * Get a specific object inside the scene by name
-     * 
-     * @param name The name of the object
-     * 
-     * @return The gameobject requested or null
-     * 
-     * @since 1.0.0
-     */
-    public GameObject getObject(String name) {
-        return this.getObject(name, true);
-    }
-
-    /**
-     * Get a specific object inside the scene by name
-     * 
-     * @param name The name of the object
-     * @param caseSensitive Weather the name check is case sensitive or not
-     * 
-     * @return The gameobject requested or null
-     * 
-     * @since 1.0.0
-     */
-    public GameObject getObject(String name, boolean caseSensitive) {
-        for (GameObject object : this.objects) {
-            if ((caseSensitive && object.getName().equals(name)) || (!caseSensitive && object.getName().equalsIgnoreCase(name))) {
-                return object;
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * Get a list of objects inside the scene by name
      * 
      * @param name The name of the objects
@@ -122,6 +90,39 @@ public class Scene {
         }
 
         return found;
+    }
+
+    /**
+     * Get a specific object inside the scene by name
+     * 
+     * @param name The name of the object
+     * 
+     * @return The gameobject requested or null
+     * 
+     * @since 1.0.0
+     */
+    public GameObject getObject(String name) {
+        return this.getObject(name, true);
+    }
+
+    /**
+     * Get a specific object inside the scene by name
+     * 
+     * @param name The name of the object
+     * @param caseSensitive Weather the name check is case sensitive or not
+     * 
+     * @return The gameobject requested or null
+     * 
+     * @since 1.0.0
+     */
+    public GameObject getObject(String name, boolean caseSensitive) {
+        for (GameObject object : this.objects) {
+            if ((caseSensitive && object.getName().equals(name)) || (!caseSensitive && object.getName().equalsIgnoreCase(name))) {
+                return object;
+            }
+        }
+
+        return null;
     }
 
     /**

@@ -6,6 +6,7 @@ import io.github.kale_ko.gighm.scene.GameObject;
 /**
  * A base component
  * 
+ * @version 1.0.0
  * @since 1.0.0
  */
 public abstract class Component {
