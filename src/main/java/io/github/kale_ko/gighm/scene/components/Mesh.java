@@ -91,7 +91,16 @@ public class Mesh extends Component {
      * @since 1.0.0
      */
     public Mesh(@NotNull float[] vertices, @NotNull int verticeSize) {
-        this(vertices, verticeSize, null, null, 0);
+        this(vertices, verticeSize, null);
+    }
+
+    /**
+     * Create a mesh to render
+     * 
+     * @since 1.0.0
+     */
+    public Mesh(@NotNull float[] vertices, @NotNull int verticeSize, int[] triangles) {
+        this(vertices, verticeSize, null, null, 0, triangles);
     }
 
     /**

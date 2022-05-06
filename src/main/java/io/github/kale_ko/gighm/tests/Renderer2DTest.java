@@ -54,9 +54,16 @@ public class Renderer2DTest {
             object3.getComponent(Transform.class).setPosition(new Vector3d(45, 240, 10));
             object3.getComponent(Transform.class).setScale(new Vector3d(80));
 
+            GameObject object4 = new GameObject("Test Object 4");
+            Mesh mesh4 = new Mesh(new float[] { -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f }, 2, new int[] { 0, 1, 2, 2, 3, 0 });
+            object4.addComponent(mesh4);
+            object4.getComponent(Transform.class).setPosition(new Vector3d(-45, -180, 10));
+            object4.getComponent(Transform.class).setScale(new Vector3d(70));
+
             scene.addObjects(object1);
             scene.addObjects(object2);
             scene.addObjects(object3);
+            scene.addObjects(object4);
 
             new Window(renderer, "Test Renderer", width, height, false, true);
         } catch (IOException e) {
