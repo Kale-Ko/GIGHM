@@ -2,6 +2,7 @@ package io.github.kale_ko.gighm.rendering;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL20.*;
+import java.awt.Color;
 import javax.validation.constraints.NotNull;
 import org.lwjgl.opengl.GL;
 import io.github.kale_ko.gighm.rendering.shaders.Shader;
@@ -15,6 +16,7 @@ import io.github.kale_ko.gighm.scene.components.Transform;
 /**
  * A renderer to render a scene
  * 
+ * @version 1.1.0
  * @since 1.0.0
  */
 public class Renderer {
@@ -33,13 +35,6 @@ public class Renderer {
     private @NotNull Camera camera;
 
     /**
-     * Weather the window is initialized
-     * 
-     * @since 1.0.0
-     */
-    private @NotNull boolean initialized = false;
-
-    /**
      * The shader to use
      * 
      * @since 1.0.0
@@ -47,17 +42,49 @@ public class Renderer {
     private @NotNull Shader shader;
 
     /**
+     * The color to clear the background with
+     * 
+     * @since 1.1.0
+     */
+    private @NotNull Color clearColor;
+
+    /**
+     * Weather the window is initialized
+     * 
+     * @since 1.0.0
+     */
+    private @NotNull boolean initialized = false;
+
+    /**
      * Create a renderer to render a scene
      * 
      * @param scene The scene to render
+     * @param camera The camera to render from
+     * @param shader The shader to use
      * 
      * @since 1.0.0
      */
     public Renderer(@NotNull Scene scene, Camera camera, Shader shader) {
+        this(scene, camera, shader, new Color(0, 0, 0));
+    }
+
+    /**
+     * Create a renderer to render a scene
+     * 
+     * @param scene The scene to render
+     * @param camera The camera to render from
+     * @param shader The shader to use
+     * @param clearColor The color to clear the background with
+     * 
+     * @since 1.0.0
+     */
+    public Renderer(@NotNull Scene scene, Camera camera, Shader shader, Color clearColor) {
         this.scene = scene;
         this.camera = camera;
 
         this.shader = shader;
+
+        this.clearColor = clearColor;
     }
 
     /**
@@ -75,9 +102,8 @@ public class Renderer {
         this.initialized = true;
 
         GL.createCapabilities();
+        glEnable(GL_DEPTH);
         glEnable(GL_TEXTURE_2D);
-
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     }
 
     /**
@@ -86,7 +112,9 @@ public class Renderer {
      * @since 1.0.0
      */
     public void render(@NotNull long windowId) {
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClearColor(((float) this.clearColor.getRed()) / 255f, ((float) this.clearColor.getGreen()) / 255f, ((float) this.clearColor.getBlue()) / 255f, 1.0f);
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         if (!this.shader.getInitialized()) {
             this.shader.init();
@@ -119,5 +147,16 @@ public class Renderer {
         }
 
         glfwSwapBuffers(windowId);
+    }
+
+    /**
+     * Set the clear/background color
+     * 
+     * @param color Set the clear/background color
+     * 
+     * @since 1.1.0
+     */
+    public void setClearColor(Color color) {
+        this.clearColor = color;
     }
 }

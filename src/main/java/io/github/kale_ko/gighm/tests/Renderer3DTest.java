@@ -1,5 +1,6 @@
 package io.github.kale_ko.gighm.tests;
 
+import java.awt.Color;
 import java.io.IOException;
 import org.joml.Vector3d;
 import io.github.kale_ko.gighm.rendering.Renderer;
@@ -30,6 +31,7 @@ public class Renderer3DTest {
             scene.addObjects(cameraObject);
 
             Renderer renderer = new Renderer(scene, camera, shader);
+            renderer.setClearColor(new Color(0.2f, 0.2f, 0.8f));
 
             GameObject object1 = new GameObject("Test Object");
             Texture2D texture1 = Texture2DLoader.loadTexture(Renderer3DTest.class.getResourceAsStream("/tests/logo.png"));

@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 /**
  * Utility for loading shader data from a file to use with shaders
  * 
+ * @version 1.0.0
  * @since 1.0.0
  */
 public class ShaderLoader {

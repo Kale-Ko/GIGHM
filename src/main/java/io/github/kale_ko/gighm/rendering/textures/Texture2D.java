@@ -8,6 +8,8 @@ import io.github.kale_ko.gighm.rendering.shaders.Shader;
 /**
  * A 2D texture
  * 
+ * @version 1.0.0
+ * 
  * @since 1.0.0
  */
 public class Texture2D {

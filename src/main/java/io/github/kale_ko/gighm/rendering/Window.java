@@ -12,6 +12,7 @@ import org.lwjgl.system.MemoryStack;
 /**
  * A window to render to
  * 
+ * @version 1.0.0
  * @since 1.0.0
  */
 public class Window {
