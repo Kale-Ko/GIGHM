@@ -11,6 +11,7 @@ import io.github.kale_ko.gighm.scene.components.Transform;
 /**
  * An object that can hold different components
  * 
+ * @version 1.0.0
  * @since 1.0.0
  */
 public class GameObject {
