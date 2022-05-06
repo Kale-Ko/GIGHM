@@ -26,7 +26,7 @@ public class Renderer3DTest {
             GameObject cameraObject = new GameObject("Camera");
             Camera camera = Camera.createPerspective(179, width / height, 0.01f, 512);
             cameraObject.addComponent(camera);
-            cameraObject.getComponent(Transform.class).setPosition(new Vector3d(0, 0, -80));
+            cameraObject.getComponent(Transform.class).setPosition(new Vector3d(0, 0, -20));
             scene.addObjects(cameraObject);
 
             Shader shader = new Shader(ShaderLoader.loadShaderData(Renderer3DTest.class.getResourceAsStream("/vertex.glsl")), ShaderLoader.loadShaderData(Renderer3DTest.class.getResourceAsStream("/fragment.glsl")));
