@@ -137,7 +137,10 @@ public class Renderer {
 
                     texture.bind(this.shader);
                 } else {
-                    // TODO Draw in white
+                    shader.setUniform("sampler", -1);
+
+                    glActiveTexture(0);
+                    glBindTexture(GL_TEXTURE_2D, 0);
                 }
 
                 shader.setUniform("projection", camera.getProjection().mul(object.getComponent(Transform.class).getMatrix()));
