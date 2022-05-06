@@ -93,6 +93,7 @@ public class GameObject {
      * 
      * @since 1.0.0
      */
+    @SuppressWarnings("unchecked")
     public <T extends Component> T getComponent(@NotNull Class<T> clazz) {
         return (T) this.components.get(clazz);
     }

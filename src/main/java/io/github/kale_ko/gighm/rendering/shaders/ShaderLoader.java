@@ -1,9 +1,8 @@
 package io.github.kale_ko.gighm.rendering.shaders;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.validation.constraints.NotNull;
@@ -15,9 +14,10 @@ import javax.validation.constraints.NotNull;
  */
 public class ShaderLoader {
     /**
-     * Load a shader from a file
+     * Load a shader from file
      * 
-     * @param file The file to load
+     * @param vertexPath The vertex file to load
+     * @param fragmentPath The fragment file to load
      * 
      * @return A {@link Shader} representing the shader
      * 
@@ -25,14 +25,15 @@ public class ShaderLoader {
      * 
      * @since 1.0.0
      */
-    public static Shader loadShader(@NotNull String vertexFile, @NotNull String fragmentFile) throws IOException {
-        return loadShader(new File(vertexFile), new File(fragmentFile));
+    public static Shader loadShader(@NotNull String vertexPath, @NotNull String fragmentPath) throws IOException {
+        return loadShader(new File(vertexPath), new File(fragmentPath));
     }
 
     /**
-     * Load a shader from a file
+     * Load a shader from file
      * 
-     * @param file The file to load
+     * @param vertexFile The vertex file to load
+     * @param fragmentFile The fragment file to load
      * 
      * @return A {@link Shader} representing the shader
      * 
@@ -41,13 +42,29 @@ public class ShaderLoader {
      * @since 1.0.0
      */
     public static Shader loadShader(@NotNull File vertexFile, @NotNull File fragmentFile) throws IOException {
-        return new Shader(loadShaderData(vertexFile), loadShaderData(fragmentFile));
+        return loadShader(new FileInputStream(vertexFile), new FileInputStream(fragmentFile));
     }
 
     /**
-     * Load a shader's data from a file
+     * Load a shader from stream
      * 
-     * @param file The file to load
+     * @param vertexStream The vertex stream to load
+     * @param fragmentStream The fragment stream to load
+     * 
+     * @return A {@link Shader} representing the shader
+     * 
+     * @throws IOException
+     * 
+     * @since 1.0.0
+     */
+    public static Shader loadShader(@NotNull InputStream vertexStream, @NotNull InputStream fragmentStream) throws IOException {
+        return new Shader(loadShaderData(vertexStream), loadShaderData(fragmentStream));
+    }
+
+    /**
+     * Load a shader's data from file
+     * 
+     * @param path The file to load
      * 
      * @return A {@link String} representing the shader
      * 
@@ -55,12 +72,12 @@ public class ShaderLoader {
      * 
      * @since 1.0.0
      */
-    public static String loadShaderData(@NotNull String file) throws IOException {
-        return loadShaderData(new File(file));
+    public static String loadShaderData(@NotNull String path) throws IOException {
+        return loadShaderData(new File(path));
     }
 
     /**
-     * Load a shader's data from a file
+     * Load a shader's data from file
      * 
      * @param file The file to load
      * 
@@ -71,23 +88,13 @@ public class ShaderLoader {
      * @since 1.0.0
      */
     public static String loadShaderData(@NotNull File file) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(file));
-        StringBuilder data = new StringBuilder();
-
-        String line;
-        while ((line = reader.readLine()) != null) {
-            data.append(line + "\n");
-        }
-
-        reader.close();
-
-        return data.toString();
+        return loadShaderData(new FileInputStream(file));
     }
 
     /**
-     * Load a shader's data from a file
+     * Load a shader's data from stream
      * 
-     * @param file The file to load
+     * @param stream The stream to load
      * 
      * @return A {@link String} representing the shader
      * 
