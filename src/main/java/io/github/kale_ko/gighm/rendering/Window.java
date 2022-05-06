@@ -159,7 +159,12 @@ public class Window {
         this.maximized = maximized;
         this.resizable = resizable;
 
-        this.init();
+        Thread thread = new Thread(new Runnable() {
+            public void run() {
+                init();
+            }
+        }, "GIGHM-Main");
+        thread.start();
     }
 
     /**
@@ -210,8 +215,6 @@ public class Window {
         if (renderer != null) {
             renderer.init();
         }
-
-        // TODO Run on serperate thread
 
         while (!glfwWindowShouldClose(windowId)) {
             if (renderer != null) {

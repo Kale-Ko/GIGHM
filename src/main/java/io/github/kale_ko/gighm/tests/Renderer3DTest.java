@@ -22,16 +22,18 @@ public class Renderer3DTest {
             int height = 600;
 
             Scene scene = new Scene("Main");
-            Shader shader = new Shader(ShaderLoader.loadShaderData(Renderer3DTest.class.getResourceAsStream("/vertex.glsl")), ShaderLoader.loadShaderData(Renderer3DTest.class.getResourceAsStream("/fragment.glsl")));
 
             GameObject cameraObject = new GameObject("Camera");
             Camera camera = Camera.createPerspective(179, width / height, 0.01f, 512);
             cameraObject.addComponent(camera);
-            cameraObject.getComponent(Transform.class).setPosition(new Vector3d(0, 0, -20));
+            cameraObject.getComponent(Transform.class).setPosition(new Vector3d(0, 0, -80));
             scene.addObjects(cameraObject);
 
+            Shader shader = new Shader(ShaderLoader.loadShaderData(Renderer3DTest.class.getResourceAsStream("/vertex.glsl")), ShaderLoader.loadShaderData(Renderer3DTest.class.getResourceAsStream("/fragment.glsl")));
             Renderer renderer = new Renderer(scene, camera, shader);
-            renderer.setClearColor(new Color(0.2f, 0.2f, 0.8f));
+            renderer.setClearColor(new Color(0.8f, 0.8f, 0.8f));
+
+            Window window = new Window(renderer, "Test Renderer", width, height, false, true);
 
             GameObject object1 = new GameObject("Test Object");
             Texture2D texture1 = Texture2DLoader.loadTexture(Renderer3DTest.class.getResourceAsStream("/tests/logo.png"));
@@ -41,24 +43,16 @@ public class Renderer3DTest {
             object1.getComponent(Transform.class).setScale(new Vector3d(32));
 
             GameObject object2 = new GameObject("Test Object 2");
-            Texture2D texture2 = Texture2DLoader.loadTexture(Renderer3DTest.class.getResourceAsStream("/tests/logo.png"));
+            Texture2D texture2 = Texture2DLoader.loadTexture(Renderer2DTest.class.getResourceAsStream("/tests/noise.png"));
             Mesh mesh2 = new Mesh(new float[] { -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f }, 2, texture2, new float[] { 0, 0, 1, 0, 1, 1, 0, 1 }, 2, new int[] { 0, 1, 2, 2, 3, 0 });
             object2.addComponent(mesh2);
-            object2.getComponent(Transform.class).setPosition(new Vector3d(-85, 30, 10));
-            object2.getComponent(Transform.class).setScale(new Vector3d(20));
-
-            GameObject object3 = new GameObject("Test Object 3");
-            Texture2D texture3 = Texture2DLoader.loadTexture(Renderer3DTest.class.getResourceAsStream("/tests/noise.png"));
-            Mesh mesh3 = new Mesh(new float[] { -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f }, 2, texture3, new float[] { 0, 0, 1, 0, 1, 1, 0, 1 }, 2, new int[] { 0, 1, 2, 2, 3, 0 });
-            object3.addComponent(mesh3);
-            object3.getComponent(Transform.class).setPosition(new Vector3d(45, 240, 10));
-            object3.getComponent(Transform.class).setScale(new Vector3d(16));
+            object2.getComponent(Transform.class).setPosition(new Vector3d(45, 240, 10));
+            object2.getComponent(Transform.class).setScale(new Vector3d(16));
 
             scene.addObjects(object1);
             scene.addObjects(object2);
-            scene.addObjects(object3);
 
-            new Window(renderer, "Test Renderer", width, height, false, true);
+            window.setTitle("Test 3D Renderer!");
         } catch (IOException e) {
             e.printStackTrace();
         }
