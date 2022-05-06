@@ -2,7 +2,9 @@ package io.github.kale_ko.gighm.rendering.textures;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import javax.imageio.ImageIO;
 import javax.validation.constraints.NotNull;
@@ -15,9 +17,9 @@ import org.lwjgl.BufferUtils;
  */
 public class Texture2DLoader {
     /**
-     * Load an image into a texture from a file
+     * Load a texture from file
      * 
-     * @param file The file to load
+     * @param path The texture file to load
      * 
      * @return A {@link Texture2D} representing the image
      * 
@@ -25,14 +27,14 @@ public class Texture2DLoader {
      * 
      * @since 1.0.0
      */
-    public static @NotNull Texture2D loadTexture(@NotNull String file) throws IOException {
-        return loadTexture(new File(file));
+    public static @NotNull Texture2D loadTexture(@NotNull String path) throws IOException {
+        return loadTexture(new File(path));
     }
 
     /**
-     * Load an image into a texture from a file
+     * Load a texture from file
      * 
-     * @param file The file to load
+     * @param file The texture file to load
      * 
      * @return A {@link Texture2D} representing the image
      * 
@@ -41,15 +43,30 @@ public class Texture2DLoader {
      * @since 1.0.0
      */
     public static @NotNull Texture2D loadTexture(@NotNull File file) throws IOException {
-        BufferedImage img = ImageIO.read(file);
-
-        return new Texture2D(img.getWidth(), img.getHeight(), loadTextureData(file));
+        return loadTexture(new FileInputStream(file));
     }
 
     /**
-     * Load an image from a file
+     * Load a texture from stream
      * 
-     * @param file The file to load
+     * @param path The texture stream to load
+     * 
+     * @return A {@link Texture2D} representing the image
+     * 
+     * @throws IOException
+     * 
+     * @since 1.0.0
+     */
+    public static @NotNull Texture2D loadTexture(@NotNull InputStream stream) throws IOException {
+        BufferedImage image = ImageIO.read(stream);
+
+        return new Texture2D(image.getWidth(), image.getHeight(), loadTextureData(image));
+    }
+
+    /**
+     * Load a texture data from file
+     * 
+     * @param path The texture file to load
      * 
      * @return A {@link ByteBuffer} containing the image data
      * 
@@ -57,14 +74,14 @@ public class Texture2DLoader {
      * 
      * @since 1.0.0
      */
-    public static @NotNull ByteBuffer loadTextureData(@NotNull String file) throws IOException {
-        return loadTextureData(new File(file));
+    public static @NotNull ByteBuffer loadTextureData(@NotNull String path) throws IOException {
+        return loadTextureData(new File(path));
     }
 
     /**
-     * Load an image from a file
+     * Load a texture data from file
      * 
-     * @param file The file to load
+     * @param file The texture file to load
      * 
      * @return A {@link ByteBuffer} containing the image data
      * 
@@ -73,10 +90,36 @@ public class Texture2DLoader {
      * @since 1.0.0
      */
     public static @NotNull ByteBuffer loadTextureData(@NotNull File file) throws IOException {
-        BufferedImage img = ImageIO.read(file);
+        return loadTextureData(new FileInputStream(file));
+    }
 
-        int[] pixelData = new int[img.getWidth() * img.getHeight() * 4];
-        pixelData = img.getRGB(0, 0, img.getWidth(), img.getHeight(), null, 0, img.getWidth());
+    /**
+     * Load a texture data from stream
+     * 
+     * @param stream The texture stream to load
+     * 
+     * @return A {@link ByteBuffer} containing the image data
+     * 
+     * @throws IOException
+     * 
+     * @since 1.0.0
+     */
+    public static @NotNull ByteBuffer loadTextureData(@NotNull InputStream stream) throws IOException {
+        return loadTextureData(ImageIO.read(stream));
+    }
+
+    /**
+     * Load a texture data from stream
+     * 
+     * @param stream The texture stream to load
+     * 
+     * @return A {@link ByteBuffer} containing the image data
+     * 
+     * @since 1.0.0
+     */
+    public static @NotNull ByteBuffer loadTextureData(@NotNull BufferedImage image) {
+        int[] pixelData = new int[image.getWidth() * image.getHeight() * 4];
+        pixelData = image.getRGB(0, 0, image.getWidth(), image.getHeight(), null, 0, image.getWidth());
 
         ByteBuffer pixels = BufferUtils.createByteBuffer(pixelData.length * 4);
 
