@@ -32,21 +32,21 @@ public class RendererTest {
             Renderer renderer = new Renderer(scene, camera, shader);
 
             GameObject object1 = new GameObject("Test Object");
-            Texture2D texture1 = Texture2DLoader.loadTexture("C:/Users/Kale Ko/Downloads/54416665.png");
+            Texture2D texture1 = Texture2DLoader.loadTexture(RendererTest.class.getResourceAsStream("/tests/logo.png"));
             Mesh mesh1 = new Mesh(new float[] { -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f }, 2, texture1, new float[] { 0, 0, 1, 0, 1, 1, 0, 1 }, 2, new int[] { 0, 1, 2, 2, 3, 0 });
             object1.addComponent(mesh1);
             object1.getComponent(Transform.class).setPosition(new Vector3d(125, -65, 10));
             object1.getComponent(Transform.class).setScale(new Vector3d(160));
 
             GameObject object2 = new GameObject("Test Object 2");
-            Texture2D texture2 = Texture2DLoader.loadTexture("C:/Users/Kale Ko/Downloads/54416665.png");
+            Texture2D texture2 = Texture2DLoader.loadTexture(RendererTest.class.getResourceAsStream("/tests/logo.png"));
             Mesh mesh2 = new Mesh(new float[] { -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f }, 2, texture2, new float[] { 0, 0, 1, 0, 1, 1, 0, 1 }, 2, new int[] { 0, 1, 2, 2, 3, 0 });
             object2.addComponent(mesh2);
             object2.getComponent(Transform.class).setPosition(new Vector3d(-85, 30, 10));
             object2.getComponent(Transform.class).setScale(new Vector3d(100));
 
             GameObject object3 = new GameObject("Test Object 3");
-            Texture2D texture3 = Texture2DLoader.loadTexture("C:/Users/Kale Ko/Downloads/aaaaaaaaaaaaaaaaaaaa.png");
+            Texture2D texture3 = Texture2DLoader.loadTexture(RendererTest.class.getResourceAsStream("/tests/noise.png"));
             Mesh mesh3 = new Mesh(new float[] { -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f }, 2, texture3, new float[] { 0, 0, 1, 0, 1, 1, 0, 1 }, 2, new int[] { 0, 1, 2, 2, 3, 0 });
             object3.addComponent(mesh3);
             object3.getComponent(Transform.class).setPosition(new Vector3d(45, 240, 10));
