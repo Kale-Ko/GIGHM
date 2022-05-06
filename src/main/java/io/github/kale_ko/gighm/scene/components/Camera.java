@@ -6,6 +6,7 @@ import org.joml.Vector3f;
 /**
  * A camera to render from
  * 
+ * @version 1.0.0
  * @since 1.0.0
  */
 public class Camera extends Component {

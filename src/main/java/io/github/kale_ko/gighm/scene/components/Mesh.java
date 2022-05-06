@@ -11,6 +11,7 @@ import io.github.kale_ko.gighm.rendering.textures.Texture2D;
 /**
  * A mesh to render
  * 
+ * @version 1.0.0
  * @since 1.0.0
  */
 public class Mesh extends Component {
