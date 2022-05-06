@@ -22,7 +22,6 @@ public class Renderer2DTest {
             int height = 600;
 
             Scene scene = new Scene("Main");
-            Shader shader = new Shader(ShaderLoader.loadShaderData(Renderer2DTest.class.getResourceAsStream("/vertex.glsl")), ShaderLoader.loadShaderData(Renderer2DTest.class.getResourceAsStream("/fragment.glsl")));
 
             GameObject cameraObject = new GameObject("Camera");
             Camera camera = Camera.createOrthagraphic(width, height, 512);
@@ -30,8 +29,11 @@ public class Renderer2DTest {
             cameraObject.getComponent(Transform.class).setPosition(new Vector3d(0, 0, -10));
             scene.addObjects(cameraObject);
 
+            Shader shader = new Shader(ShaderLoader.loadShaderData(Renderer2DTest.class.getResourceAsStream("/vertex.glsl")), ShaderLoader.loadShaderData(Renderer2DTest.class.getResourceAsStream("/fragment.glsl")));
             Renderer renderer = new Renderer(scene, camera, shader);
             renderer.setClearColor(new Color(0.8f, 0.8f, 0.8f));
+
+            Window window = new Window(renderer, "Test Renderer", width, height, false, true);
 
             GameObject object1 = new GameObject("Test Object");
             Texture2D texture1 = Texture2DLoader.loadTexture(Renderer2DTest.class.getResourceAsStream("/tests/logo.png"));
@@ -65,7 +67,7 @@ public class Renderer2DTest {
             scene.addObjects(object3);
             scene.addObjects(object4);
 
-            new Window(renderer, "Test Renderer", width, height, false, true);
+            window.setTitle("Test 2D Renderer!");
         } catch (IOException e) {
             e.printStackTrace();
         }
