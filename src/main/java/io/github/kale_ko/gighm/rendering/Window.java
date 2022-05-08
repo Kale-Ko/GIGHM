@@ -6,13 +6,20 @@ import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 import java.nio.IntBuffer;
 import javax.validation.constraints.NotNull;
+import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
+import io.github.kale_ko.gighm.input.InputManager;
+import io.github.kale_ko.gighm.input.KeyAction;
+import io.github.kale_ko.gighm.input.KeyCode;
+import io.github.kale_ko.gighm.input.KeyMod;
+import io.github.kale_ko.gighm.input.MouseAction;
+import io.github.kale_ko.gighm.input.MouseButton;
 
 /**
  * A window to render to
  * 
- * @version 1.0.0
+ * @version 1.2.0
  * @since 1.0.0
  */
 public class Window {
@@ -22,6 +29,13 @@ public class Window {
      * @since 1.0.0
      */
     private Renderer renderer;
+
+    /**
+     * The input manager used to capture user input
+     * 
+     * @since 1.2.0
+     */
+    private InputManager inputManager;
 
     /**
      * The title of the window
@@ -92,7 +106,20 @@ public class Window {
      * @since 1.0.0
      */
     public Window(Renderer renderer, @NotNull String title) {
-        this(renderer, title, 640, 360);
+        this(renderer, null, title);
+    }
+
+    /**
+     * Create a window to render to
+     * 
+     * @param renderer The renderer to use when rendering the window
+     * @param inputManager The input manager used to capture user input
+     * @param title The title of the new window
+     * 
+     * @since 1.2.0
+     */
+    public Window(Renderer renderer, InputManager inputManager, @NotNull String title) {
+        this(renderer, inputManager, title, 640, 360);
     }
 
     /**
@@ -119,7 +146,21 @@ public class Window {
      * @since 1.0.0
      */
     public Window(Renderer renderer, @NotNull String title, @NotNull int width, @NotNull int height) {
-        this(renderer, title, width, height, false, false);
+        this(renderer, null, title, width, height);
+    }
+
+    /**
+     * Create a window to render to
+     * 
+     * @param renderer The renderer to use when rendering the window
+     * @param title The title of the new window
+     * @param width The width of the new window
+     * @param height The height of the new window
+     * 
+     * @since 1.2.0
+     */
+    public Window(Renderer renderer, InputManager inputManager, @NotNull String title, @NotNull int width, @NotNull int height) {
+        this(renderer, inputManager, title, width, height, false, false);
     }
 
     /**
@@ -134,13 +175,31 @@ public class Window {
      * @since 1.0.0
      */
     public Window(@NotNull String title, @NotNull int width, @NotNull int height, @NotNull boolean maximized, @NotNull boolean resizable) {
-        this(null, title, width, height, maximized, resizable);
+        this(null, null, title, width, height, maximized, resizable);
     }
 
     /**
      * Create a window to render to
      * 
      * @param renderer The renderer to use when rendering the window
+     * @param inputManager The input manager used to capture user input
+     * @param title The title of the new window
+     * @param width The width of the new window
+     * @param height The height of the new window
+     * @param maximized Weather the new window should be maxamized
+     * @param resizable Weather the new window should be resizable
+     * 
+     * @since 1.2.0
+     */
+    public Window(Renderer renderer, @NotNull String title, @NotNull int width, @NotNull int height, @NotNull boolean maximized, @NotNull boolean resizable) {
+        this(renderer, null, title, width, height, maximized, resizable);
+    }
+
+    /**
+     * Create a window to render to
+     * 
+     * @param renderer The renderer to use when rendering the window
+     * @param inputManager The input manager used to capture user input
      * @param title The title of the new window
      * @param width The width of the new window
      * @param height The height of the new window
@@ -149,8 +208,9 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public Window(Renderer renderer, @NotNull String title, @NotNull int width, @NotNull int height, @NotNull boolean maximized, @NotNull boolean resizable) {
+    public Window(Renderer renderer, InputManager inputManager, @NotNull String title, @NotNull int width, @NotNull int height, @NotNull boolean maximized, @NotNull boolean resizable) {
         this.renderer = renderer;
+        this.inputManager = inputManager;
 
         this.title = title;
         this.width = width;
@@ -179,6 +239,8 @@ public class Window {
             throw new RuntimeException("The window is already initialized");
         }
 
+        glfwSetErrorCallback(GLFWErrorCallback.createPrint(System.err));
+
         if (!glfwInit()) {
             throw new RuntimeException("Failed to initialize GLFW");
         }
@@ -197,7 +259,52 @@ public class Window {
             throw new RuntimeException("Failed to create GLFW window");
         }
 
-        // TODO Initialize keyboard/mouse handlers etc
+        glfwSetKeyCallback(windowId, (window, key, scancode, action, mods) -> {
+            if (inputManager != null) {
+                inputManager.onKeyboardKey(KeyCode.valueOfGLFWKey(key, KeyMod.isPressed(KeyMod.SHIFT, mods)), KeyAction.valueOfGLFWEvent(action), KeyMod.getPressed(mods));
+            }
+        });
+
+        glfwSetMouseButtonCallback(windowId, (window, button, action, mods) -> {
+            if (inputManager != null) {
+                inputManager.onMouseButton(MouseButton.valueOfGLFWButton(button), MouseAction.valueOfGLFWEvent(action));
+            }
+        });
+
+        glfwSetCursorPosCallback(windowId, (window, x, y) -> {
+            if (inputManager != null) {
+                inputManager.onMouseMove((int) x, (int) y);
+            }
+        });
+
+        glfwSetScrollCallback(windowId, (window, x, y) -> {
+            if (inputManager != null) {
+                inputManager.onMouseScroll((int) x, (int) y);
+            }
+        });
+
+        glfwSetWindowSizeCallback(windowId, (window, newwidth, newheight) -> {
+            if (renderer != null) {
+                this.width = newwidth;
+                this.height = newheight;
+
+                renderer.getCamera().setWidth(newwidth);
+                renderer.getCamera().setHeight(newheight);
+                renderer.getCamera().setAspect(newwidth / newheight);
+
+                renderer.getCamera().recalculateProjection();
+            }
+        });
+
+        glfwSetWindowMaximizeCallback(windowId, (window, maxamized) -> {
+            if (renderer != null) {
+                renderer.getCamera().setWidth(getWidth());
+                renderer.getCamera().setHeight(getHeight());
+                renderer.getCamera().setAspect(getWidth() / getHeight());
+
+                renderer.getCamera().recalculateProjection();
+            }
+        });
 
         MemoryStack stack = stackPush();
         IntBuffer cWidth = stack.mallocInt(1);
@@ -219,6 +326,10 @@ public class Window {
         while (!glfwWindowShouldClose(windowId)) {
             if (renderer != null) {
                 renderer.render(windowId);
+            }
+
+            if (inputManager != null) {
+                inputManager.resetDelta();
             }
 
             glfwPollEvents();
