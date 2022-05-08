@@ -54,10 +54,8 @@ tasks.register("buildFull", Jar) {
     destinationDirectory = file("./")
     archiveFileName = "${project.name}-${project.version}.jar"
 
-    doLast {
-        from files(project.sourceSets.main.output)
-        from files(project.configurations.depencancy.collect { it.isDirectory() ? it : zipTree(it) })
-    }
+    from files(project.sourceSets.main.output)
+    from files(project.configurations.depencancy.collect { it.isDirectory() ? it : zipTree(it) })
 }
 
 publishing {
