@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'maven-publish'
 }
 
 sourceCompatibility = JavaVersion.toVersion(project.java_version)
@@ -23,26 +24,22 @@ repositories {
 }
 
 dependencies {
-	depencancy platform("org.lwjgl:lwjgl-bom:${project.lwjgl_version}")
-	depencancy "org.lwjgl:lwjgl"
-	depencancy "org.lwjgl:lwjgl-assimp"
-	depencancy "org.lwjgl:lwjgl-glfw"
-	depencancy "org.lwjgl:lwjgl-openal"
-	depencancy "org.lwjgl:lwjgl-opengl"
-	depencancy "org.lwjgl:lwjgl-opengles"
-	depencancy "org.lwjgl:lwjgl-stb"
+    depencancy platform("org.lwjgl:lwjgl-bom:${project.lwjgl_version}")
+    depencancy "org.lwjgl:lwjgl"
+    depencancy "org.lwjgl:lwjgl-glfw"
+    depencancy "org.lwjgl:lwjgl-opengl"
+    depencancy "org.lwjgl:lwjgl-opengles"
+    // depencancy "org.lwjgl:lwjgl-openal"
 
     project.lwjgl_natives.split(",").each {
-	    depencancy "org.lwjgl:lwjgl::${it}"
-    	depencancy "org.lwjgl:lwjgl-assimp::${it}"
-	    depencancy "org.lwjgl:lwjgl-glfw::${it}"
-    	depencancy "org.lwjgl:lwjgl-openal::${it}"
-    	depencancy "org.lwjgl:lwjgl-opengl::${it}"
-	    depencancy "org.lwjgl:lwjgl-opengles::${it}"
-    	depencancy "org.lwjgl:lwjgl-stb::${it}"
+        depencancy "org.lwjgl:lwjgl::${it}"
+        depencancy "org.lwjgl:lwjgl-glfw::${it}"
+        depencancy "org.lwjgl:lwjgl-opengl::${it}"
+        depencancy "org.lwjgl:lwjgl-opengles::${it}"
+        // depencancy "org.lwjgl:lwjgl-openal::${it}"
     }
 
-	depencancy "org.joml:joml:${project.joml_version}"
+    depencancy "org.joml:joml:${project.joml_version}"
 
     depencancy "javax.validation:validation-api:1.0.0.GA"
 }
@@ -57,6 +54,53 @@ tasks.register("buildFull", Jar) {
     destinationDirectory = file("./")
     archiveFileName = "${project.name}-${project.version}.jar"
 
-    from files(project.sourceSets.main.output)
-    from files(project.configurations.depencancy.collect { it.isDirectory() ? it : zipTree(it) })
+    doLast {
+        from files(project.sourceSets.main.output)
+        from files(project.configurations.depencancy.collect { it.isDirectory() ? it : zipTree(it) })
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/Kale-Ko/GIGHM")
+
+            credentials {
+                username = "Kale-Ko"
+                password = System.getenv("GH_PACKAGES_TOKEN")
+            }
+        }
+    }
+
+    publications {
+        ghp(MavenPublication) {
+            groupId = project.group
+            artifactId = project.archivesBaseName
+            version = project.version
+
+            pom.withXml {
+                def dependenciesNode = asNode().appendNode("dependencies")
+
+                configurations.depencancy.resolvedConfiguration.getFirstLevelModuleDependencies().each {
+                    def depend = it
+
+                    def dep = dependenciesNode.appendNode("dependency")
+                    dep.appendNode("groupId", it.moduleGroup)
+                    dep.appendNode("artifactId", it.moduleName)
+                    dep.appendNode("version", it.moduleVersion)
+
+                    if (it.moduleGroup == "org.lwjgl" && it.moduleName != "lwjgl-bom") {
+                        project.lwjgl_natives.split(",").each {
+                            dep = dependenciesNode.appendNode("dependency")
+                            dep.appendNode("groupId", depend.moduleGroup)
+                            dep.appendNode("artifactId", depend.moduleName)
+                            dep.appendNode("version", depend.moduleVersion)
+                            dep.appendNode("classifier", it) 
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
