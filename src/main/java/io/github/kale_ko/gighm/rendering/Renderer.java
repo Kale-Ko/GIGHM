@@ -16,7 +16,7 @@ import io.github.kale_ko.gighm.scene.components.Transform;
 /**
  * A renderer to render a scene
  * 
- * @version 1.1.0
+ * @version 1.2.0
  * @since 1.0.0
  */
 public class Renderer {
@@ -64,7 +64,7 @@ public class Renderer {
      * 
      * @since 1.0.0
      */
-    public Renderer(@NotNull Scene scene, Camera camera, Shader shader) {
+    public Renderer(@NotNull Scene scene, @NotNull Camera camera, @NotNull Shader shader) {
         this(scene, camera, shader, new Color(0, 0, 0));
     }
 
@@ -78,7 +78,7 @@ public class Renderer {
      * 
      * @since 1.0.0
      */
-    public Renderer(@NotNull Scene scene, Camera camera, Shader shader, Color clearColor) {
+    public Renderer(@NotNull Scene scene, @NotNull Camera camera, @NotNull Shader shader, Color clearColor) {
         this.scene = scene;
         this.camera = camera;
 
@@ -145,11 +145,77 @@ public class Renderer {
 
                 shader.setUniform("projection", camera.getProjection().mul(object.getComponent(Transform.class).getMatrix()));
 
-                mesh.render(camera);
+                mesh.render();
             }
         }
 
         glfwSwapBuffers(windowId);
+    }
+
+    /**
+     * Get the scene to render
+     * 
+     * @return The scene to render
+     * 
+     * @since 1.2.0
+     */
+    public Scene getScene() {
+        return this.scene;
+    }
+
+    /**
+     * Set the scene to render
+     * 
+     * @param scene The scene to render
+     * 
+     * @since 1.2.0
+     */
+    public void setScene(Scene scene) {
+        this.scene = scene;
+    }
+
+    /**
+     * Get the camera to render from
+     * 
+     * @return The camera to render from
+     * 
+     * @since 1.2.0
+     */
+    public @NotNull Camera getCamera() {
+        return this.camera;
+    }
+
+    /**
+     * Set the camera to render from
+     * 
+     * @param camera The camera to render from
+     * 
+     * @since 1.2.0
+     */
+    public void getCamera(@NotNull Camera camera) {
+        this.camera = camera;
+    }
+
+    /**
+     * Get the shader to use
+     * 
+     * @return The shader to use
+     * 
+     * @since 1.2.0
+     */
+    public Shader getShader() {
+        return this.shader;
+    }
+
+    /**
+     * Get the clear/background color
+     * 
+     * @return The clear/background color
+     * 
+     * @since 1.2.0
+     */
+    public Color getClearColor() {
+        return this.clearColor;
     }
 
     /**
@@ -161,5 +227,16 @@ public class Renderer {
      */
     public void setClearColor(Color color) {
         this.clearColor = color;
+    }
+
+    /**
+     * Get weather the renderer is initialized
+     * 
+     * @return Weather the renderer is initialized
+     * 
+     * @since 1.2.0
+     */
+    public @NotNull boolean getInitialized() {
+        return this.initialized;
     }
 }

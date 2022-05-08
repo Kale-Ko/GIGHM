@@ -11,7 +11,7 @@ import io.github.kale_ko.gighm.rendering.textures.Texture2D;
 /**
  * A mesh to render
  * 
- * @version 1.0.0
+ * @version 1.2.0
  * @since 1.0.0
  */
 public class Mesh extends Component {
@@ -185,7 +185,7 @@ public class Mesh extends Component {
      * 
      * @since 1.0.0
      */
-    public void render(Camera camera) {
+    public void render() {
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
 

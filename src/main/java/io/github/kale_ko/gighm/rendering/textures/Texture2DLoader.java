@@ -14,7 +14,6 @@ import org.lwjgl.BufferUtils;
  * Utility for loading image data from a file to use in textures
  * 
  * @version 1.0.0
- * 
  * @since 1.0.0
  */
 public class Texture2DLoader {

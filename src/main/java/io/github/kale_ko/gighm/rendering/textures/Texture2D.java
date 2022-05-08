@@ -8,8 +8,7 @@ import io.github.kale_ko.gighm.rendering.shaders.Shader;
 /**
  * A 2D texture
  * 
- * @version 1.0.0
- * 
+ * @version 1.2.0
  * @since 1.0.0
  */
 public class Texture2D {
@@ -99,6 +98,39 @@ public class Texture2D {
 
         glActiveTexture(GL_TEXTURE0 + this.textureId);
         glBindTexture(GL_TEXTURE_2D, this.textureId);
+    }
+
+    /**
+     * Get the width of the texture
+     * 
+     * @return The width of the texture
+     * 
+     * @since 1.2.0
+     */
+    public @NotNull int getWidth() {
+        return this.width;
+    }
+
+    /**
+     * Get the height of the texture
+     * 
+     * @return The height of the texture
+     * 
+     * @since 1.2.0
+     */
+    public @NotNull int getHeight() {
+        return this.height;
+    }
+
+    /**
+     * Get the raw data of the texture
+     * 
+     * @return The raw data of the texture
+     * 
+     * @since 1.2.0
+     */
+    public @NotNull ByteBuffer getRawData() {
+        return this.data;
     }
 
     /**

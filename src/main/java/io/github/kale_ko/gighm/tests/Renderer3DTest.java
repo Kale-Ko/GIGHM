@@ -29,7 +29,7 @@ public class Renderer3DTest {
             cameraObject.getComponent(Transform.class).setPosition(new Vector3d(0, 0, -20));
             scene.addObjects(cameraObject);
 
-            Shader shader = new Shader(ShaderLoader.loadShaderData(Renderer3DTest.class.getResourceAsStream("/vertex.glsl")), ShaderLoader.loadShaderData(Renderer3DTest.class.getResourceAsStream("/fragment.glsl")));
+            Shader shader = ShaderLoader.loadShader(Renderer2DTest.class.getResourceAsStream("/vertex.glsl"), Renderer2DTest.class.getResourceAsStream("/fragment.glsl"));
             Renderer renderer = new Renderer(scene, camera, shader);
             renderer.setClearColor(new Color(0.8f, 0.8f, 0.8f));
 
