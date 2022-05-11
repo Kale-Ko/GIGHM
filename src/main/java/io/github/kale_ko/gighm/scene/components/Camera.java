@@ -145,7 +145,7 @@ public class Camera extends Component {
      * 
      * @since 1.0.0
      */
-    public CameraType gettype() {
+    public CameraType getType() {
         return this.type;
     }
 
@@ -293,6 +293,11 @@ public class Camera extends Component {
         this.recalculateProjection();
     }
 
+    /**
+     * Recalculate the projection of the camera (This is done automatically when using set{x} functions)
+     * 
+     * @since 1.0.0
+     */
     public void recalculateProjection() {
         if (this.type == CameraType.ORTHAGRAPHIC) {
             this.projection = new Matrix4f().setOrtho(-this.width / 2, this.width / 2, -this.height / 2, this.height / 2, -this.far, this.far);

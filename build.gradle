@@ -44,6 +44,10 @@ dependencies {
     depencancy "javax.validation:validation-api:1.0.0.GA"
 }
 
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
 tasks.register("buildFull", Jar) {
     dependsOn tasks.build
 
@@ -56,6 +60,22 @@ tasks.register("buildFull", Jar) {
 
     from files(project.sourceSets.main.output)
     from files(project.configurations.depencancy.collect { it.isDirectory() ? it : zipTree(it) })
+
+    doLast {
+        fileTree(project.projectDir).visit(details -> {
+            if (details.file.path.replace("\\", "/").startsWith(project.projectDir.getPath().replace("\\", "/") + "/GIGHM-")) {
+                def isCurrent = false
+
+                if (tasks.buildFull.outputs.files.size() > 0 && tasks.buildFull.outputs.files[0].getPath() == details.file.path) {
+                    isCurrent = true
+                }
+
+                if (!isCurrent) {
+                    delete(details.file.path)
+                }
+            }
+        })
+    }
 }
 
 publishing {

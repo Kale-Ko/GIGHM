@@ -11,7 +11,7 @@ import org.joml.Vector3f;
 /**
  * An object transform
  * 
- * @version 1.0.0
+ * @version 1.3.0
  * @since 1.0.0
  */
 public class Transform extends Component {
@@ -106,6 +106,28 @@ public class Transform extends Component {
      */
     public void setRotation(@NotNull Quaterniond rotation) {
         this.rotation = rotation;
+    }
+
+    /**
+     * Set the rotation of the object
+     * 
+     * @param rotation The rotation of the object
+     * 
+     * @since 1.3.0
+     */
+    public void setRotation(@NotNull Vector3d rotation) {
+        this.rotation = new Quaterniond().rotateXYZ(rotation.x, rotation.y, rotation.z);
+    }
+
+    /**
+     * Set the rotation of the object
+     * 
+     * @param rotation The rotation of the object
+     * 
+     * @since 1.3.0
+     */
+    public void setRotation(@NotNull double rotation) {
+        this.rotation = new Quaterniond().rotateXYZ(rotation, 0, 0);
     }
 
     /**
