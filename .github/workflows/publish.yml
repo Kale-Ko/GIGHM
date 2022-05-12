@@ -5,7 +5,7 @@ on:
     types: [created]
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -22,7 +22,8 @@ jobs:
           server-id: ghp
           settings-path: ${{ github.workspace }}
 
-      - run: chmod +x gradlew
+      - name: Fix gradlew inexecutable
+        run: chmod +x gradlew
 
       - name: Build All
         uses: gradle/gradle-build-action@v2
