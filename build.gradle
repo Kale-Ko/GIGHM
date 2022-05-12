@@ -14,7 +14,7 @@ configurations {
     depencancy
     depencancy.canBeResolved = true
 
-    compileOnly {
+    implementation {
         extendsFrom depencancy
     }
 }
@@ -48,7 +48,12 @@ tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
 
-tasks.register("buildFull", Jar) {
+jar {
+    destinationDirectory = file("./")
+    archiveFileName = "${project.name}-${project.version}.jar"
+}
+
+tasks.register("buildFat", Jar) {
     dependsOn tasks.build
 
     sourceCompatibility = JavaVersion.toVersion(project.java_version)
@@ -56,17 +61,49 @@ tasks.register("buildFull", Jar) {
 
     duplicatesStrategy = "exclude"
     destinationDirectory = file("./")
-    archiveFileName = "${project.name}-${project.version}.jar"
+    archiveFileName = "${project.name}-${project.version}-fat.jar"
 
     from files(project.sourceSets.main.output)
     from files(project.configurations.depencancy.collect { it.isDirectory() ? it : zipTree(it) })
+}
+
+tasks.register("buildSources", Jar) {
+    duplicatesStrategy = "exclude"
+    destinationDirectory = file("./")
+    archiveFileName = "${project.name}-${project.version}-sources.jar"
+
+    from sourceSets.main.allJava
+}
+
+tasks.register("genJavaDocs", Javadoc) {
+    source = sourceSets.main.allJava
+    classpath = sourceSets.main.runtimeClasspath
+
+    exclude "**/tests/*.java"
+}
+
+tasks.register("buildJavaDocs", Jar) {
+    dependsOn tasks.genJavaDocs
+
+    duplicatesStrategy = "exclude"
+    destinationDirectory = file("./")
+    archiveFileName = "${project.name}-${project.version}-javadoc.jar"
+
+    from tasks.genJavaDocs
+}
+
+tasks.register("buildAll", Jar) {
+    dependsOn tasks.build
+    dependsOn tasks.buildFat
+    dependsOn tasks.buildSources
+    dependsOn tasks.buildJavaDocs
 
     doLast {
         fileTree(project.projectDir).visit(details -> {
-            if (details.file.path.replace("\\", "/").startsWith(project.projectDir.getPath().replace("\\", "/") + "/GIGHM-")) {
+            if (details.file.name.startsWith("/GIGHM-")) {
                 def isCurrent = false
 
-                if (tasks.buildFull.outputs.files.size() > 0 && tasks.buildFull.outputs.files[0].getPath() == details.file.path) {
+                if (tasks.buildAll.outputs.files.size() > 0 && tasks.buildAll.outputs.files.contains(details.file)) {
                     isCurrent = true
                 }
 
@@ -97,8 +134,29 @@ publishing {
             artifactId = project.archivesBaseName
             version = project.version
 
+            artifact tasks.buildFat
+            artifact tasks.buildJavaDocs
+            artifact tasks.buildSources
+
             pom.withXml {
-                def dependenciesNode = asNode().appendNode("dependencies")
+                def node = asNode()
+
+                def licenseNode = node.appendNode("licenses").appendNode("license")
+                licenseNode.appendNode("name", "MIT")
+                licenseNode.appendNode("url", "https://opensource.org/licenses/MIT")
+
+                def developerNode = node.appendNode("developers").appendNode("developer")
+                developerNode.appendNode("id", "kale-ko")
+                developerNode.appendNode("name", "Kale Ko")
+                developerNode.appendNode("url", "https://kaleko.ga/")
+                developerNode.appendNode("email", "contact@kaleko.ga")
+
+                def scmNode = node.appendNode("scm")
+                scmNode.appendNode("connection", "scm:git:git@github.com:Kale-Ko/GIGHM.git")
+                scmNode.appendNode("developerConnection", "scm:git:git@github.com:Kale-Ko/GIGHM.git")
+                scmNode.appendNode("url", "https://github.com/Kale-Ko/GIGHM")
+
+                def dependenciesNode = node.appendNode("dependencies")
 
                 configurations.depencancy.resolvedConfiguration.getFirstLevelModuleDependencies().each {
                     def depend = it
