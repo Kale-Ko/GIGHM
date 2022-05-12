@@ -23,7 +23,8 @@ jobs:
           server-id: ghp
           settings-path: ${{ github.workspace }}
 
-      - run: chmod +x gradlew
+      - name: Fix gradlew inexecutable
+        run: chmod +x gradlew
 
       - name: Build All
         uses: gradle/gradle-build-action@v2
