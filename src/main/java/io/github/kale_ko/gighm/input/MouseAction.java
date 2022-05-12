@@ -45,6 +45,32 @@ public class MouseAction {
     }
 
     /**
+     * Get a string representing the object
+     * 
+     * @return A string representing the object
+     * 
+     * @since 1.6.0
+     */
+    @Override
+    public String toString() {
+        for (Field field : MouseAction.class.getFields()) {
+            try {
+                field.setAccessible(true);
+
+                if (((MouseAction) field.get(null)).equals(this)) {
+                    return field.getName();
+                }
+
+                field.setAccessible(false);
+            } catch (IllegalArgumentException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return "MouseAction";
+    }
+
+    /**
      * Get all of the mods defined
      * 
      * @return All of the mods defined
