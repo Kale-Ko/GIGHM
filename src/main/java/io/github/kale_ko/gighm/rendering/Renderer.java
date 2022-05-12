@@ -1,6 +1,5 @@
 package io.github.kale_ko.gighm.rendering;
 
-import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.system.MemoryUtil.*;
 import java.awt.Color;
@@ -21,7 +20,7 @@ import io.github.kale_ko.gighm.scene.components.Transform;
 /**
  * A renderer to render a scene
  * 
- * @version 1.2.0
+ * @version 1.5.0
  * @since 1.0.0
  */
 public class Renderer {
@@ -126,7 +125,7 @@ public class Renderer {
      * 
      * @since 1.0.0
      */
-    public void render(long windowId) {
+    public void render() {
         glClearColor(((float) this.clearColor.getRed()) / 255f, ((float) this.clearColor.getGreen()) / 255f, ((float) this.clearColor.getBlue()) / 255f, 1.0f);
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -276,8 +275,6 @@ public class Renderer {
                 glDisableVertexAttribArray(1);
             }
         }
-
-        glfwSwapBuffers(windowId);
     }
 
     /**
@@ -320,7 +317,7 @@ public class Renderer {
      * 
      * @since 1.2.0
      */
-    public void getCamera(Camera camera) {
+    public void setCamera(Camera camera) {
         this.camera = camera;
     }
 
@@ -333,6 +330,17 @@ public class Renderer {
      */
     public Shader getShader() {
         return this.shader;
+    }
+
+    /**
+     * Set the shader to use
+     * 
+     * @param shader The shader to use
+     * 
+     * @since 1.5.0
+     */
+    public void setShader(Shader shader) {
+        this.shader = shader;
     }
 
     /**

@@ -49,6 +49,7 @@ public abstract class Component {
      * Get the name of the component
      * 
      * @return The name of the component
+     * 
      * @since 1.0.0
      */
     public static String getName() {

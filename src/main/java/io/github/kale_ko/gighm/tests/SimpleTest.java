@@ -19,7 +19,8 @@ public class SimpleTest {
             Scene scene = new Scene();
 
             GameObject cameraObject = new GameObject();
-            Camera camera = Camera.createOrthagraphic(width, height, farPlane); // OR createPerspective(fov, width / height, nearPlane, farPlane);
+            Camera camera = Camera.createOrthagraphic(width, height, farPlane);
+            // OR createPerspective(fov, width / height, nearPlane, farPlane);
             cameraObject.addComponent(camera);
             scene.addObjects(cameraObject);
 
