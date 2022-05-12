@@ -54,7 +54,8 @@ public class Mesh extends Component {
     /**
      * Create a mesh to render
      * 
-     * @since 1.0.0
+     * @param vertices The vertices of the mesh
+     * @param verticeSize The size of a vertice in the mesh
      */
     public Mesh(float[] vertices, int verticeSize) {
         this(vertices, verticeSize, null);
@@ -63,7 +64,9 @@ public class Mesh extends Component {
     /**
      * Create a mesh to render
      * 
-     * @since 1.0.0
+     * @param vertices The vertices of the mesh
+     * @param verticeSize The size of a vertice in the mesh
+     * @param triangles The triangles of the mesh
      */
     public Mesh(float[] vertices, int verticeSize, int[] triangles) {
         this(vertices, verticeSize, null, null, 0, triangles);
@@ -72,7 +75,11 @@ public class Mesh extends Component {
     /**
      * Create a mesh to render
      * 
-     * @since 1.0.0
+     * @param vertices The vertices of the mesh
+     * @param verticeSize The size of a vertice in the mesh
+     * @param texture The texture of the mesh
+     * @param uvs The uvs of the mesh
+     * @param uvSize The size of a uv in the mesh
      */
     public Mesh(float[] vertices, int verticeSize, Texture2D texture, float[] uvs, int uvSize) {
         this(vertices, verticeSize, texture, uvs, uvSize, null);
@@ -81,7 +88,12 @@ public class Mesh extends Component {
     /**
      * Create a mesh to render
      * 
-     * @since 1.0.0
+     * @param vertices The vertices of the mesh
+     * @param verticeSize The size of a vertice in the mesh
+     * @param texture The texture of the mesh
+     * @param uvs The uvs of the mesh
+     * @param uvSize The size of a uv in the mesh
+     * @param triangles The triangles of the mesh
      */
     public Mesh(float[] vertices, int verticeSize, Texture2D texture, float[] uvs, int uvSize, int[] triangles) {
         super();
