@@ -1,7 +1,5 @@
 package io.github.kale_ko.gighm.rendering.shaders;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * A shader
  * 
@@ -14,14 +12,14 @@ public class Shader {
      * 
      * @since 1.0.0
      */
-    private @NotNull String vertexSource;
+    private String vertexSource;
 
     /**
      * The source data of the fragment shader
      * 
      * @since 1.0.0
      */
-    private @NotNull String fragmentSource;
+    private String fragmentSource;
 
     /**
      * Create a shader
@@ -33,7 +31,7 @@ public class Shader {
      * 
      * @since 1.0.0
      */
-    public Shader(@NotNull String vertexSource, @NotNull String fragmentSource) {
+    public Shader(String vertexSource, String fragmentSource) {
         this.vertexSource = vertexSource;
         this.fragmentSource = fragmentSource;
     }
@@ -45,7 +43,7 @@ public class Shader {
      * 
      * @since 1.2.0
      */
-    public @NotNull String getVertexSource() {
+    public String getVertexSource() {
         return this.vertexSource;
     }
 
@@ -56,7 +54,7 @@ public class Shader {
      * 
      * @since 1.2.0
      */
-    public @NotNull String getFragmentSource() {
+    public String getFragmentSource() {
         return this.fragmentSource;
     }
 }

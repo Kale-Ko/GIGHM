@@ -2,7 +2,6 @@ package io.github.kale_ko.gighm.input;
 
 import java.util.List;
 import java.util.ArrayList;
-import javax.validation.constraints.NotNull;
 
 /**
  * An input manager
@@ -29,42 +28,42 @@ public class InputManager {
      * 
      * @since 1.2.0
      */
-    private @NotNull int mouseX = -1;
+    private int mouseX = -1;
 
     /**
      * The current mouse y
      * 
      * @since 1.2.0
      */
-    private @NotNull int mouseY = -1;
+    private int mouseY = -1;
 
     /**
      * The distance the mouse has moved in the last frame on the x
      * 
      * @since 1.2.0
      */
-    private @NotNull int mouseDeltaX = 0;
+    private int mouseDeltaX = 0;
 
     /**
      * The distance the mouse has moved in the last frame on the y
      * 
      * @since 1.2.0
      */
-    private @NotNull int mouseDeltaY = 0;
+    private int mouseDeltaY = 0;
 
     /**
      * The distance the scroll wheel was turned in the last frame on the x
      * 
      * @since 1.2.0
      */
-    private @NotNull int mouseDeltaScrollX = 0;
+    private int mouseDeltaScrollX = 0;
 
     /**
      * The distance the scroll wheel was turned in the last frame on the y
      * 
      * @since 1.2.0
      */
-    private @NotNull int mouseDeltaScrollY = 0;
+    private int mouseDeltaScrollY = 0;
 
     /**
      * Called for a keyboard event
@@ -75,7 +74,7 @@ public class InputManager {
      * 
      * @since 1.2.0
      */
-    public void onKeyboardKey(@NotNull KeyCode key, @NotNull KeyAction action, @NotNull List<KeyMod> mods) {
+    public void onKeyboardKey(KeyCode key, KeyAction action, List<KeyMod> mods) {
         if (action == KeyAction.DOWN) {
             if (!keysDown.contains(key)) {
                 keysDown.add(key);
@@ -95,7 +94,7 @@ public class InputManager {
      * 
      * @since 1.2.0
      */
-    public void onMouseButton(@NotNull MouseButton button, @NotNull MouseAction action) {
+    public void onMouseButton(MouseButton button, MouseAction action) {
         if (action == MouseAction.DOWN) {
             if (!buttonsDown.contains(button)) {
                 buttonsDown.add(button);
@@ -115,7 +114,7 @@ public class InputManager {
      * 
      * @since 1.2.0
      */
-    public void onMouseMove(@NotNull int x, @NotNull int y) {
+    public void onMouseMove(int x, int y) {
         this.mouseDeltaX += x - mouseX;
         this.mouseDeltaY += y - mouseY;
 
@@ -131,7 +130,7 @@ public class InputManager {
      * 
      * @since 1.2.0
      */
-    public void onMouseScroll(@NotNull int x, @NotNull int y) {
+    public void onMouseScroll(int x, int y) {
         this.mouseDeltaScrollX -= x;
         this.mouseDeltaScrollY -= y;
     }
@@ -158,7 +157,7 @@ public class InputManager {
      * 
      * @since 1.2.0
      */
-    public @NotNull boolean getKeyDown(KeyCode key) {
+    public boolean getKeyDown(KeyCode key) {
         return this.keysDown.contains(key);
     }
 
@@ -171,7 +170,7 @@ public class InputManager {
      * 
      * @since 1.2.0
      */
-    public @NotNull boolean getButtonDown(MouseButton button) {
+    public boolean getButtonDown(MouseButton button) {
         return this.buttonsDown.contains(button);
     }
 
@@ -182,7 +181,7 @@ public class InputManager {
      * 
      * @since 1.2.0
      */
-    public @NotNull int getMouseX() {
+    public int getMouseX() {
         return this.mouseX;
     }
 
@@ -193,7 +192,7 @@ public class InputManager {
      * 
      * @since 1.2.0
      */
-    public @NotNull int getMouseY() {
+    public int getMouseY() {
         return this.mouseY;
     }
 
@@ -204,7 +203,7 @@ public class InputManager {
      * 
      * @since 1.2.0
      */
-    public @NotNull int getMouseDeltaX() {
+    public int getMouseDeltaX() {
         return this.mouseDeltaX;
     }
 
@@ -215,7 +214,7 @@ public class InputManager {
      * 
      * @since 1.2.0
      */
-    public @NotNull int getMouseDeltaY() {
+    public int getMouseDeltaY() {
         return this.mouseDeltaY;
     }
 
@@ -226,7 +225,7 @@ public class InputManager {
      * 
      * @since 1.2.0
      */
-    public @NotNull int getScrollDeltaX() {
+    public int getScrollDeltaX() {
         return this.mouseDeltaScrollX;
     }
 
@@ -237,7 +236,7 @@ public class InputManager {
      * 
      * @since 1.2.0
      */
-    public @NotNull int getScrollDeltaY() {
+    public int getScrollDeltaY() {
         return this.mouseDeltaScrollY;
     }
 }
