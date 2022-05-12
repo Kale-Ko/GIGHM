@@ -18,7 +18,7 @@ import io.github.kale_ko.gighm.input.MouseButton;
 /**
  * A window to render to
  * 
- * @version 1.2.0
+ * @version 1.5.0
  * @since 1.0.0
  */
 public class Window {
@@ -152,6 +152,7 @@ public class Window {
      * Create a window to render to
      * 
      * @param renderer The renderer to use when rendering the window
+     * @param inputManager The input manager used to capture user input
      * @param title The title of the new window
      * @param width The width of the new window
      * @param height The height of the new window
@@ -228,7 +229,7 @@ public class Window {
     /**
      * Initialize the window
      * 
-     * @throws RuntimeException  If the window is already initialized or glfw fails to start/create the window
+     * @throws RuntimeException If the window is already initialized or glfw fails to start/create the window
      * 
      * @since 1.0.0
      */
@@ -323,10 +324,12 @@ public class Window {
 
         while (!glfwWindowShouldClose(windowId)) {
             if (renderer != null) {
-                renderer.render(windowId);
+                renderer.render();
             }
 
-            if (inputManager != null) {
+            glfwSwapBuffers(windowId);
+
+            if (inputManager != null && inputManager.getAutoResetDelta()) {
                 inputManager.resetDelta();
             }
 
@@ -337,6 +340,50 @@ public class Window {
         glfwDestroyWindow(windowId);
 
         glfwTerminate();
+    }
+
+    /**
+     * Get the renderer being used by the window
+     * 
+     * @return The renderer being used by the window
+     * 
+     * @since 1.5.0
+     */
+    public Renderer getRenderer() {
+        return this.renderer;
+    }
+
+    /**
+     * Set the renderer being used by the window
+     * 
+     * @param renderer The renderer being used by the window
+     * 
+     * @since 1.5.0
+     */
+    public void setRenderer(Renderer renderer) {
+        this.renderer = renderer;
+    }
+
+    /**
+     * Get the input manager used to capture user input
+     * 
+     * @return The input manager used to capture user input
+     * 
+     * @since 1.5.0
+     */
+    public InputManager getInputManager() {
+        return this.inputManager;
+    }
+
+    /**
+     * Set the input manager used to capture user input
+     * 
+     * @param inputManager The input manager used to capture user input
+     * 
+     * @since 1.5.0
+     */
+    public void setInputManager(InputManager inputManager) {
+        this.inputManager = inputManager;
     }
 
     /**

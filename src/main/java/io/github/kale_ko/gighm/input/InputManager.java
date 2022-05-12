@@ -6,7 +6,7 @@ import java.util.ArrayList;
 /**
  * An input manager
  * 
- * @version 1.2.0
+ * @version 1.5.0
  * @since 1.2.0
  */
 public class InputManager {
@@ -64,6 +64,13 @@ public class InputManager {
      * @since 1.2.0
      */
     private int mouseDeltaScrollY = 0;
+
+    /**
+     * Weather the delta is auto reset
+     * 
+     * @since 1.5.0
+     */
+    private boolean autoResetDelta = true;
 
     /**
      * Called for a keyboard event
@@ -133,19 +140,6 @@ public class InputManager {
     public void onMouseScroll(int x, int y) {
         this.mouseDeltaScrollX -= x;
         this.mouseDeltaScrollY -= y;
-    }
-
-    /**
-     * Reset the delta variables
-     * 
-     * @since 1.2.0
-     */
-    public void resetDelta() {
-        this.mouseDeltaX = 0;
-        this.mouseDeltaY = 0;
-
-        this.mouseDeltaScrollX = 0;
-        this.mouseDeltaScrollY = 0;
     }
 
     /**
@@ -238,5 +232,40 @@ public class InputManager {
      */
     public int getScrollDeltaY() {
         return this.mouseDeltaScrollY;
+    }
+
+    /**
+     * Get weather the delta is auto reset
+     * 
+     * @return Weather the delta is auto reset
+     * 
+     * @since 1.5.0
+     */
+    public boolean getAutoResetDelta() {
+        return this.autoResetDelta;
+    }
+
+    /**
+     * Set weather the delta is auto reset (Note if you set this to false you must call {@link #resetDelta} yourself each update)
+     * 
+     * @param flag Weather the delta is auto reset
+     * 
+     * @since 1.5.0
+     */
+    public void setAutoResetDelta(boolean flag) {
+        this.autoResetDelta = flag;
+    }
+
+    /**
+     * Reset the delta variables
+     * 
+     * @since 1.2.0
+     */
+    public void resetDelta() {
+        this.mouseDeltaX = 0;
+        this.mouseDeltaY = 0;
+
+        this.mouseDeltaScrollX = 0;
+        this.mouseDeltaScrollY = 0;
     }
 }

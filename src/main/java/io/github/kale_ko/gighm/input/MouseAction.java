@@ -1,27 +1,30 @@
 package io.github.kale_ko.gighm.input;
 
 import static org.lwjgl.glfw.GLFW.*;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A mouse action
  * 
- * @version 1.2.0
+ * @version 1.5.0
  * @since 1.2.0
  */
-public enum MouseAction {
+public class MouseAction {
     /**
      * Mouse button pressed
      * 
      * @since 1.2.0
      */
-    DOWN(GLFW_PRESS),
+    public static final MouseAction DOWN = new MouseAction(GLFW_PRESS);
 
     /**
      * Mouse button released
      * 
      * @since 1.2.0
      */
-    UP(GLFW_RELEASE);
+    public static final MouseAction UP = new MouseAction(GLFW_RELEASE);
 
     /**
      * The id of the glfw event corresponding with the action
@@ -39,6 +42,31 @@ public enum MouseAction {
      */
     private MouseAction(int glfwEventId) {
         this.glfwEventId = glfwEventId;
+    }
+
+    /**
+     * Get all of the mods defined
+     * 
+     * @return All of the mods defined
+     * 
+     * @since 1.5.0
+     */
+    public static MouseAction[] values() {
+        List<MouseAction> mods = new ArrayList<MouseAction>();
+
+        for (Field field : MouseAction.class.getFields()) {
+            try {
+                field.setAccessible(true);
+
+                mods.add((MouseAction) field.get(null));
+
+                field.setAccessible(false);
+            } catch (IllegalArgumentException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return mods.toArray(new MouseAction[] {});
     }
 
     /**
