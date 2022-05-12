@@ -3,7 +3,6 @@ package io.github.kale_ko.gighm.input;
 import static org.lwjgl.glfw.GLFW.*;
 import java.util.ArrayList;
 import java.util.List;
-import javax.validation.constraints.NotNull;
 
 /**
  * A key modifier
@@ -25,7 +24,7 @@ public enum KeyMod {
      * 
      * @since 1.2.0
      */
-    private final @NotNull int glfwModId;
+    private final int glfwModId;
 
     /**
      * Create a {@link KeyMod}
@@ -34,7 +33,7 @@ public enum KeyMod {
      * 
      * @since 1.2.0
      */
-    private KeyMod(@NotNull int glfwModId) {
+    private KeyMod(int glfwModId) {
         this.glfwModId = glfwModId;
     }
 
@@ -47,7 +46,7 @@ public enum KeyMod {
      * 
      * @since 1.2.0
      */
-    public static KeyMod valueOfGLFWEvent(@NotNull int id) {
+    public static KeyMod valueOfGLFWEvent(int id) {
         for (KeyMod action : values()) {
             if (action.glfwModId == id) {
                 return action;
@@ -67,7 +66,7 @@ public enum KeyMod {
      * 
      * @since 1.2.0
      */
-    public static boolean isPressed(@NotNull KeyMod mod, @NotNull int mods) {
+    public static boolean isPressed(KeyMod mod, int mods) {
         return (mods & mod.glfwModId) > 0;
     }
 
@@ -80,7 +79,7 @@ public enum KeyMod {
      * 
      * @since 1.2.0
      */
-    public static List<KeyMod> getPressed(@NotNull int mods) {
+    public static List<KeyMod> getPressed(int mods) {
         List<KeyMod> pressed = new ArrayList<KeyMod>();
 
         for (KeyMod mod : values()) {

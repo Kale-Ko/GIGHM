@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * A scene that can be rendered
  * 
- * @version 1.0.1
+ * @version 1.4.0
  * @since 1.0.0
  */
 public class Scene {
@@ -23,6 +23,15 @@ public class Scene {
      * @since 1.0.0
      */
     private List<GameObject> objects;
+
+    /**
+     * Create a scene that can be rendered
+     * 
+     * @since 1.4.0
+     */
+    public Scene() {
+        this("Main");
+    }
 
     /**
      * Create a scene that can be rendered

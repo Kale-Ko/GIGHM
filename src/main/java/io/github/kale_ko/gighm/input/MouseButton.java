@@ -1,7 +1,6 @@
 package io.github.kale_ko.gighm.input;
 
 import static org.lwjgl.glfw.GLFW.*;
-import javax.validation.constraints.NotNull;
 
 /**
  * A mouse button
@@ -27,7 +26,7 @@ public enum MouseButton {
      * 
      * @since 1.2.0
      */
-    private final @NotNull int glfwButtonId;
+    private final int glfwButtonId;
 
     /**
      * Create a {@link MouseButton}
@@ -36,7 +35,7 @@ public enum MouseButton {
      * 
      * @since 1.2.0
      */
-    private MouseButton(@NotNull int glfwButtonId) {
+    private MouseButton(int glfwButtonId) {
         this.glfwButtonId = glfwButtonId;
     }
 
@@ -49,7 +48,7 @@ public enum MouseButton {
      * 
      * @since 1.2.0
      */
-    public static MouseButton valueOfGLFWButton(@NotNull int id) {
+    public static MouseButton valueOfGLFWButton(int id) {
         for (MouseButton code : values()) {
             if (code.glfwButtonId == id) {
                 return code;

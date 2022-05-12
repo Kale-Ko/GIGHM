@@ -1,6 +1,5 @@
 package io.github.kale_ko.gighm.scene.components;
 
-import javax.validation.constraints.NotNull;
 import io.github.kale_ko.gighm.rendering.textures.Texture2D;
 
 /**
@@ -15,14 +14,14 @@ public class Mesh extends Component {
      * 
      * @since 1.0.0
      */
-    private @NotNull float[] vertices;
+    private float[] vertices;
 
     /**
      * The size of a vertice in the mesh
      * 
      * @since 1.0.0
      */
-    private @NotNull int verticeSize;
+    private int verticeSize;
 
     /**
      * The texture of the mesh
@@ -57,7 +56,7 @@ public class Mesh extends Component {
      * 
      * @since 1.0.0
      */
-    public Mesh(@NotNull float[] vertices, @NotNull int verticeSize) {
+    public Mesh(float[] vertices, int verticeSize) {
         this(vertices, verticeSize, null);
     }
 
@@ -66,7 +65,7 @@ public class Mesh extends Component {
      * 
      * @since 1.0.0
      */
-    public Mesh(@NotNull float[] vertices, @NotNull int verticeSize, int[] triangles) {
+    public Mesh(float[] vertices, int verticeSize, int[] triangles) {
         this(vertices, verticeSize, null, null, 0, triangles);
     }
 
@@ -75,7 +74,7 @@ public class Mesh extends Component {
      * 
      * @since 1.0.0
      */
-    public Mesh(@NotNull float[] vertices, @NotNull int verticeSize, Texture2D texture, float[] uvs, int uvSize) {
+    public Mesh(float[] vertices, int verticeSize, Texture2D texture, float[] uvs, int uvSize) {
         this(vertices, verticeSize, texture, uvs, uvSize, null);
     }
 
@@ -84,7 +83,7 @@ public class Mesh extends Component {
      * 
      * @since 1.0.0
      */
-    public Mesh(@NotNull float[] vertices, @NotNull int verticeSize, Texture2D texture, float[] uvs, int uvSize, int[] triangles) {
+    public Mesh(float[] vertices, int verticeSize, Texture2D texture, float[] uvs, int uvSize, int[] triangles) {
         super();
 
         this.vertices = vertices;
@@ -105,7 +104,7 @@ public class Mesh extends Component {
      * 
      * @since 1.0.0
      */
-    public @NotNull float[] getVertices() {
+    public float[] getVertices() {
         return this.vertices;
     }
 
@@ -116,7 +115,7 @@ public class Mesh extends Component {
      * 
      * @since 1.0.0
      */
-    public @NotNull int getVerticeSize() {
+    public int getVerticeSize() {
         return this.verticeSize;
     }
 
@@ -171,7 +170,7 @@ public class Mesh extends Component {
      * 
      * @since 1.0.0
      */
-    public static @NotNull String getName() {
+    public static String getName() {
         return "Mesh";
     }
 }
