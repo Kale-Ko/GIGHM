@@ -3,6 +3,8 @@ package io.github.kale_ko.gighm.tests;
 import java.awt.Color;
 import java.io.IOException;
 import org.joml.Vector3d;
+import io.github.kale_ko.gighm.events.EventManager;
+import io.github.kale_ko.gighm.events.types.rendering.RenderEvent;
 import io.github.kale_ko.gighm.rendering.Renderer;
 import io.github.kale_ko.gighm.rendering.Window;
 import io.github.kale_ko.gighm.rendering.shaders.Shader;
@@ -35,6 +37,13 @@ public class Renderer2DTest {
 
             Window window = new Window(renderer, "Test Renderer", width, height, false, true);
 
+            EventManager eventManager = new EventManager();
+            window.setEventManager(eventManager);
+
+            eventManager.addEventListener(RenderEvent.class, event -> {
+                System.out.println("FPS: " + (1 / event.getDelta()));
+            });
+
             GameObject object1 = new GameObject("Test Object");
             Texture2D texture1 = Texture2DLoader.loadTexture(Renderer2DTest.class.getResourceAsStream("/tests/kale.png"));
             Mesh mesh1 = new Mesh(new float[] { -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f }, 2, texture1, new float[] { 0, 0, 1, 0, 1, 1, 0, 1 }, 2, new int[] { 0, 1, 2, 2, 3, 0 });
@@ -66,8 +75,6 @@ public class Renderer2DTest {
             scene.addObjects(object2);
             scene.addObjects(object3);
             scene.addObjects(object4);
-
-            window.setTitle("Test 2D Renderer!");
         } catch (IOException e) {
             e.printStackTrace();
         }
