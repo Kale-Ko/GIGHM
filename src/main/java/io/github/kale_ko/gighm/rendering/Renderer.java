@@ -8,7 +8,6 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Map;
-import javax.validation.constraints.NotNull;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL;
 import io.github.kale_ko.gighm.rendering.shaders.Shader;
@@ -31,45 +30,45 @@ public class Renderer {
      * 
      * @since 1.0.0
      */
-    private @NotNull Scene scene;
+    private Scene scene;
 
     /**
      * The camera to render from
      * 
      * @since 1.0.0
      */
-    private @NotNull Camera camera;
+    private Camera camera;
 
     /**
      * The shader to use
      * 
      * @since 1.0.0
      */
-    private @NotNull Shader shader;
+    private Shader shader;
 
     /**
      * The color to clear the background with
      * 
      * @since 1.1.0
      */
-    private @NotNull Color clearColor;
+    private Color clearColor;
 
     /**
      * Weather the window is initialized
      * 
      * @since 1.0.0
      */
-    private @NotNull boolean initialized = false;
+    private boolean initialized = false;
 
-    private @NotNull Map<Shader, Integer> shaderPrograms = new HashMap<Shader, Integer>();
-    private @NotNull Map<Shader, Integer> shaderVertexShaders = new HashMap<Shader, Integer>();
-    private @NotNull Map<Shader, Integer> shaderFragmentShaders = new HashMap<Shader, Integer>();
+    private Map<Shader, Integer> shaderPrograms = new HashMap<Shader, Integer>();
+    private Map<Shader, Integer> shaderVertexShaders = new HashMap<Shader, Integer>();
+    private Map<Shader, Integer> shaderFragmentShaders = new HashMap<Shader, Integer>();
 
-    private @NotNull Map<Mesh, Integer> meshVertBuffers = new HashMap<Mesh, Integer>();
-    private @NotNull Map<Mesh, Integer> meshUvBuffers = new HashMap<Mesh, Integer>();
-    private @NotNull Map<Mesh, Integer> meshTriBuffers = new HashMap<Mesh, Integer>();
+    private Map<Mesh, Integer> meshVertBuffers = new HashMap<Mesh, Integer>();
+    private Map<Mesh, Integer> meshUvBuffers = new HashMap<Mesh, Integer>();
+    private Map<Mesh, Integer> meshTriBuffers = new HashMap<Mesh, Integer>();
 
-    private @NotNull Map<Texture2D, Integer> textures = new HashMap<Texture2D, Integer>();
+    private Map<Texture2D, Integer> textures = new HashMap<Texture2D, Integer>();
 
     /**
      * Create a renderer to render a scene
@@ -80,7 +79,7 @@ public class Renderer {
      * 
      * @since 1.0.0
      */
-    public Renderer(@NotNull Scene scene, @NotNull Camera camera, @NotNull Shader shader) {
+    public Renderer(Scene scene, Camera camera, Shader shader) {
         this(scene, camera, shader, new Color(0, 0, 0));
     }
 
@@ -94,7 +93,7 @@ public class Renderer {
      * 
      * @since 1.0.0
      */
-    public Renderer(@NotNull Scene scene, @NotNull Camera camera, @NotNull Shader shader, Color clearColor) {
+    public Renderer(Scene scene, Camera camera, Shader shader, Color clearColor) {
         this.scene = scene;
         this.camera = camera;
 
@@ -127,7 +126,7 @@ public class Renderer {
      * 
      * @since 1.0.0
      */
-    public void render(@NotNull long windowId) {
+    public void render(long windowId) {
         glClearColor(((float) this.clearColor.getRed()) / 255f, ((float) this.clearColor.getGreen()) / 255f, ((float) this.clearColor.getBlue()) / 255f, 1.0f);
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -146,7 +145,7 @@ public class Renderer {
             }
 
             int fragmentId = glCreateShader(GL_FRAGMENT_SHADER);
-            this.shaderVertexShaders.put(shader, fragmentId);
+            this.shaderFragmentShaders.put(shader, fragmentId);
             glShaderSource(fragmentId, shader.getFragmentSource());
             glCompileShader(fragmentId);
             if (glGetShaderi(fragmentId, GL_COMPILE_STATUS) != GL_TRUE) {
@@ -188,6 +187,8 @@ public class Renderer {
                     glBindBuffer(GL_ARRAY_BUFFER, vertId);
                     glBufferData(GL_ARRAY_BUFFER, vertBuffer, GL_STATIC_DRAW);
 
+                    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
                     if (mesh.getUVs() != null) {
                         int uvId = glGenBuffers();
                         this.meshUvBuffers.put(mesh, uvId);
@@ -198,10 +199,13 @@ public class Renderer {
 
                         glBindBuffer(GL_ARRAY_BUFFER, uvId);
                         glBufferData(GL_ARRAY_BUFFER, uvBuffer, GL_STATIC_DRAW);
+
+                        glBindBuffer(GL_ARRAY_BUFFER, 0);
                     }
 
                     if (mesh.getTriangles() != null) {
                         int triId = glGenBuffers();
+                        this.meshTriBuffers.put(mesh, triId);
 
                         IntBuffer triBuffer = BufferUtils.createIntBuffer(mesh.getTriangles().length);
                         triBuffer.put(mesh.getTriangles());
@@ -210,7 +214,6 @@ public class Renderer {
                         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, triId);
                         glBufferData(GL_ELEMENT_ARRAY_BUFFER, triBuffer, GL_STATIC_DRAW);
 
-                        glBindBuffer(GL_ARRAY_BUFFER, 0);
                         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
                     }
                 }
@@ -228,8 +231,8 @@ public class Renderer {
                         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture.getWidth(), texture.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, texture.getRawData());
                     }
 
-                    int loc = glGetUniformLocation(this.textures.get(texture), "sampler");
-                    glUniform1i(loc, -1);
+                    int loc = glGetUniformLocation(this.shaderPrograms.get(shader), "sampler");
+                    glUniform1i(loc, this.textures.get(texture));
 
                     glActiveTexture(GL_TEXTURE0 + this.textures.get(texture));
                     glBindTexture(GL_TEXTURE_2D, this.textures.get(texture));
@@ -264,7 +267,7 @@ public class Renderer {
 
                     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
                 } else {
-                    glDrawArrays(GL_TRIANGLES, 0, mesh.getTriangles().length / mesh.getVerticeSize());
+                    glDrawArrays(GL_TRIANGLES, 0, mesh.getVertices().length / mesh.getVerticeSize());
                 }
 
                 glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -306,7 +309,7 @@ public class Renderer {
      * 
      * @since 1.2.0
      */
-    public @NotNull Camera getCamera() {
+    public Camera getCamera() {
         return this.camera;
     }
 
@@ -317,7 +320,7 @@ public class Renderer {
      * 
      * @since 1.2.0
      */
-    public void getCamera(@NotNull Camera camera) {
+    public void getCamera(Camera camera) {
         this.camera = camera;
     }
 
@@ -361,7 +364,7 @@ public class Renderer {
      * 
      * @since 1.2.0
      */
-    public @NotNull boolean getInitialized() {
+    public boolean getInitialized() {
         return this.initialized;
     }
 }

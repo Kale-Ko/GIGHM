@@ -1,6 +1,5 @@
 package io.github.kale_ko.gighm.scene.components;
 
-import javax.validation.constraints.NotNull;
 import io.github.kale_ko.gighm.scene.GameObject;
 
 /**
@@ -38,6 +37,8 @@ public abstract class Component {
     /**
      * Set the gameobject this component is a part of (Only used internally)
      * 
+     * @param gameObject The gameobject this component should be a part of
+     * 
      * @since 1.0.0
      */
     public void _setGameObject(GameObject gameObject) {
@@ -50,7 +51,7 @@ public abstract class Component {
      * @return The name of the component
      * @since 1.0.0
      */
-    public static @NotNull String getName() {
+    public static String getName() {
         return "Component";
     }
 }
