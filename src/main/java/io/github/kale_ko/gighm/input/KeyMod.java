@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * A key modifier
  * 
- * @version 1.5.0
+ * @version 1.6.0
  * @since 1.2.0
  */
 public class KeyMod {
@@ -70,6 +70,32 @@ public class KeyMod {
      */
     private KeyMod(int glfwModId) {
         this.glfwModId = glfwModId;
+    }
+
+    /**
+     * Get a string representing the object
+     * 
+     * @return A string representing the object
+     * 
+     * @since 1.6.0
+     */
+    @Override
+    public String toString() {
+        for (Field field : KeyMod.class.getFields()) {
+            try {
+                field.setAccessible(true);
+
+                if (((KeyMod) field.get(null)).equals(this)) {
+                    return field.getName();
+                }
+
+                field.setAccessible(false);
+            } catch (IllegalArgumentException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return "KeyMod";
     }
 
     /**

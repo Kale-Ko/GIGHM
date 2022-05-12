@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * A key code
  * 
- * @version 1.5.0
+ * @version 1.6.0
  * @since 1.2.0
  */
 public class KeyCode {
@@ -326,6 +326,32 @@ public class KeyCode {
 
         this.charecter = charecter;
         this.upperCharecter = upperCharecter;
+    }
+
+    /**
+     * Get a string representing the object
+     * 
+     * @return A string representing the object
+     * 
+     * @since 1.6.0
+     */
+    @Override
+    public String toString() {
+        for (Field field : KeyCode.class.getFields()) {
+            try {
+                field.setAccessible(true);
+
+                if (((KeyCode) field.get(null)).equals(this)) {
+                    return field.getName();
+                }
+
+                field.setAccessible(false);
+            } catch (IllegalArgumentException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return "KeyCode";
     }
 
     /**

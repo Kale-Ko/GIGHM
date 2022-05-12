@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * A key action
  * 
- * @version 1.5.0
+ * @version 1.6.0
  * @since 1.2.0
  */
 public class KeyAction {
@@ -49,6 +49,32 @@ public class KeyAction {
      */
     private KeyAction(int glfwEventId) {
         this.glfwEventId = glfwEventId;
+    }
+
+    /**
+     * Get a string representing the object
+     * 
+     * @return A string representing the object
+     * 
+     * @since 1.6.0
+     */
+    @Override
+    public String toString() {
+        for (Field field : KeyAction.class.getFields()) {
+            try {
+                field.setAccessible(true);
+
+                if (((KeyAction) field.get(null)).equals(this)) {
+                    return field.getName();
+                }
+
+                field.setAccessible(false);
+            } catch (IllegalArgumentException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return "KeyAction";
     }
 
     /**

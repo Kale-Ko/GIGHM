@@ -87,6 +87,32 @@ public class MouseButton {
     }
 
     /**
+     * Get a string representing the object
+     * 
+     * @return A string representing the object
+     * 
+     * @since 1.6.0
+     */
+    @Override
+    public String toString() {
+        for (Field field : MouseButton.class.getFields()) {
+            try {
+                field.setAccessible(true);
+
+                if (((MouseButton) field.get(null)).equals(this)) {
+                    return field.getName();
+                }
+
+                field.setAccessible(false);
+            } catch (IllegalArgumentException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return "MouseButton";
+    }
+
+    /**
      * Get all of the buttons defined
      * 
      * @return All of the buttons defined

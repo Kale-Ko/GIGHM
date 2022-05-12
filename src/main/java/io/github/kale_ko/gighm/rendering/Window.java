@@ -5,9 +5,16 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 import java.nio.IntBuffer;
+import java.time.Instant;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
+import io.github.kale_ko.gighm.events.EventManager;
+import io.github.kale_ko.gighm.events.types.input.KeyEvent;
+import io.github.kale_ko.gighm.events.types.input.MouseButtonEvent;
+import io.github.kale_ko.gighm.events.types.input.MouseMoveEvent;
+import io.github.kale_ko.gighm.events.types.input.MouseScrollEvent;
+import io.github.kale_ko.gighm.events.types.rendering.RenderEvent;
 import io.github.kale_ko.gighm.input.InputManager;
 import io.github.kale_ko.gighm.input.KeyAction;
 import io.github.kale_ko.gighm.input.KeyCode;
@@ -18,7 +25,7 @@ import io.github.kale_ko.gighm.input.MouseButton;
 /**
  * A window to render to
  * 
- * @version 1.5.0
+ * @version 1.6.0
  * @since 1.0.0
  */
 public class Window {
@@ -28,6 +35,13 @@ public class Window {
      * @since 1.0.0
      */
     private Renderer renderer;
+
+    /**
+     * The event manager used to manage events and callbacks
+     * 
+     * @since 1.6.0
+     */
+    private EventManager eventManager;
 
     /**
      * The input manager used to capture user input
@@ -105,20 +119,7 @@ public class Window {
      * @since 1.0.0
      */
     public Window(Renderer renderer, String title) {
-        this(renderer, null, title);
-    }
-
-    /**
-     * Create a window to render to
-     * 
-     * @param renderer The renderer to use when rendering the window
-     * @param inputManager The input manager used to capture user input
-     * @param title The title of the new window
-     * 
-     * @since 1.2.0
-     */
-    public Window(Renderer renderer, InputManager inputManager, String title) {
-        this(renderer, inputManager, title, 640, 360);
+        this(renderer, title, 640, 320);
     }
 
     /**
@@ -145,22 +146,7 @@ public class Window {
      * @since 1.0.0
      */
     public Window(Renderer renderer, String title, int width, int height) {
-        this(renderer, null, title, width, height);
-    }
-
-    /**
-     * Create a window to render to
-     * 
-     * @param renderer The renderer to use when rendering the window
-     * @param inputManager The input manager used to capture user input
-     * @param title The title of the new window
-     * @param width The width of the new window
-     * @param height The height of the new window
-     * 
-     * @since 1.2.0
-     */
-    public Window(Renderer renderer, InputManager inputManager, String title, int width, int height) {
-        this(renderer, inputManager, title, width, height, false, false);
+        this(renderer, title, width, height, false, true);
     }
 
     /**
@@ -175,30 +161,13 @@ public class Window {
      * @since 1.0.0
      */
     public Window(String title, int width, int height, boolean maximized, boolean resizable) {
-        this(null, null, title, width, height, maximized, resizable);
+        this(null, title, width, height, maximized, resizable);
     }
 
     /**
      * Create a window to render to
      * 
      * @param renderer The renderer to use when rendering the window
-     * @param title The title of the new window
-     * @param width The width of the new window
-     * @param height The height of the new window
-     * @param maximized Weather the new window should be maxamized
-     * @param resizable Weather the new window should be resizable
-     * 
-     * @since 1.2.0
-     */
-    public Window(Renderer renderer, String title, int width, int height, boolean maximized, boolean resizable) {
-        this(renderer, null, title, width, height, maximized, resizable);
-    }
-
-    /**
-     * Create a window to render to
-     * 
-     * @param renderer The renderer to use when rendering the window
-     * @param inputManager The input manager used to capture user input
      * @param title The title of the new window
      * @param width The width of the new window
      * @param height The height of the new window
@@ -207,9 +176,8 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public Window(Renderer renderer, InputManager inputManager, String title, int width, int height, boolean maximized, boolean resizable) {
+    public Window(Renderer renderer, String title, int width, int height, boolean maximized, boolean resizable) {
         this.renderer = renderer;
-        this.inputManager = inputManager;
 
         this.title = title;
         this.width = width;
@@ -261,24 +229,40 @@ public class Window {
         glfwSetKeyCallback(windowId, (window, key, scancode, action, mods) -> {
             if (inputManager != null) {
                 inputManager.onKeyboardKey(KeyCode.valueOfGLFWKey(key, KeyMod.isPressed(KeyMod.SHIFT, mods)), KeyAction.valueOfGLFWEvent(action), KeyMod.getPressed(mods));
+
+                if (this.eventManager != null) {
+                    this.eventManager.emit(new KeyEvent(KeyCode.valueOfGLFWKey(key, KeyMod.isPressed(KeyMod.SHIFT, mods)), KeyAction.valueOfGLFWEvent(action), KeyMod.getPressed(mods)));
+                }
             }
         });
 
         glfwSetMouseButtonCallback(windowId, (window, button, action, mods) -> {
             if (inputManager != null) {
                 inputManager.onMouseButton(MouseButton.valueOfGLFWButton(button), MouseAction.valueOfGLFWEvent(action));
+
+                if (this.eventManager != null) {
+                    this.eventManager.emit(new MouseButtonEvent(MouseButton.valueOfGLFWButton(button), MouseAction.valueOfGLFWEvent(action)));
+                }
             }
         });
 
         glfwSetCursorPosCallback(windowId, (window, x, y) -> {
             if (inputManager != null) {
                 inputManager.onMouseMove((int) x, (int) y);
+
+                if (this.eventManager != null) {
+                    this.eventManager.emit(new MouseMoveEvent((int) x, (int) y));
+                }
             }
         });
 
         glfwSetScrollCallback(windowId, (window, x, y) -> {
             if (inputManager != null) {
                 inputManager.onMouseScroll((int) x, (int) y);
+
+                if (this.eventManager != null) {
+                    this.eventManager.emit(new MouseScrollEvent((int) x, (int) y));
+                }
             }
         });
 
@@ -322,9 +306,18 @@ public class Window {
             renderer.init();
         }
 
+        Instant lastRender = Instant.now();
         while (!glfwWindowShouldClose(windowId)) {
             if (renderer != null) {
                 renderer.render();
+
+                Instant now = Instant.now();
+
+                if (this.eventManager != null) {
+                    this.eventManager.emit(new RenderEvent((now.getEpochSecond() + ((double) now.getNano() / 1000000000)) - (lastRender.getEpochSecond() + ((double) lastRender.getNano() / 1000000000))));
+                }
+
+                lastRender = now;
             }
 
             glfwSwapBuffers(windowId);
@@ -362,6 +355,28 @@ public class Window {
      */
     public void setRenderer(Renderer renderer) {
         this.renderer = renderer;
+    }
+
+    /**
+     * Get the game manager used to manage events and callbacks
+     * 
+     * @return The game manager used to manage events and callbacks
+     * 
+     * @since 1.6.0
+     */
+    public EventManager getEventManager() {
+        return this.eventManager;
+    }
+
+    /**
+     * Set the game manager used to manage events and callbacks
+     * 
+     * @param eventManager The game manager used to manage events and callbacks
+     * 
+     * @since 1.6.0
+     */
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
     }
 
     /**
