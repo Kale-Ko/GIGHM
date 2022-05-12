@@ -16,6 +16,7 @@ public class InputManager {
      * @since 1.2.0
      */
     private List<KeyCode> keysDown = new ArrayList<KeyCode>();
+
     /**
      * The list of buttons currently down
      * 
