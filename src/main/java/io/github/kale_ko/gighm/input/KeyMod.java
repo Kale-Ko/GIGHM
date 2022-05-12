@@ -1,23 +1,58 @@
 package io.github.kale_ko.gighm.input;
 
 import static org.lwjgl.glfw.GLFW.*;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * A key modifier
  * 
- * @version 1.2.0
+ * @version 1.5.0
  * @since 1.2.0
  */
-public enum KeyMod {
-    SHIFT(GLFW_MOD_SHIFT),
-    CONTROL(GLFW_MOD_CONTROL),
-    ALT(GLFW_MOD_ALT),
-    META(GLFW_MOD_SUPER),
+public class KeyMod {
+    /**
+     * The left and right shift keys
+     * 
+     * @since 1.2.0
+     */
+    public static final KeyMod SHIFT = new KeyMod(GLFW_MOD_SHIFT);
 
-    CAPS_LOCK(GLFW_MOD_CAPS_LOCK),
-    NUM_LOCK(GLFW_MOD_NUM_LOCK);
+    /**
+     * The left and right control keys
+     * 
+     * @since 1.2.0
+     */
+    public static final KeyMod CONTROL = new KeyMod(GLFW_MOD_CONTROL);
+
+    /**
+     * The left and right alt keys
+     * 
+     * @since 1.2.0
+     */
+    public static final KeyMod ALT = new KeyMod(GLFW_MOD_ALT);
+
+    /**
+     * The left and right meta keys (Usually the windows key on windows or command on mac)
+     * 
+     * @since 1.2.0
+     */
+    public static final KeyMod META = new KeyMod(GLFW_MOD_SUPER);
+
+    /**
+     * The caps lock key (If activated, not help down)
+     * 
+     * @since 1.2.0
+     */
+    public static final KeyMod CAPS_LOCK = new KeyMod(GLFW_MOD_CAPS_LOCK);
+
+    /**
+     * The num lock key (If activated, not help down)
+     * 
+     * @since 1.2.0
+     */
+    public static final KeyMod NUM_LOCK = new KeyMod(GLFW_MOD_NUM_LOCK);
 
     /**
      * The id of the glfw mod corresponding to the mod
@@ -35,6 +70,31 @@ public enum KeyMod {
      */
     private KeyMod(int glfwModId) {
         this.glfwModId = glfwModId;
+    }
+
+    /**
+     * Get all of the mods defined
+     * 
+     * @return All of the mods defined
+     * 
+     * @since 1.5.0
+     */
+    public static KeyMod[] values() {
+        List<KeyMod> mods = new ArrayList<KeyMod>();
+
+        for (Field field : KeyMod.class.getFields()) {
+            try {
+                field.setAccessible(true);
+
+                mods.add((KeyMod) field.get(null));
+
+                field.setAccessible(false);
+            } catch (IllegalArgumentException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return mods.toArray(new KeyMod[] {});
     }
 
     /**

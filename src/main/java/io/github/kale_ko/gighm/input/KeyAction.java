@@ -1,34 +1,37 @@
 package io.github.kale_ko.gighm.input;
 
 import static org.lwjgl.glfw.GLFW.*;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A key action
  * 
- * @version 1.2.0
+ * @version 1.5.0
  * @since 1.2.0
  */
-public enum KeyAction {
+public class KeyAction {
     /**
      * Key pressed
      * 
      * @since 1.2.0
      */
-    DOWN(GLFW_PRESS),
+    public static final KeyAction DOWN = new KeyAction(GLFW_PRESS);
 
     /**
      * Key released
      * 
      * @since 1.2.0
      */
-    UP(GLFW_RELEASE),
+    public static final KeyAction UP = new KeyAction(GLFW_RELEASE);
 
     /**
      * Key repeated (Still held down)
      * 
      * @since 1.2.0
      */
-    REPEAT(GLFW_REPEAT);
+    public static final KeyAction REPEAT = new KeyAction(GLFW_REPEAT);
 
     /**
      * The id of the glfw event corresponding with the action
@@ -46,6 +49,31 @@ public enum KeyAction {
      */
     private KeyAction(int glfwEventId) {
         this.glfwEventId = glfwEventId;
+    }
+
+    /**
+     * Get all of the mods defined
+     * 
+     * @return All of the mods defined
+     * 
+     * @since 1.5.0
+     */
+    public static KeyAction[] values() {
+        List<KeyAction> mods = new ArrayList<KeyAction>();
+
+        for (Field field : KeyAction.class.getFields()) {
+            try {
+                field.setAccessible(true);
+
+                mods.add((KeyAction) field.get(null));
+
+                field.setAccessible(false);
+            } catch (IllegalArgumentException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return mods.toArray(new KeyAction[] {});
     }
 
     /**

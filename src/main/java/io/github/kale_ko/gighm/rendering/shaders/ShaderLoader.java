@@ -21,7 +21,7 @@ public class ShaderLoader {
      * 
      * @return A {@link Shader} representing the shader
      * 
-     * @throws IOException
+     * @throws IOException If it fails to read the file
      * 
      * @since 1.0.0
      */
@@ -37,7 +37,7 @@ public class ShaderLoader {
      * 
      * @return A {@link Shader} representing the shader
      * 
-     * @throws IOException
+     * @throws IOException If it fails to read the file
      * 
      * @since 1.0.0
      */
@@ -53,7 +53,7 @@ public class ShaderLoader {
      * 
      * @return A {@link Shader} representing the shader
      * 
-     * @throws IOException
+     * @throws IOException If it fails to read the stream
      * 
      * @since 1.0.0
      */
@@ -66,7 +66,7 @@ public class ShaderLoader {
      * 
      * @return The default {@link Shader}
      * 
-     * @throws IOException
+     * @throws IOException If it fails to read the file
      * 
      * @since 1.4.0
      */
@@ -81,7 +81,7 @@ public class ShaderLoader {
      * 
      * @return A {@link String} representing the shader
      * 
-     * @throws IOException
+     * @throws IOException If it fails to read the file
      * 
      * @since 1.0.0
      */
@@ -96,7 +96,7 @@ public class ShaderLoader {
      * 
      * @return A {@link String} representing the shader
      * 
-     * @throws IOException
+     * @throws IOException If it fails to read the file
      * 
      * @since 1.0.0
      */
@@ -111,7 +111,7 @@ public class ShaderLoader {
      * 
      * @return A {@link String} representing the shader
      * 
-     * @throws IOException
+     * @throws IOException If it fails to read the stream
      * 
      * @since 1.0.0
      */

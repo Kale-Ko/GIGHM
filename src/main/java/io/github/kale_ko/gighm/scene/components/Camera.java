@@ -292,19 +292,6 @@ public class Camera extends Component {
     }
 
     /**
-     * Recalculate the projection of the camera (This is done automatically when using set{x} functions)
-     * 
-     * @since 1.0.0
-     */
-    public void recalculateProjection() {
-        if (this.type == CameraType.ORTHAGRAPHIC) {
-            this.projection = new Matrix4f().setOrtho(-this.width / 2, this.width / 2, -this.height / 2, this.height / 2, -this.far, this.far);
-        } else if (this.type == CameraType.PERSPECTIVE) {
-            this.projection = new Matrix4f().setPerspective(this.fov, this.aspect, this.near, this.far);
-        }
-    }
-
-    /**
      * Get the projection of the camera
      * 
      * @return The projection of the camera
@@ -320,5 +307,18 @@ public class Camera extends Component {
         target = projection.mul(position, target).mul(rotation);
 
         return target;
+    }
+
+    /**
+     * Recalculate the projection of the camera (This is done automatically when using set{x} functions)
+     * 
+     * @since 1.0.0
+     */
+    public void recalculateProjection() {
+        if (this.type == CameraType.ORTHAGRAPHIC) {
+            this.projection = new Matrix4f().setOrtho(-this.width / 2, this.width / 2, -this.height / 2, this.height / 2, -this.far, this.far);
+        } else if (this.type == CameraType.PERSPECTIVE) {
+            this.projection = new Matrix4f().setPerspective(this.fov, this.aspect, this.near, this.far);
+        }
     }
 }

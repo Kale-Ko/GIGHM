@@ -40,8 +40,6 @@ dependencies {
     }
 
     depencancy "org.joml:joml:${project.joml_version}"
-
-    depencancy "javax.validation:validation-api:1.0.0.GA"
 }
 
 tasks.withType(JavaCompile) {
@@ -69,6 +67,8 @@ tasks.register("buildFat", Jar) {
 }
 
 tasks.register("buildSources", Jar) {
+    dependsOn tasks.build
+
     duplicatesStrategy = "exclude"
     destinationDirectory = file("./")
     archiveFileName = "${project.name}-${project.version}-sources.jar"
@@ -78,6 +78,8 @@ tasks.register("buildSources", Jar) {
 }
 
 tasks.register("genJavaDocs", Javadoc) {
+    dependsOn tasks.build
+
     source = sourceSets.main.allJava
     classpath = sourceSets.main.runtimeClasspath
 
