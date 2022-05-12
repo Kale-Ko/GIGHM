@@ -91,8 +91,6 @@ public class Camera extends Component {
      * Create a camera to render from
      * 
      * @param type The type of the camera
-     * @param near The near plane of the camera
-     * @param far The far plane of the camera
      * 
      * @since 1.0.0
      */

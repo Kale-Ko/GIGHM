@@ -5,12 +5,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import javax.validation.constraints.NotNull;
 
 /**
  * Utility for loading shader data from a file to use with shaders
  * 
- * @version 1.0.0
+ * @version 1.4.0
  * @since 1.0.0
  */
 public class ShaderLoader {
@@ -26,7 +25,7 @@ public class ShaderLoader {
      * 
      * @since 1.0.0
      */
-    public static Shader loadShader(@NotNull String vertexPath, @NotNull String fragmentPath) throws IOException {
+    public static Shader loadShader(String vertexPath, String fragmentPath) throws IOException {
         return loadShader(new File(vertexPath), new File(fragmentPath));
     }
 
@@ -42,7 +41,7 @@ public class ShaderLoader {
      * 
      * @since 1.0.0
      */
-    public static Shader loadShader(@NotNull File vertexFile, @NotNull File fragmentFile) throws IOException {
+    public static Shader loadShader(File vertexFile, File fragmentFile) throws IOException {
         return loadShader(new FileInputStream(vertexFile), new FileInputStream(fragmentFile));
     }
 
@@ -58,8 +57,21 @@ public class ShaderLoader {
      * 
      * @since 1.0.0
      */
-    public static Shader loadShader(@NotNull InputStream vertexStream, @NotNull InputStream fragmentStream) throws IOException {
+    public static Shader loadShader(InputStream vertexStream, InputStream fragmentStream) throws IOException {
         return new Shader(loadShaderData(vertexStream), loadShaderData(fragmentStream));
+    }
+
+    /**
+     * Load the default shader
+     * 
+     * @return The default {@link Shader}
+     * 
+     * @throws IOException
+     * 
+     * @since 1.4.0
+     */
+    public static Shader loadDefault() throws IOException {
+        return loadShader(ShaderLoader.class.getResourceAsStream("/vertex.glsl"), ShaderLoader.class.getResourceAsStream("/fragment.glsl"));
     }
 
     /**
@@ -73,7 +85,7 @@ public class ShaderLoader {
      * 
      * @since 1.0.0
      */
-    public static String loadShaderData(@NotNull String path) throws IOException {
+    public static String loadShaderData(String path) throws IOException {
         return loadShaderData(new File(path));
     }
 
@@ -88,7 +100,7 @@ public class ShaderLoader {
      * 
      * @since 1.0.0
      */
-    public static String loadShaderData(@NotNull File file) throws IOException {
+    public static String loadShaderData(File file) throws IOException {
         return loadShaderData(new FileInputStream(file));
     }
 
@@ -103,7 +115,7 @@ public class ShaderLoader {
      * 
      * @since 1.0.0
      */
-    public static String loadShaderData(@NotNull InputStream stream) throws IOException {
+    public static String loadShaderData(InputStream stream) throws IOException {
         BufferedInputStream reader = new BufferedInputStream(stream);
         StringBuilder data = new StringBuilder();
 

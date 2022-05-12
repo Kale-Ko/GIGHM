@@ -1,7 +1,6 @@
 package io.github.kale_ko.gighm.rendering.textures;
 
 import java.nio.ByteBuffer;
-import javax.validation.constraints.NotNull;
 
 /**
  * A 2D texture
@@ -15,21 +14,21 @@ public class Texture2D {
      * 
      * @since 1.0.0
      */
-    private @NotNull int width;
+    private int width;
 
     /**
      * The height of the texture
      * 
      * @since 1.0.0
      */
-    private @NotNull int height;
+    private int height;
 
     /**
      * The raw data of the texture
      * 
      * @since 1.0.0
      */
-    private @NotNull ByteBuffer data;
+    private ByteBuffer data;
 
     /**
      * Create a 2D texture
@@ -42,7 +41,7 @@ public class Texture2D {
      * 
      * @since 1.0.0
      */
-    public Texture2D(@NotNull int width, @NotNull int height, @NotNull ByteBuffer data) {
+    public Texture2D(int width, int height, ByteBuffer data) {
         this.width = width;
         this.height = height;
 
@@ -56,7 +55,7 @@ public class Texture2D {
      * 
      * @since 1.2.0
      */
-    public @NotNull int getWidth() {
+    public int getWidth() {
         return this.width;
     }
 
@@ -67,7 +66,7 @@ public class Texture2D {
      * 
      * @since 1.2.0
      */
-    public @NotNull int getHeight() {
+    public int getHeight() {
         return this.height;
     }
 
@@ -78,7 +77,7 @@ public class Texture2D {
      * 
      * @since 1.2.0
      */
-    public @NotNull ByteBuffer getRawData() {
+    public ByteBuffer getRawData() {
         return this.data;
     }
 }

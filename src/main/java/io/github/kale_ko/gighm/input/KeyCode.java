@@ -1,7 +1,6 @@
 package io.github.kale_ko.gighm.input;
 
 import static org.lwjgl.glfw.GLFW.*;
-import javax.validation.constraints.NotNull;
 
 /**
  * A key code
@@ -185,7 +184,7 @@ public enum KeyCode {
      * 
      * @since 1.2.0
      */
-    private final @NotNull int glfwKeyId;
+    private final int glfwKeyId;
 
     /**
      * Weather it is the uppercase version
@@ -199,7 +198,7 @@ public enum KeyCode {
      * 
      * @since 1.2.0
      */
-    private final @NotNull char charecter;
+    private final char charecter;
 
     /**
      * The typed uppercase charecter of the key code
@@ -215,7 +214,7 @@ public enum KeyCode {
      * 
      * @since 1.2.0
      */
-    private KeyCode(@NotNull int glfwKeyId) {
+    private KeyCode(int glfwKeyId) {
         this.glfwKeyId = glfwKeyId;
         this.shift = null;
 
@@ -232,7 +231,7 @@ public enum KeyCode {
      * 
      * @since 1.2.0
      */
-    private KeyCode(@NotNull int glfwKeyId, Boolean shift, @NotNull char charecter) {
+    private KeyCode(int glfwKeyId, Boolean shift, char charecter) {
         this.glfwKeyId = glfwKeyId;
         this.shift = shift;
 
@@ -250,7 +249,7 @@ public enum KeyCode {
      * 
      * @since 1.2.0
      */
-    private KeyCode(@NotNull int glfwKeyId, Boolean shift, @NotNull char charecter, char upperCharecter) {
+    private KeyCode(int glfwKeyId, Boolean shift, char charecter, char upperCharecter) {
         this.glfwKeyId = glfwKeyId;
         this.shift = shift;
 
@@ -267,7 +266,7 @@ public enum KeyCode {
      * 
      * @since 1.2.0
      */
-    public static KeyCode valueOfChar(@NotNull char charecter) {
+    public static KeyCode valueOfChar(char charecter) {
         for (KeyCode code : values()) {
             if (code.charecter == charecter || code.upperCharecter == charecter) {
                 return code;
@@ -287,7 +286,7 @@ public enum KeyCode {
      * 
      * @since 1.2.0
      */
-    public static KeyCode valueOfGLFWKey(@NotNull int id, boolean shift) {
+    public static KeyCode valueOfGLFWKey(int id, boolean shift) {
         for (KeyCode code : values()) {
             if (code.glfwKeyId == id && (code.shift == null || code.shift == shift)) {
                 return code;

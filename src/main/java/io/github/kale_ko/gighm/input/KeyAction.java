@@ -1,7 +1,6 @@
 package io.github.kale_ko.gighm.input;
 
 import static org.lwjgl.glfw.GLFW.*;
-import javax.validation.constraints.NotNull;
 
 /**
  * A key action
@@ -36,7 +35,7 @@ public enum KeyAction {
      * 
      * @since 1.2.0
      */
-    private final @NotNull int glfwEventId;
+    private final int glfwEventId;
 
     /**
      * Create a {@link KeyAction}
@@ -45,7 +44,7 @@ public enum KeyAction {
      * 
      * @since 1.2.0
      */
-    private KeyAction(@NotNull int glfwEventId) {
+    private KeyAction(int glfwEventId) {
         this.glfwEventId = glfwEventId;
     }
 
@@ -58,7 +57,7 @@ public enum KeyAction {
      * 
      * @since 1.2.0
      */
-    public static KeyAction valueOfGLFWEvent(@NotNull int id) {
+    public static KeyAction valueOfGLFWEvent(int id) {
         for (KeyAction action : values()) {
             if (action.glfwEventId == id) {
                 return action;

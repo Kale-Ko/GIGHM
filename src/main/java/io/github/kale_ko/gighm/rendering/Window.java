@@ -5,7 +5,6 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 import java.nio.IntBuffer;
-import javax.validation.constraints.NotNull;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
@@ -42,42 +41,42 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    private @NotNull String title;
+    private String title;
 
     /**
      * The width of the window (Note this may not be accurate if the user can resize the window, use {@link #getWidth})
      * 
      * @since 1.0.0
      */
-    private @NotNull int width;
+    private int width;
 
     /**
      * The height of the window (Note this may not be accurate if the user can resize the window, use {@link #getHeight})
      * 
      * @since 1.0.0
      */
-    private @NotNull int height;
+    private int height;
 
     /**
      * Weather the window is maximized (Note this may not be accurate if the user can resize the window, use {@link #getMaximized})
      * 
      * @since 1.0.0
      */
-    private @NotNull boolean maximized;
+    private boolean maximized;
 
     /**
      * Weather the window is resizable
      * 
      * @since 1.0.0
      */
-    private @NotNull boolean resizable;
+    private boolean resizable;
 
     /**
      * Weather the window is initialized
      * 
      * @since 1.0.0
      */
-    private @NotNull boolean initialized = false;
+    private boolean initialized = false;
 
     /**
      * The id of the window
@@ -93,7 +92,7 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public Window(@NotNull String title) {
+    public Window(String title) {
         this(null, title);
     }
 
@@ -105,7 +104,7 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public Window(Renderer renderer, @NotNull String title) {
+    public Window(Renderer renderer, String title) {
         this(renderer, null, title);
     }
 
@@ -118,7 +117,7 @@ public class Window {
      * 
      * @since 1.2.0
      */
-    public Window(Renderer renderer, InputManager inputManager, @NotNull String title) {
+    public Window(Renderer renderer, InputManager inputManager, String title) {
         this(renderer, inputManager, title, 640, 360);
     }
 
@@ -131,7 +130,7 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public Window(@NotNull String title, @NotNull int width, @NotNull int height) {
+    public Window(String title, int width, int height) {
         this(null, title, width, height);
     }
 
@@ -145,7 +144,7 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public Window(Renderer renderer, @NotNull String title, @NotNull int width, @NotNull int height) {
+    public Window(Renderer renderer, String title, int width, int height) {
         this(renderer, null, title, width, height);
     }
 
@@ -159,7 +158,7 @@ public class Window {
      * 
      * @since 1.2.0
      */
-    public Window(Renderer renderer, InputManager inputManager, @NotNull String title, @NotNull int width, @NotNull int height) {
+    public Window(Renderer renderer, InputManager inputManager, String title, int width, int height) {
         this(renderer, inputManager, title, width, height, false, false);
     }
 
@@ -174,7 +173,7 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public Window(@NotNull String title, @NotNull int width, @NotNull int height, @NotNull boolean maximized, @NotNull boolean resizable) {
+    public Window(String title, int width, int height, boolean maximized, boolean resizable) {
         this(null, null, title, width, height, maximized, resizable);
     }
 
@@ -182,7 +181,6 @@ public class Window {
      * Create a window to render to
      * 
      * @param renderer The renderer to use when rendering the window
-     * @param inputManager The input manager used to capture user input
      * @param title The title of the new window
      * @param width The width of the new window
      * @param height The height of the new window
@@ -191,7 +189,7 @@ public class Window {
      * 
      * @since 1.2.0
      */
-    public Window(Renderer renderer, @NotNull String title, @NotNull int width, @NotNull int height, @NotNull boolean maximized, @NotNull boolean resizable) {
+    public Window(Renderer renderer, String title, int width, int height, boolean maximized, boolean resizable) {
         this(renderer, null, title, width, height, maximized, resizable);
     }
 
@@ -208,7 +206,7 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public Window(Renderer renderer, InputManager inputManager, @NotNull String title, @NotNull int width, @NotNull int height, @NotNull boolean maximized, @NotNull boolean resizable) {
+    public Window(Renderer renderer, InputManager inputManager, String title, int width, int height, boolean maximized, boolean resizable) {
         this.renderer = renderer;
         this.inputManager = inputManager;
 
@@ -348,7 +346,7 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public @NotNull String getTitle() {
+    public String getTitle() {
         return this.title;
     }
 
@@ -359,7 +357,7 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public void setTitle(@NotNull String title) {
+    public void setTitle(String title) {
         this.title = title;
 
         glfwSetWindowTitle(windowId, title);
@@ -372,7 +370,7 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public @NotNull int getWidth() {
+    public int getWidth() {
         MemoryStack stack = stackPush();
         IntBuffer cWidth = stack.mallocInt(1);
         glfwGetWindowSize(windowId, cWidth, null);
@@ -387,7 +385,7 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public @NotNull int getHeight() {
+    public int getHeight() {
         MemoryStack stack = stackPush();
         IntBuffer cHeight = stack.mallocInt(1);
         glfwGetWindowSize(windowId, null, cHeight);
@@ -403,7 +401,7 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public void setWindowSize(@NotNull int width, @NotNull int height) {
+    public void setWindowSize(int width, int height) {
         this.width = width;
         this.height = height;
 
@@ -417,7 +415,7 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public @NotNull boolean getMaximized() {
+    public boolean getMaximized() {
         return glfwGetWindowAttrib(windowId, GLFW_MAXIMIZED) == GLFW_TRUE;
     }
 
@@ -428,7 +426,7 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public @NotNull boolean getResizable() {
+    public boolean getResizable() {
         return glfwGetWindowAttrib(windowId, GLFW_RESIZABLE) == GLFW_TRUE;
     }
 
@@ -439,7 +437,7 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public @NotNull boolean getInitialized() {
+    public boolean getInitialized() {
         return this.initialized;
     }
 
@@ -450,7 +448,7 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public @NotNull long getWindowId() {
+    public long getWindowId() {
         return this.windowId;
     }
 }

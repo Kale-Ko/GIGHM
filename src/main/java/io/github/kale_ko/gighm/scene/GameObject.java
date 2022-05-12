@@ -2,7 +2,6 @@ package io.github.kale_ko.gighm.scene;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.validation.constraints.NotNull;
 import org.joml.Quaterniond;
 import org.joml.Vector3d;
 import io.github.kale_ko.gighm.scene.components.Component;
@@ -20,14 +19,14 @@ public class GameObject {
      * 
      * @since 1.0.0
      */
-    private @NotNull String name;
+    private String name;
 
     /**
      * The objects components
      * 
      * @since 1.0.0
      */
-    private @NotNull Map<Class<? extends Component>, Component> components = new HashMap<Class<? extends Component>, Component>();
+    private Map<Class<? extends Component>, Component> components = new HashMap<Class<? extends Component>, Component>();
 
     /**
      * Create an object that can hold different components
@@ -45,7 +44,7 @@ public class GameObject {
      * 
      * @since 1.0.0
      */
-    public GameObject(@NotNull String name) {
+    public GameObject(String name) {
         this.name = name;
 
         this.addComponent(new Transform(new Vector3d(0, 0, 0), new Quaterniond(0, 0, 0, 1), new Vector3d(1, 1, 1)));
@@ -58,7 +57,7 @@ public class GameObject {
      * 
      * @since 1.0.0
      */
-    public @NotNull String getName() {
+    public String getName() {
         return this.name;
     }
 
@@ -69,7 +68,7 @@ public class GameObject {
      * 
      * @since 1.0.0
      */
-    public void setName(@NotNull String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -77,10 +76,11 @@ public class GameObject {
      * Add a component to the object
      * 
      * @param object The object to add
+     * @param <T> The The type of the object to add
      * 
      * @since 1.0.0
      */
-    public <T extends Component> void addComponent(@NotNull T object) {
+    public <T extends Component> void addComponent(T object) {
         object._setGameObject(this);
         this.components.put(object.getClass(), object);
     }
@@ -89,13 +89,14 @@ public class GameObject {
      * Get a component from the object
      * 
      * @param clazz The type to get
+     * @param <T> The type to get
      * 
      * @return The component requested or null
      * 
      * @since 1.0.0
      */
     @SuppressWarnings("unchecked")
-    public <T extends Component> T getComponent(@NotNull Class<T> clazz) {
+    public <T extends Component> T getComponent(Class<T> clazz) {
         return (T) this.components.get(clazz);
     }
 
@@ -103,10 +104,11 @@ public class GameObject {
      * Remove a component from the object
      * 
      * @param clazz The type to remove
+     * @param <T> The type to remove
      * 
      * @since 1.0.0
      */
-    public <T extends Component> void removeComponent(@NotNull Class<T> clazz) {
+    public <T extends Component> void removeComponent(Class<T> clazz) {
         this.components.remove(clazz);
     }
 }
