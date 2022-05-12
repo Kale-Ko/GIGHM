@@ -1,0 +1,35 @@
+name: Publish
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: "8"
+          distribution: "adopt"
+          server-id: ghp
+          settings-path: ${{ github.workspace }}
+
+      - name: Build All
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: buildAll
+
+      - name: Publish to GitHub Packages
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: publish
+        env:
+          GH_PACKAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
