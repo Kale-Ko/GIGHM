@@ -10,7 +10,7 @@ There is an event system so you can listen for key presses, renders, etc and an 
 
 ## Planned Features
 
-Currently it is planned to add a more extendable component system and a configurable physics system.
+Currently it is planned to add a configurable physics system and just make the whole api easier to interact with.
 
 ## Setup
 
