@@ -85,7 +85,7 @@ tasks.register("genJavaDocs", Javadoc) {
 
     title = project.name + " " + project.version
 
-    new File("build/docs/overview.html").text = "<p class=\"overview\">" + project.project_description + "</p>"
+    new File(projectDir, "build/docs/overview.html").text = "<p class=\"overview\">" + project.project_description + "</p>"
 
     options {
         overview "build/docs/overview.html"
