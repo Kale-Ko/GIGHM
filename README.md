@@ -8,15 +8,13 @@ Currently GIGHM supports rendering scenes which contain game objects.
 
 Game objects can have components which dictate things about them.
 
-There is also a basic input system which supports checking if keyboard keys and mouse buttons are down. It also allows getting mouse pos and scroll.
+There is an event system so you can listen for key presses, renders, etc.
+
+There is also an input system which supports checking if keyboard keys or mouse buttons are down and also allows getting mouse pos and scroll.
 
 ## Planned Features
 
-Tick/render callbacks
-
 More extendable component system.
-
-Input system callbacks.
 
 A configurable physics system.
 
