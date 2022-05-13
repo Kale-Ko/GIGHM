@@ -87,7 +87,7 @@ tasks.register("genJavaDocs", Javadoc) {
 
     mkdir "./build"
     mkdir "./build/docs"
-    file("./build/docs/overview.html").text = "<p class=\"overview\">" + project.project_description + "</p>"
+    file("./build/docs/overview.html").text = "<html><body><p class=\"overview\">" + project.project_description + "</p></body></html>"
 
     options {
         overview "build/docs/overview.html"
