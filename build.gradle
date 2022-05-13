@@ -83,6 +83,13 @@ tasks.register("genJavaDocs", Javadoc) {
     source = sourceSets.main.allJava
     classpath = sourceSets.main.runtimeClasspath
 
+    title = project.name + " " + project.version
+
+    options {
+        overview project.project_description
+        encoding "utf-8"
+    }
+
     exclude "**/tests/*.java"
 }
 
@@ -151,6 +158,8 @@ publishing {
             pom.withXml {
                 def node = asNode()
 
+                def packagingNode = node.appendNode("packaging", "jar")
+
                 def licenseNode = node.appendNode("licenses").appendNode("license")
                 licenseNode.appendNode("name", "MIT")
                 licenseNode.appendNode("url", "https://opensource.org/licenses/MIT")
@@ -164,6 +173,7 @@ publishing {
                 def scmNode = node.appendNode("scm")
                 scmNode.appendNode("connection", "scm:git:git@github.com:Kale-Ko/GIGHM.git")
                 scmNode.appendNode("developerConnection", "scm:git:git@github.com:Kale-Ko/GIGHM.git")
+                scmNode.appendNode("tag", "master")
                 scmNode.appendNode("url", "https://github.com/Kale-Ko/GIGHM")
 
                 def dependenciesNode = node.appendNode("dependencies")
