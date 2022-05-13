@@ -39,7 +39,7 @@ jobs:
           git-config-name: Github Actions [bot]
           git-config-email: <>
           commit-message: Update JavaDocs
-          folder: /build/docs/javadoc
+          folder: build/docs/javadoc
           branch: pages
-          target-folder: /docs
+          target-folder: docs
           clean: true
