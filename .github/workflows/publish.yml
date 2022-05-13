@@ -8,7 +8,7 @@ jobs:
   maven-publish:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
 
     steps:
       - name: Checkout Code
@@ -40,8 +40,8 @@ jobs:
       - name: Publish to Github Pages
         uses: jamesives/github-pages-deploy-action@v4.3.3
         with:
-          git-config-name: Github Actions [bot]
-          git-config-email: actions@github.com
+          git-config-name: github-actions[bot]
+          git-config-email: 41898282+github-actions[bot]@users.noreply.github.com
           commit-message: Update JavaDocs
           folder: build/docs/javadoc
           branch: pages
