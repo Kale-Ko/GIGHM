@@ -16,18 +16,18 @@ public class SimpleTest {
             int height = 600;
             int farPlane = 512;
 
-            Scene scene = new Scene();
+            Scene scene = new Scene("Main"); // Create the main scene
 
-            GameObject cameraObject = new GameObject();
-            Camera camera = Camera.createOrthagraphic(width, height, farPlane);
-            // OR createPerspective(fov, width / height, nearPlane, farPlane);
-            cameraObject.addComponent(camera);
-            scene.addObjects(cameraObject);
-
-            Shader shader = ShaderLoader.loadDefault();
-            Renderer renderer = new Renderer(scene, camera, shader);
-
-            new Window(renderer, "Test Renderer", width, height);
+            GameObject cameraObject = new GameObject("Camera"); // Create the camera object
+            Camera camera = Camera.createOrthagraphic(width, height, farPlane); // Create the 2D camera component
+            // OR createPerspective(fov, width / height, nearPlane, farPlane) for 3D;
+            cameraObject.addComponent(camera); // Add the camera component to the camera object
+            scene.addObjects(cameraObject); // Add the camera object into the scene
+            
+            Shader shader = ShaderLoader.loadDefault(); // Load the default shader
+            Renderer renderer = new Renderer(scene, camera, shader); // Create the renderer with the scene, camera, and shader
+            
+            Window window = new Window(renderer, "Simple Demo", width, height); // Create the window with the render
         } catch (IOException e) {
             e.printStackTrace();
         }
