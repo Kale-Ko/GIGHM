@@ -5,7 +5,7 @@ on:
     tags: ["*.*.*"]
 
 jobs:
-  maven-publish:
+  publish:
     runs-on: ubuntu-latest
     permissions:
       contents: write
