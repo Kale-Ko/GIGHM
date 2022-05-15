@@ -1,14 +1,14 @@
 package io.github.kale_ko.gighm.events.types.input;
 
-import io.github.kale_ko.gighm.events.types.Event;
+import io.github.kale_ko.gighm.events.types.CancellableEvent;
 
 /**
  * A mouse scroll event
  * 
- * @version 1.6.0
+ * @version 1.7.0
  * @since 1.6.0
  */
-public class MouseScrollEvent extends Event {
+public class MouseScrollEvent extends CancellableEvent {
     /**
      * The mouse x
      * 

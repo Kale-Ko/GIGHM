@@ -25,7 +25,7 @@ import io.github.kale_ko.gighm.input.MouseButton;
 /**
  * A window to render to
  * 
- * @version 1.6.0
+ * @version 1.7.0
  * @since 1.0.0
  */
 public class Window {
@@ -227,42 +227,26 @@ public class Window {
         }
 
         glfwSetKeyCallback(windowId, (window, key, scancode, action, mods) -> {
-            if (inputManager != null) {
-                inputManager.onKeyboardKey(KeyCode.valueOfGLFWKey(key, KeyMod.isPressed(KeyMod.SHIFT, mods)), KeyAction.valueOfGLFWEvent(action), KeyMod.getPressed(mods));
-
-                if (this.eventManager != null) {
-                    this.eventManager.emit(new KeyEvent(KeyCode.valueOfGLFWKey(key, KeyMod.isPressed(KeyMod.SHIFT, mods)), KeyAction.valueOfGLFWEvent(action), KeyMod.getPressed(mods)));
-                }
+            if (this.eventManager != null) {
+                this.eventManager.emit(new KeyEvent(KeyCode.valueOfGLFWKey(key, KeyMod.isPressed(KeyMod.SHIFT, mods)), KeyAction.valueOfGLFWEvent(action), KeyMod.getPressed(mods)));
             }
         });
 
         glfwSetMouseButtonCallback(windowId, (window, button, action, mods) -> {
-            if (inputManager != null) {
-                inputManager.onMouseButton(MouseButton.valueOfGLFWButton(button), MouseAction.valueOfGLFWEvent(action));
-
-                if (this.eventManager != null) {
-                    this.eventManager.emit(new MouseButtonEvent(MouseButton.valueOfGLFWButton(button), MouseAction.valueOfGLFWEvent(action)));
-                }
+            if (this.eventManager != null) {
+                this.eventManager.emit(new MouseButtonEvent(MouseButton.valueOfGLFWButton(button), MouseAction.valueOfGLFWEvent(action)));
             }
         });
 
         glfwSetCursorPosCallback(windowId, (window, x, y) -> {
-            if (inputManager != null) {
-                inputManager.onMouseMove((int) x, (int) y);
-
-                if (this.eventManager != null) {
-                    this.eventManager.emit(new MouseMoveEvent((int) x, (int) y));
-                }
+            if (this.eventManager != null) {
+                this.eventManager.emit(new MouseMoveEvent((int) x, (int) y));
             }
         });
 
         glfwSetScrollCallback(windowId, (window, x, y) -> {
-            if (inputManager != null) {
-                inputManager.onMouseScroll((int) x, (int) y);
-
-                if (this.eventManager != null) {
-                    this.eventManager.emit(new MouseScrollEvent((int) x, (int) y));
-                }
+            if (this.eventManager != null) {
+                this.eventManager.emit(new MouseScrollEvent((int) x, (int) y));
             }
         });
 
@@ -271,9 +255,9 @@ public class Window {
                 this.width = newwidth;
                 this.height = newheight;
 
-                renderer.getCamera().setWidth(newwidth);
-                renderer.getCamera().setHeight(newheight);
-                renderer.getCamera().setAspect(newwidth / newheight);
+                renderer.getCamera().setWidth(this.width);
+                renderer.getCamera().setHeight(this.height);
+                renderer.getCamera().setAspect(this.width / this.height);
 
                 renderer.getCamera().recalculateProjection();
             }
@@ -281,9 +265,12 @@ public class Window {
 
         glfwSetWindowMaximizeCallback(windowId, (window, maxamized) -> {
             if (renderer != null) {
-                renderer.getCamera().setWidth(getWidth());
-                renderer.getCamera().setHeight(getHeight());
-                renderer.getCamera().setAspect(getWidth() / getHeight());
+                this.width = getWidth();
+                this.height = getHeight();
+
+                renderer.getCamera().setWidth(this.width);
+                renderer.getCamera().setHeight(this.height);
+                renderer.getCamera().setAspect(this.width / this.height);
 
                 renderer.getCamera().recalculateProjection();
             }
@@ -321,10 +308,6 @@ public class Window {
             }
 
             glfwSwapBuffers(windowId);
-
-            if (inputManager != null && inputManager.getAutoResetDelta()) {
-                inputManager.resetDelta();
-            }
 
             glfwPollEvents();
         }

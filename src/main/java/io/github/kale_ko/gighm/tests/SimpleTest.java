@@ -23,10 +23,10 @@ public class SimpleTest {
             // OR createPerspective(fov, width / height, nearPlane, farPlane) for 3D;
             cameraObject.addComponent(camera); // Add the camera component to the camera object
             scene.addObjects(cameraObject); // Add the camera object into the scene
-            
+
             Shader shader = ShaderLoader.loadDefault(); // Load the default shader
             Renderer renderer = new Renderer(scene, camera, shader); // Create the renderer with the scene, camera, and shader
-            
+
             Window window = new Window(renderer, "Simple Demo", width, height); // Create the window with the render
         } catch (IOException e) {
             e.printStackTrace();
