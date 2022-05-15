@@ -26,9 +26,6 @@ public class InputTest {
 
             Window window = new Window(renderer, "Input Test", 800, 600, false, true);
 
-            InputManager inputManager = new InputManager();
-            window.setInputManager(inputManager);
-
             EventManager eventManager = new EventManager();
             window.setEventManager(eventManager);
 
@@ -47,6 +44,9 @@ public class InputTest {
             eventManager.addEventListener(MouseScrollEvent.class, event -> {
                 System.out.println("MOUSESCROLL: " + event.getX() + ", " + event.getY());
             });
+
+            InputManager inputManager = new InputManager(eventManager);
+            window.setInputManager(inputManager);
         } catch (IOException e) {
             e.printStackTrace();
         }

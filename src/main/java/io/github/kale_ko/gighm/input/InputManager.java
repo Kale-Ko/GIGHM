@@ -1,15 +1,28 @@
 package io.github.kale_ko.gighm.input;
 
 import java.util.List;
+import io.github.kale_ko.gighm.events.EventManager;
+import io.github.kale_ko.gighm.events.types.input.KeyEvent;
+import io.github.kale_ko.gighm.events.types.input.MouseButtonEvent;
+import io.github.kale_ko.gighm.events.types.input.MouseMoveEvent;
+import io.github.kale_ko.gighm.events.types.input.MouseScrollEvent;
+import io.github.kale_ko.gighm.events.types.rendering.RenderEvent;
 import java.util.ArrayList;
 
 /**
  * An input manager
  * 
- * @version 1.5.0
+ * @version 1.7.0
  * @since 1.2.0
  */
 public class InputManager {
+    /**
+     * The event manager to listen to
+     * 
+     * @since 1.7.0
+     */
+    private EventManager eventManager;
+
     /**
      * The list of keys currently down
      * 
@@ -74,73 +87,57 @@ public class InputManager {
     private boolean autoResetDelta = true;
 
     /**
-     * Called for a keyboard event
+     * Create an input manager
      * 
-     * @param key The key the event is about
-     * @param action The action that was run
-     * @param mods The modifiers currently down
+     * @param eventManager The event manager to listen to
      * 
-     * @since 1.2.0
+     * @since 1.7.0
      */
-    public void onKeyboardKey(KeyCode key, KeyAction action, List<KeyMod> mods) {
-        if (action == KeyAction.DOWN) {
-            if (!keysDown.contains(key)) {
-                keysDown.add(key);
-            }
-        } else if (action == KeyAction.UP) {
-            if (keysDown.contains(key)) {
-                keysDown.remove(key);
-            }
-        }
-    }
+    public InputManager(EventManager eventManager) {
+        this.eventManager = eventManager;
 
-    /**
-     * Called for a mouse button event
-     * 
-     * @param button The button the event is about
-     * @param action The action that was run
-     * 
-     * @since 1.2.0
-     */
-    public void onMouseButton(MouseButton button, MouseAction action) {
-        if (action == MouseAction.DOWN) {
-            if (!buttonsDown.contains(button)) {
-                buttonsDown.add(button);
+        this.eventManager.addEventListener(KeyEvent.class, (event) -> {
+            if (event.getAction() == KeyAction.DOWN) {
+                if (!keysDown.contains(event.getCode())) {
+                    keysDown.add(event.getCode());
+                }
+            } else if (event.getAction() == KeyAction.UP) {
+                if (keysDown.contains(event.getCode())) {
+                    keysDown.remove(event.getCode());
+                }
             }
-        } else if (action == MouseAction.UP) {
-            if (buttonsDown.contains(button)) {
-                buttonsDown.remove(button);
+        });
+
+        this.eventManager.addEventListener(MouseButtonEvent.class, (event) -> {
+            if (event.getAction() == MouseAction.DOWN) {
+                if (!buttonsDown.contains(event.getButton())) {
+                    buttonsDown.add(event.getButton());
+                }
+            } else if (event.getAction() == MouseAction.UP) {
+                if (buttonsDown.contains(event.getButton())) {
+                    buttonsDown.remove(event.getButton());
+                }
             }
-        }
-    }
+        });
 
-    /**
-     * Called for a mouse move event
-     * 
-     * @param x The new mouse x
-     * @param y The new mouse y
-     * 
-     * @since 1.2.0
-     */
-    public void onMouseMove(int x, int y) {
-        this.mouseDeltaX += x - mouseX;
-        this.mouseDeltaY += y - mouseY;
+        this.eventManager.addEventListener(MouseMoveEvent.class, (event) -> {
+            this.mouseDeltaX += event.getX() - mouseX;
+            this.mouseDeltaY += event.getY() - mouseY;
 
-        this.mouseX = x;
-        this.mouseY = y;
-    }
+            this.mouseX = event.getX();
+            this.mouseY = event.getY();
+        });
 
-    /**
-     * Called for a mouse scroll event
-     * 
-     * @param x The distance scrolled on the x
-     * @param y The distance scrolled on the y
-     * 
-     * @since 1.2.0
-     */
-    public void onMouseScroll(int x, int y) {
-        this.mouseDeltaScrollX -= x;
-        this.mouseDeltaScrollY -= y;
+        this.eventManager.addEventListener(MouseScrollEvent.class, (event) -> {
+            this.mouseDeltaScrollX -= event.getX();
+            this.mouseDeltaScrollY -= event.getY();
+        });
+
+        this.eventManager.addEventListener(RenderEvent.class, (event) -> {
+            if (this.getAutoResetDelta()) {
+                this.resetDelta();
+            }
+        });
     }
 
     /**
