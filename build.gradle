@@ -26,16 +26,14 @@ repositories {
 dependencies {
     depencancy platform("org.lwjgl:lwjgl-bom:${project.lwjgl_version}")
     depencancy "org.lwjgl:lwjgl"
-    depencancy "org.lwjgl:lwjgl-glfw"
     depencancy "org.lwjgl:lwjgl-opengl"
-    depencancy "org.lwjgl:lwjgl-opengles"
+    depencancy "org.lwjgl:lwjgl-glfw"
     // depencancy "org.lwjgl:lwjgl-openal"
 
     project.lwjgl_natives.split(",").each {
         depencancy "org.lwjgl:lwjgl::${it}"
-        depencancy "org.lwjgl:lwjgl-glfw::${it}"
         depencancy "org.lwjgl:lwjgl-opengl::${it}"
-        depencancy "org.lwjgl:lwjgl-opengles::${it}"
+        depencancy "org.lwjgl:lwjgl-glfw::${it}"
         // depencancy "org.lwjgl:lwjgl-openal::${it}"
     }
 
