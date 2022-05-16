@@ -60,6 +60,8 @@ public class Renderer3DTest {
 
             scene.addObjects(object1);
             scene.addObjects(object2);
+
+            window.setTitle("3D Renderer!");
         } catch (IOException e) {
             e.printStackTrace();
         }

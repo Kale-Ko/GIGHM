@@ -75,6 +75,8 @@ public class Renderer2DTest {
             scene.addObjects(object2);
             scene.addObjects(object3);
             scene.addObjects(object4);
+
+            window.setTitle("2D Renderer!");
         } catch (IOException e) {
             e.printStackTrace();
         }

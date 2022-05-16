@@ -47,6 +47,8 @@ public class InputTest {
 
             InputManager inputManager = new InputManager(eventManager);
             window.setInputManager(inputManager);
+
+            window.setTitle("Input!");
         } catch (IOException e) {
             e.printStackTrace();
         }

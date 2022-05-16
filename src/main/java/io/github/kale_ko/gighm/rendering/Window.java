@@ -177,6 +177,23 @@ public class Window {
      * @since 1.0.0
      */
     public Window(Renderer renderer, String title, int width, int height, boolean maximized, boolean resizable) {
+        this(renderer, title, width, height, maximized, resizable, false);
+    }
+
+    /**
+     * Create a window to render to
+     * 
+     * @param renderer The renderer to use when rendering the window
+     * @param title The title of the new window
+     * @param width The width of the new window
+     * @param height The height of the new window
+     * @param maximized Weather the new window should be maxamized
+     * @param resizable Weather the new window should be resizable
+     * @param dontHaltThread Weather to not halt the current thread until the window has been initialized (Note if you set this to true you must wait until the window has been initialized to use it)
+     * 
+     * @since 1.7.0
+     */
+    public Window(Renderer renderer, String title, int width, int height, boolean maximized, boolean resizable, boolean dontHaltThread) {
         this.renderer = renderer;
 
         this.title = title;
@@ -186,12 +203,25 @@ public class Window {
         this.maximized = maximized;
         this.resizable = resizable;
 
+        Thread mainThread = Thread.currentThread();
+
         Thread thread = new Thread(new Runnable() {
             public void run() {
-                init();
+                init(mainThread);
             }
         }, "GIGHM-Main");
+
         thread.start();
+
+        if (!dontHaltThread) {
+            try {
+                synchronized (mainThread) {
+                    mainThread.wait();
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -201,7 +231,7 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public void init() {
+    private void init(Thread mainThread) {
         if (this.initialized) {
             throw new RuntimeException("The window is already initialized");
         }
@@ -224,6 +254,10 @@ public class Window {
         windowId = glfwCreateWindow(width, height, title, NULL, NULL);
         if (windowId == NULL) {
             throw new RuntimeException("Failed to create GLFW window");
+        }
+
+        synchronized (mainThread) {
+            mainThread.notify();
         }
 
         glfwSetKeyCallback(windowId, (window, key, scancode, action, mods) -> {

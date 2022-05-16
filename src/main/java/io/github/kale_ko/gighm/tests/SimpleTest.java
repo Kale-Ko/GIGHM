@@ -28,6 +28,8 @@ public class SimpleTest {
             Renderer renderer = new Renderer(scene, camera, shader); // Create the renderer with the scene, camera, and shader
 
             Window window = new Window(renderer, "Simple Demo", width, height); // Create the window with the render
+
+            window.setTitle("Demo!"); // Change the window title once it is created
         } catch (IOException e) {
             e.printStackTrace();
         }
