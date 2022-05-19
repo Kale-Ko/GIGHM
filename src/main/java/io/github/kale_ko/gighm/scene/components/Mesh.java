@@ -5,7 +5,7 @@ import io.github.kale_ko.gighm.rendering.textures.Texture2D;
 /**
  * A mesh to render
  * 
- * @version 1.3.0
+ * @version 1.7.0
  * @since 1.0.0
  */
 public class Mesh extends Component {
@@ -38,13 +38,6 @@ public class Mesh extends Component {
     private float[] uvs;
 
     /**
-     * The size of a uv in the mesh
-     * 
-     * @since 1.0.0
-     */
-    private int uvSize;
-
-    /**
      * The triangles of the mesh
      * 
      * @since 1.0.0
@@ -56,6 +49,8 @@ public class Mesh extends Component {
      * 
      * @param vertices The vertices of the mesh
      * @param verticeSize The size of a vertice in the mesh
+     * 
+     * @since 1.0.0
      */
     public Mesh(float[] vertices, int verticeSize) {
         this(vertices, verticeSize, null);
@@ -67,9 +62,11 @@ public class Mesh extends Component {
      * @param vertices The vertices of the mesh
      * @param verticeSize The size of a vertice in the mesh
      * @param triangles The triangles of the mesh
+     * 
+     * @since 1.0.0
      */
     public Mesh(float[] vertices, int verticeSize, int[] triangles) {
-        this(vertices, verticeSize, null, null, 0, triangles);
+        this(vertices, verticeSize, null, null, triangles);
     }
 
     /**
@@ -79,10 +76,11 @@ public class Mesh extends Component {
      * @param verticeSize The size of a vertice in the mesh
      * @param texture The texture of the mesh
      * @param uvs The uvs of the mesh
-     * @param uvSize The size of a uv in the mesh
+     * 
+     * @since 1.0.0
      */
-    public Mesh(float[] vertices, int verticeSize, Texture2D texture, float[] uvs, int uvSize) {
-        this(vertices, verticeSize, texture, uvs, uvSize, null);
+    public Mesh(float[] vertices, int verticeSize, Texture2D texture, float[] uvs) {
+        this(vertices, verticeSize, texture, uvs, null);
     }
 
     /**
@@ -92,19 +90,21 @@ public class Mesh extends Component {
      * @param verticeSize The size of a vertice in the mesh
      * @param texture The texture of the mesh
      * @param uvs The uvs of the mesh
-     * @param uvSize The size of a uv in the mesh
      * @param triangles The triangles of the mesh
+     * 
+     * @since 1.0.0
      */
-    public Mesh(float[] vertices, int verticeSize, Texture2D texture, float[] uvs, int uvSize, int[] triangles) {
-        super();
-
+    public Mesh(float[] vertices, int verticeSize, Texture2D texture, float[] uvs, int[] triangles) {
         this.vertices = vertices;
 
         this.texture = texture;
         this.uvs = uvs;
 
         this.verticeSize = verticeSize;
-        this.uvSize = uvSize;
+
+        if (this.verticeSize != 2 && this.verticeSize != 3) {
+            throw new RuntimeException("Vertice size must be either 2 or 3");
+        }
 
         this.triangles = triangles;
     }
@@ -154,17 +154,6 @@ public class Mesh extends Component {
     }
 
     /**
-     * Get the size of a uv in the mesh
-     * 
-     * @return The size of a uv in the mesh
-     * 
-     * @since 1.0.0
-     */
-    public int getUVSize() {
-        return this.uvSize;
-    }
-
-    /**
      * Get the triangles of the mesh
      * 
      * @return The triangles of the mesh
@@ -173,6 +162,23 @@ public class Mesh extends Component {
      */
     public int[] getTriangles() {
         return this.triangles;
+    }
+
+    /**
+     * Get the complete vertices of the mesh
+     * 
+     * @return The complete vertices of the mesh
+     * 
+     * @since 1.7.0
+     */
+    public float[] getFullVertices() {
+        float[] fullVertices = new float[this.getTriangles().length];
+
+        for (int i = 0; i < this.getTriangles().length; i++) {
+            fullVertices[i] = this.getVertices()[this.getTriangles()[i]];
+        }
+
+        return fullVertices;
     }
 
     /**

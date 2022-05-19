@@ -256,7 +256,7 @@ public class Renderer {
 
                 if (this.meshUvBuffers.containsKey(mesh)) {
                     glBindBuffer(GL_ARRAY_BUFFER, this.meshUvBuffers.get(mesh));
-                    glVertexAttribPointer(1, mesh.getUVSize(), GL_FLOAT, false, 0, NULL);
+                    glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, NULL);
                 }
 
                 if (this.meshTriBuffers.containsKey(mesh)) {
