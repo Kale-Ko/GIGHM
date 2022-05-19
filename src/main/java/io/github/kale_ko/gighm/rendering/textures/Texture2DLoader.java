@@ -23,7 +23,7 @@ public class Texture2DLoader {
      * 
      * @return A {@link Texture2D} representing the image
      * 
-     * @throws IOException  If it fails to read the file
+     * @throws IOException If it fails to read the file
      * 
      * @since 1.0.0
      */
@@ -38,7 +38,7 @@ public class Texture2DLoader {
      * 
      * @return A {@link Texture2D} representing the image
      * 
-     * @throws IOException  If it fails to read the file
+     * @throws IOException If it fails to read the file
      * 
      * @since 1.0.0
      */
@@ -53,7 +53,7 @@ public class Texture2DLoader {
      * 
      * @return A {@link Texture2D} representing the image
      * 
-     * @throws IOException  If it fails to read the stream
+     * @throws IOException If it fails to read the stream
      * 
      * @since 1.0.0
      */
@@ -70,7 +70,7 @@ public class Texture2DLoader {
      * 
      * @return A {@link ByteBuffer} containing the image data
      * 
-     * @throws IOException  If it fails to read the file
+     * @throws IOException If it fails to read the file
      * 
      * @since 1.0.0
      */
@@ -85,7 +85,7 @@ public class Texture2DLoader {
      * 
      * @return A {@link ByteBuffer} containing the image data
      * 
-     * @throws IOException  If it fails to read the file
+     * @throws IOException If it fails to read the file
      * 
      * @since 1.0.0
      */
@@ -100,7 +100,7 @@ public class Texture2DLoader {
      * 
      * @return A {@link ByteBuffer} containing the image data
      * 
-     * @throws IOException  If it fails to read the stream
+     * @throws IOException If it fails to read the stream
      * 
      * @since 1.0.0
      */
