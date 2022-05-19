@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * A key modifier
  * 
- * @version 1.6.0
+ * @version 1.7.0
  * @since 1.2.0
  */
 public class KeyMod {
@@ -132,7 +132,7 @@ public class KeyMod {
      * 
      * @since 1.2.0
      */
-    public static KeyMod valueOfGLFWEvent(int id) {
+    public static KeyMod valueOfGLFWMod(int id) {
         for (KeyMod action : values()) {
             if (action.glfwModId == id) {
                 return action;
