@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * A scene that can be rendered
  * 
- * @version 1.4.0
+ * @version 1.7.0
  * @since 1.0.0
  */
 public class Scene {
@@ -142,7 +142,13 @@ public class Scene {
      * @since 1.0.0
      */
     public void addObjects(GameObject object) {
-        this.objects.add(object);
+        if (object.getScene() == null) {
+            object._setScene(this);
+
+            this.objects.add(object);
+        } else {
+            throw new RuntimeException("You can't add a gameobject to multiple scenes");
+        }
     }
 
     /**
