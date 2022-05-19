@@ -1,5 +1,7 @@
 package io.github.kale_ko.gighm.scene.components;
 
+import io.github.kale_ko.gighm.events.types.physics.TickEvent;
+import io.github.kale_ko.gighm.events.types.rendering.RenderEvent;
 import io.github.kale_ko.gighm.scene.GameObject;
 
 /**
@@ -14,7 +16,7 @@ public abstract class Component {
      * 
      * @since 1.0.0
      */
-    private GameObject gameObject;
+    private GameObject gameObject = null;
 
     /**
      * Create a base component
@@ -44,6 +46,24 @@ public abstract class Component {
     public void _setGameObject(GameObject gameObject) {
         this.gameObject = gameObject;
     }
+
+    /**
+     * Called at the same time as {@link RenderEvent}
+     * 
+     * @param delta The time since the last render
+     * 
+     * @since 1.7.0
+     */
+    public void render(double delta) {}
+
+    /**
+     * Called at the same time as {@link TickEvent}
+     * 
+     * @param cycle The cycle the tick is on
+     * 
+     * @since 1.7.0
+     */
+    public void tick(long cycle) {}
 
     /**
      * Get the name of the component
