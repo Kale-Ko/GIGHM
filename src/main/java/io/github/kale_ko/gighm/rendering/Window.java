@@ -6,6 +6,10 @@ import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 import java.nio.IntBuffer;
 import java.time.Instant;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
@@ -14,6 +18,7 @@ import io.github.kale_ko.gighm.events.types.input.KeyEvent;
 import io.github.kale_ko.gighm.events.types.input.MouseButtonEvent;
 import io.github.kale_ko.gighm.events.types.input.MouseMoveEvent;
 import io.github.kale_ko.gighm.events.types.input.MouseScrollEvent;
+import io.github.kale_ko.gighm.events.types.physics.TickEvent;
 import io.github.kale_ko.gighm.events.types.rendering.RenderEvent;
 import io.github.kale_ko.gighm.input.InputManager;
 import io.github.kale_ko.gighm.input.KeyAction;
@@ -21,6 +26,8 @@ import io.github.kale_ko.gighm.input.KeyCode;
 import io.github.kale_ko.gighm.input.KeyMod;
 import io.github.kale_ko.gighm.input.MouseAction;
 import io.github.kale_ko.gighm.input.MouseButton;
+import io.github.kale_ko.gighm.scene.GameObject;
+import io.github.kale_ko.gighm.scene.components.Component;
 
 /**
  * A window to render to
@@ -105,6 +112,13 @@ public class Window {
      * @since 1.7.0
      */
     private Thread thread;
+
+    /**
+     * The cycle the tick is on
+     * 
+     * @since 1.0.0
+     */
+    private long tickCycle = 0;
 
     /**
      * Create a window to render to
@@ -319,6 +333,26 @@ public class Window {
             }
         });
 
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+        ScheduledFuture<?> handle = scheduler.scheduleAtFixedRate(new Runnable() {
+            public void run() {
+                eventManager.emit(new TickEvent());
+
+                for (GameObject object : renderer.getScene().getObjects()) {
+                    for (Component component : object.getComponents()) {
+                        component.tick(tickCycle);
+                    }
+                }
+
+                if (tickCycle != Long.MAX_VALUE) {
+                    tickCycle = 0;
+                } else {
+                    tickCycle++;
+                }
+            }
+        }, 1, 20, TimeUnit.MILLISECONDS);
+
         MemoryStack stack = stackPush();
         IntBuffer cWidth = stack.mallocInt(1);
         IntBuffer cHeight = stack.mallocInt(1);
@@ -342,9 +376,16 @@ public class Window {
                 renderer.render();
 
                 Instant now = Instant.now();
+                double delta = (now.getEpochSecond() + ((double) now.getNano() / 1000000000)) - (lastRender.getEpochSecond() + ((double) lastRender.getNano() / 1000000000));
 
                 if (this.eventManager != null) {
-                    this.eventManager.emit(new RenderEvent((now.getEpochSecond() + ((double) now.getNano() / 1000000000)) - (lastRender.getEpochSecond() + ((double) lastRender.getNano() / 1000000000))));
+                    this.eventManager.emit(new RenderEvent(delta));
+                }
+
+                for (GameObject object : renderer.getScene().getObjects()) {
+                    for (Component component : object.getComponents()) {
+                        component.render(delta);
+                    }
                 }
 
                 lastRender = now;
@@ -354,6 +395,9 @@ public class Window {
 
             glfwPollEvents();
         }
+
+        handle.cancel(true);
+        scheduler.shutdown();
 
         glfwFreeCallbacks(windowId);
         glfwDestroyWindow(windowId);
