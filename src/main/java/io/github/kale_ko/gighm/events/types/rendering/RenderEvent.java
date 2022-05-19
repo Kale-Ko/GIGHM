@@ -3,7 +3,7 @@ package io.github.kale_ko.gighm.events.types.rendering;
 import io.github.kale_ko.gighm.events.types.Event;
 
 /**
- * A render event
+ * A render event (Fires every time the window is rendered)
  * 
  * @version 1.6.0
  * @since 1.6.0

@@ -3,7 +3,7 @@ package io.github.kale_ko.gighm.events.types;
 /**
  * An abstract cancellable event object
  * 
- * @version 1.6.0
+ * @version 1.7.0
  * @since 1.6.0
  */
 public abstract class CancellableEvent extends Event {
@@ -21,7 +21,7 @@ public abstract class CancellableEvent extends Event {
      * 
      * @since 1.6.0
      */
-    public boolean isCancelled() {
+    public boolean getCancelled() {
         return this.cancelled;
     }
 
