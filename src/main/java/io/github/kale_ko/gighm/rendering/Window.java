@@ -100,6 +100,13 @@ public class Window {
     private long windowId;
 
     /**
+     * The main GIGHM thread for this window
+     * 
+     * @since 1.7.0
+     */
+    private Thread thread;
+
+    /**
      * Create a window to render to
      * 
      * @param title The title of the new window
@@ -205,13 +212,13 @@ public class Window {
 
         Thread mainThread = Thread.currentThread();
 
-        Thread thread = new Thread(new Runnable() {
+        this.thread = new Thread(new Runnable() {
             public void run() {
                 init(mainThread);
             }
-        }, "GIGHM-Main");
+        }, "GIGHM");
 
-        thread.start();
+        this.thread.start();
 
         if (!dontHaltThread) {
             try {
@@ -255,6 +262,8 @@ public class Window {
         if (windowId == NULL) {
             throw new RuntimeException("Failed to create GLFW window");
         }
+
+        this.thread.setName("GIGHM-" + windowId);
 
         synchronized (mainThread) {
             mainThread.notify();
