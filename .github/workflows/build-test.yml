@@ -24,9 +24,6 @@ jobs:
           server-id: ghp
           settings-path: ${{ github.workspace }}
 
-      - name: Fix gradlew Being Inexecutable
-        run: chmod +x gradlew
-
       - name: Build All
         uses: gradle/gradle-build-action@v2
         with:
