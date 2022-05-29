@@ -3,7 +3,7 @@ package io.github.kale_ko.gighm.rendering;
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
 import java.nio.IntBuffer;
 import java.time.Instant;
 import java.util.concurrent.Executors;
@@ -18,21 +18,26 @@ import io.github.kale_ko.gighm.events.types.input.KeyEvent;
 import io.github.kale_ko.gighm.events.types.input.MouseButtonEvent;
 import io.github.kale_ko.gighm.events.types.input.MouseMoveEvent;
 import io.github.kale_ko.gighm.events.types.input.MouseScrollEvent;
-import io.github.kale_ko.gighm.events.types.physics.TickEvent;
 import io.github.kale_ko.gighm.events.types.rendering.RenderEvent;
+import io.github.kale_ko.gighm.events.types.rendering.TickEvent;
 import io.github.kale_ko.gighm.input.InputManager;
 import io.github.kale_ko.gighm.input.KeyAction;
 import io.github.kale_ko.gighm.input.KeyCode;
 import io.github.kale_ko.gighm.input.KeyMod;
-import io.github.kale_ko.gighm.input.MouseAction;
 import io.github.kale_ko.gighm.input.MouseButton;
+import io.github.kale_ko.gighm.input.MouseButtonAction;
 import io.github.kale_ko.gighm.scene.GameObject;
 import io.github.kale_ko.gighm.scene.components.Component;
+import io.github.kale_ko.gighm.util.NotNull;
+import io.github.kale_ko.gighm.util.NullUtils;
+import io.github.kale_ko.gighm.util.Nullable;
 
 /**
- * A window to render to
+ * A window for rendering to and managing input
  * 
- * @version 1.7.0
+ * @author Kale Ko
+ * 
+ * @version 1.8.0
  * @since 1.0.0
  */
 public class Window {
@@ -41,180 +46,121 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    private Renderer renderer;
+    private @NotNull Renderer renderer;
 
     /**
-     * The event manager used to manage events and callbacks
+     * The event manager used for listening to and broadcasting events
      * 
      * @since 1.6.0
      */
-    private EventManager eventManager;
+    private @NotNull EventManager eventManager = new EventManager();
 
     /**
-     * The input manager used to capture user input
+     * The input manager used for getting user input
      * 
      * @since 1.2.0
      */
-    private InputManager inputManager;
+    private @NotNull InputManager inputManager = new InputManager(eventManager);
 
     /**
      * The title of the window
      * 
      * @since 1.0.0
      */
-    private String title;
+    private @NotNull String title;
 
     /**
-     * The width of the window (Note this may not be accurate if the user can resize the window, use {@link #getWidth})
+     * The width of the window
      * 
      * @since 1.0.0
      */
-    private int width;
+    private @NotNull Integer width;
 
     /**
-     * The height of the window (Note this may not be accurate if the user can resize the window, use {@link #getHeight})
+     * The height of the window
      * 
      * @since 1.0.0
      */
-    private int height;
+    private @NotNull Integer height;
 
     /**
-     * Weather the window is maximized (Note this may not be accurate if the user can resize the window, use {@link #getMaximized})
+     * Weather the window is maximized
      * 
      * @since 1.0.0
      */
-    private boolean maximized;
+    private @NotNull Boolean maximized;
 
     /**
      * Weather the window is resizable
      * 
      * @since 1.0.0
      */
-    private boolean resizable;
+    private @NotNull Boolean resizable;
 
     /**
      * Weather the window is initialized
      * 
      * @since 1.0.0
      */
-    private boolean initialized = false;
+    private @NotNull Boolean initialized = false;
 
     /**
-     * The id of the window
+     * The glfw id of the window
      * 
      * @since 1.0.0
      */
-    private long windowId;
+    private @Nullable Long windowId;
 
     /**
-     * The main GIGHM thread for this window
+     * The thread this window is running on
      * 
      * @since 1.7.0
      */
-    private Thread thread;
+    private @Nullable Thread thread;
 
     /**
-     * The cycle the tick is on
+     * The thread that created this window
+     * 
+     * @since 1.8.0
+     */
+    private @Nullable Thread mainThread;
+
+    /**
+     * Create a window
+     * 
+     * @param renderer The renderer being used by the window
+     * @param title The title of the window
+     * @param width The width of the window
+     * @param height The height of the window
      * 
      * @since 1.0.0
      */
-    private long tickCycle = 0;
-
-    /**
-     * Create a window to render to
-     * 
-     * @param title The title of the new window
-     * 
-     * @since 1.0.0
-     */
-    public Window(String title) {
-        this(null, title);
-    }
-
-    /**
-     * Create a window to render to
-     * 
-     * @param renderer The renderer to use when rendering the window
-     * @param title The title of the new window
-     * 
-     * @since 1.0.0
-     */
-    public Window(Renderer renderer, String title) {
-        this(renderer, title, 640, 320);
-    }
-
-    /**
-     * Create a window to render to
-     * 
-     * @param title The title of the new window
-     * @param width The width of the new window
-     * @param height The height of the new window
-     * 
-     * @since 1.0.0
-     */
-    public Window(String title, int width, int height) {
-        this(null, title, width, height);
-    }
-
-    /**
-     * Create a window to render to
-     * 
-     * @param renderer The renderer to use when rendering the window
-     * @param title The title of the new window
-     * @param width The width of the new window
-     * @param height The height of the new window
-     * 
-     * @since 1.0.0
-     */
-    public Window(Renderer renderer, String title, int width, int height) {
+    public Window(@NotNull Renderer renderer, @NotNull String title, @NotNull Integer width, @NotNull Integer height) {
         this(renderer, title, width, height, false, true);
     }
 
     /**
-     * Create a window to render to
+     * Create a window
      * 
-     * @param title The title of the new window
-     * @param width The width of the new window
-     * @param height The height of the new window
-     * @param maximized Weather the new window should be maxamized
-     * @param resizable Weather the new window should be resizable
+     * @param renderer The renderer being used by the window
+     * @param title The title of the window
+     * @param width The width of the window
+     * @param height The height of the window
+     * @param maximized Weather the window should be maxamized
+     * @param resizable Weather the window should be resizable
      * 
-     * @since 1.0.0
-     */
-    public Window(String title, int width, int height, boolean maximized, boolean resizable) {
-        this(null, title, width, height, maximized, resizable);
-    }
-
-    /**
-     * Create a window to render to
-     * 
-     * @param renderer The renderer to use when rendering the window
-     * @param title The title of the new window
-     * @param width The width of the new window
-     * @param height The height of the new window
-     * @param maximized Weather the new window should be maxamized
-     * @param resizable Weather the new window should be resizable
-     * 
-     * @since 1.0.0
-     */
-    public Window(Renderer renderer, String title, int width, int height, boolean maximized, boolean resizable) {
-        this(renderer, title, width, height, maximized, resizable, false);
-    }
-
-    /**
-     * Create a window to render to
-     * 
-     * @param renderer The renderer to use when rendering the window
-     * @param title The title of the new window
-     * @param width The width of the new window
-     * @param height The height of the new window
-     * @param maximized Weather the new window should be maxamized
-     * @param resizable Weather the new window should be resizable
-     * @param dontHaltThread Weather to not halt the current thread until the window has been initialized (Note if you set this to true you must wait until the window has been initialized to use it)
+     * @throws RuntimeException If the main thread can't be paused
      * 
      * @since 1.7.0
      */
-    public Window(Renderer renderer, String title, int width, int height, boolean maximized, boolean resizable, boolean dontHaltThread) {
+    public Window(@NotNull Renderer renderer, @NotNull String title, @NotNull Integer width, @NotNull Integer height, @NotNull Boolean maximized, @NotNull Boolean resizable) {
+        NullUtils.checkNulls(renderer, "renderer");
+        NullUtils.checkNulls(title, "title");
+        NullUtils.checkNulls(width, "width");
+        NullUtils.checkNulls(height, "height");
+        NullUtils.checkNulls(maximized, "maximized");
+        NullUtils.checkNulls(resizable, "resizable");
+
         this.renderer = renderer;
 
         this.title = title;
@@ -224,35 +170,35 @@ public class Window {
         this.maximized = maximized;
         this.resizable = resizable;
 
-        Thread mainThread = Thread.currentThread();
+        this.mainThread = Thread.currentThread();
 
         this.thread = new Thread(new Runnable() {
             public void run() {
-                init(mainThread);
+                init();
             }
-        }, "GIGHM");
+        });
 
         this.thread.start();
 
-        if (!dontHaltThread) {
-            try {
-                synchronized (mainThread) {
-                    mainThread.wait();
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        try {
+            synchronized (this.mainThread) {
+                this.mainThread.wait();
             }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+
+            throw new RuntimeException("The main thread could not be properly paused");
         }
     }
 
     /**
-     * Initialize the window
+     * Initialize the window (Must be called from a GIGHM thread)
      * 
-     * @throws RuntimeException If the window is already initialized or glfw fails to start/create the window
+     * @throws RuntimeException If the window is already initialized, the method is not called from a GIGHM thread, or glfw fails to create the window
      * 
      * @since 1.0.0
      */
-    private void init(Thread mainThread) {
+    private void init() {
         if (this.initialized) {
             throw new RuntimeException("The window is already initialized");
         }
@@ -260,7 +206,7 @@ public class Window {
         glfwSetErrorCallback(GLFWErrorCallback.createPrint(System.err));
 
         if (!glfwInit()) {
-            throw new RuntimeException("Failed to initialize GLFW");
+            throw new RuntimeException("Failed to initialize OpenGl and GLFW");
         }
 
         this.initialized = true;
@@ -274,63 +220,44 @@ public class Window {
 
         windowId = glfwCreateWindow(width, height, title, NULL, NULL);
         if (windowId == NULL) {
-            throw new RuntimeException("Failed to create GLFW window");
+            throw new RuntimeException("Failed to initialize the GLFW window");
         }
 
         this.thread.setName("GIGHM-" + windowId);
 
-        synchronized (mainThread) {
-            mainThread.notify();
+        synchronized (this.mainThread) {
+            this.mainThread.notify();
         }
 
         glfwSetKeyCallback(windowId, (window, key, scancode, action, mods) -> {
-            if (this.eventManager != null) {
-                this.eventManager.emit(new KeyEvent(KeyCode.valueOfGLFWKey(key, KeyMod.isPressed(KeyMod.SHIFT, mods)), KeyAction.valueOfGLFWEvent(action), KeyMod.getPressed(mods)));
-            }
+            this.eventManager.emit(new KeyEvent(KeyCode.valueOfGLFWKey(key, KeyMod.isPressed(KeyMod.SHIFT, mods)), KeyAction.valueOfGLFWEvent(action), KeyMod.getPressed(mods)));
         });
 
         glfwSetMouseButtonCallback(windowId, (window, button, action, mods) -> {
-            if (this.eventManager != null) {
-                this.eventManager.emit(new MouseButtonEvent(MouseButton.valueOfGLFWButton(button), MouseAction.valueOfGLFWEvent(action)));
-            }
+            this.eventManager.emit(new MouseButtonEvent(MouseButton.valueOfGLFWButton(button), MouseButtonAction.valueOfGLFWEvent(action), KeyMod.getPressed(mods)));
         });
 
         glfwSetCursorPosCallback(windowId, (window, x, y) -> {
-            if (this.eventManager != null) {
-                this.eventManager.emit(new MouseMoveEvent((int) x, (int) y));
-            }
+            this.eventManager.emit(new MouseMoveEvent((int) x, (int) y));
         });
 
         glfwSetScrollCallback(windowId, (window, x, y) -> {
-            if (this.eventManager != null) {
-                this.eventManager.emit(new MouseScrollEvent((int) x, (int) y));
-            }
+            this.eventManager.emit(new MouseScrollEvent((int) x, (int) y));
         });
 
         glfwSetWindowSizeCallback(windowId, (window, newwidth, newheight) -> {
-            if (renderer != null) {
-                this.width = newwidth;
-                this.height = newheight;
+            this.width = newwidth;
+            this.height = newheight;
 
-                renderer.getCamera().setWidth(this.width);
-                renderer.getCamera().setHeight(this.height);
-                renderer.getCamera().setAspect(this.width / this.height);
+            renderer.getCamera().setWidth((float) this.width);
+            renderer.getCamera().setHeight((float) this.height);
+            renderer.getCamera().setAspect((float) (this.width / this.height));
 
-                renderer.getCamera().recalculateProjection();
-            }
+            renderer.getCamera().recalculateProjection();
         });
 
-        glfwSetWindowMaximizeCallback(windowId, (window, maxamized) -> {
-            if (renderer != null) {
-                this.width = getWidth();
-                this.height = getHeight();
-
-                renderer.getCamera().setWidth(this.width);
-                renderer.getCamera().setHeight(this.height);
-                renderer.getCamera().setAspect(this.width / this.height);
-
-                renderer.getCamera().recalculateProjection();
-            }
+        glfwSetWindowMaximizeCallback(windowId, (window, maximized) -> {
+            this.maximized = maximized;
         });
 
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -341,14 +268,8 @@ public class Window {
 
                 for (GameObject object : renderer.getScene().getObjects()) {
                     for (Component component : object.getComponents()) {
-                        component.tick(tickCycle);
+                        component.tick();
                     }
-                }
-
-                if (tickCycle != Long.MAX_VALUE) {
-                    tickCycle = 0;
-                } else {
-                    tickCycle++;
                 }
             }
         }, 1, 20, TimeUnit.MILLISECONDS);
@@ -366,30 +287,24 @@ public class Window {
 
         glfwShowWindow(windowId);
 
-        if (renderer != null) {
-            renderer.init();
-        }
+        renderer.init();
 
         Instant lastRender = Instant.now();
         while (!glfwWindowShouldClose(windowId)) {
-            if (renderer != null) {
-                renderer.render();
+            renderer.render();
 
-                Instant now = Instant.now();
-                double delta = (now.getEpochSecond() + ((double) now.getNano() / 1000000000)) - (lastRender.getEpochSecond() + ((double) lastRender.getNano() / 1000000000));
+            Instant now = Instant.now();
+            Double delta = (now.getEpochSecond() + ((double) now.getNano() / 1000000000)) - (lastRender.getEpochSecond() + ((double) lastRender.getNano() / 1000000000));
 
-                if (this.eventManager != null) {
-                    this.eventManager.emit(new RenderEvent(delta));
+            this.eventManager.emit(new RenderEvent(delta));
+
+            for (GameObject object : renderer.getScene().getObjects()) {
+                for (Component component : object.getComponents()) {
+                    component.render(delta);
                 }
-
-                for (GameObject object : renderer.getScene().getObjects()) {
-                    for (Component component : object.getComponents()) {
-                        component.render(delta);
-                    }
-                }
-
-                lastRender = now;
             }
+
+            lastRender = now;
 
             glfwSwapBuffers(windowId);
 
@@ -428,9 +343,9 @@ public class Window {
     }
 
     /**
-     * Get the game manager used to manage events and callbacks
+     * Get the event manager used for listening to and broadcasting events
      * 
-     * @return The game manager used to manage events and callbacks
+     * @return The event manager used for listening to and broadcasting events
      * 
      * @since 1.6.0
      */
@@ -439,9 +354,9 @@ public class Window {
     }
 
     /**
-     * Set the game manager used to manage events and callbacks
+     * Set the event manager used for listening to and broadcasting events
      * 
-     * @param eventManager The game manager used to manage events and callbacks
+     * @param eventManager The event manager used for listening to and broadcasting events
      * 
      * @since 1.6.0
      */
@@ -450,9 +365,9 @@ public class Window {
     }
 
     /**
-     * Get the input manager used to capture user input
+     * Get the input manager used for getting user input
      * 
-     * @return The input manager used to capture user input
+     * @return The input manager used for getting user input
      * 
      * @since 1.5.0
      */
@@ -461,9 +376,9 @@ public class Window {
     }
 
     /**
-     * Set the input manager used to capture user input
+     * Set the input manager used for getting user input
      * 
-     * @param inputManager The input manager used to capture user input
+     * @param inputManager The input manager used for getting user input
      * 
      * @since 1.5.0
      */
@@ -483,9 +398,9 @@ public class Window {
     }
 
     /**
-     * Change the title of the window
+     * Set the title of the window
      * 
-     * @param title The new title of the window
+     * @param title The title of the window
      * 
      * @since 1.0.0
      */
@@ -502,12 +417,8 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public int getWidth() {
-        MemoryStack stack = stackPush();
-        IntBuffer cWidth = stack.mallocInt(1);
-        glfwGetWindowSize(windowId, cWidth, null);
-
-        return cWidth.get(0);
+    public Integer getWidth() {
+        return this.width;
     }
 
     /**
@@ -517,23 +428,19 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public int getHeight() {
-        MemoryStack stack = stackPush();
-        IntBuffer cHeight = stack.mallocInt(1);
-        glfwGetWindowSize(windowId, null, cHeight);
-
-        return cHeight.get(0);
+    public Integer getHeight() {
+        return this.height;
     }
 
     /**
-     * Change the current size of the window
+     * Set the current size of the window
      * 
      * @param width The new width of the window
      * @param height The new height of the window
      * 
      * @since 1.0.0
      */
-    public void setWindowSize(int width, int height) {
+    public void setSize(Integer width, Integer height) {
         this.width = width;
         this.height = height;
 
@@ -547,8 +454,21 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public boolean getMaximized() {
-        return glfwGetWindowAttrib(windowId, GLFW_MAXIMIZED) == GLFW_TRUE;
+    public Boolean getMaximized() {
+        return this.maximized;
+    }
+
+    /**
+     * Set weather the window is maximized
+     * 
+     * @param maximized Weather the window is maximized
+     * 
+     * @since 1.8.0
+     */
+    public void setMaximized(Boolean maximized) {
+        this.maximized = maximized;
+
+        glfwSetWindowAttrib(windowId, GLFW_MAXIMIZED, maximized ? GLFW_TRUE : GLFW_FALSE);
     }
 
     /**
@@ -558,8 +478,21 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public boolean getResizable() {
-        return glfwGetWindowAttrib(windowId, GLFW_RESIZABLE) == GLFW_TRUE;
+    public Boolean getResizable() {
+        return this.resizable;
+    }
+
+    /**
+     * Set weather the window is resizable
+     * 
+     * @param resizable Weather the window is resizable
+     * 
+     * @since 1.8.0
+     */
+    public void setResizable(Boolean resizable) {
+        this.resizable = resizable;
+
+        glfwSetWindowAttrib(windowId, GLFW_RESIZABLE, resizable ? GLFW_TRUE : GLFW_FALSE);
     }
 
     /**
@@ -569,7 +502,7 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public boolean getInitialized() {
+    public Boolean getInitialized() {
         return this.initialized;
     }
 
@@ -580,7 +513,7 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public long getWindowId() {
+    public Long getWindowId() {
         return this.windowId;
     }
 }
