@@ -1,60 +1,68 @@
 package io.github.kale_ko.gighm.events.types.input;
 
 import io.github.kale_ko.gighm.events.types.Event;
+import io.github.kale_ko.gighm.util.NotNull;
+import io.github.kale_ko.gighm.util.NullUtils;
 
 /**
  * A mouse move event
+ * Fires whenever the mouse is moved inside the window
+ * 
+ * @author Kale Ko
  * 
  * @version 1.6.0
  * @since 1.6.0
  */
 public class MouseMoveEvent extends Event {
     /**
-     * The mouse x
+     * The x position of the mouse (Relative to the window position)
      * 
      * @since 1.6.0
      */
-    private int x;
+    private @NotNull Integer x;
 
     /**
-     * The mouse y
+     * The y position of the mouse (Relative to the window position)
      * 
      * @since 1.6.0
      */
-    private int y;
+    private @NotNull Integer y;
 
     /**
      * Create a mouse move event
      * 
-     * @param x The mouse x
-     * @param y The mouse y
+     * @param x The x position of the mouse (Relative to the window position)
+     * @param y The y position of the mouse (Relative to the window position)
      * 
      * @since 1.6.0
      */
-    public MouseMoveEvent(int x, int y) {
+    public MouseMoveEvent(@NotNull Integer x, @NotNull Integer y) {
+        NullUtils.checkNulls(x, "x");
+        NullUtils.checkNulls(y, "y");
+
         this.x = x;
         this.y = y;
     }
 
     /**
-     * Get the mouse x
+     * Get the x position of the mouse (Relative to the window position)
      * 
-     * @return The mouse x
+     * @return The x position of the mouse (Relative to the window position)
      * 
      * @since 1.6.0
      */
-    public int getX() {
+    public @NotNull Integer getX() {
         return this.x;
     }
 
     /**
-     * Get the mouse y
+     * Get the y position of the mouse (Relative to the window position)
      * 
-     * @return The mouse y
+     * @return The y position of the mouse (Relative to the window position)
      * 
      * @since 1.6.0
      */
-    public int getY() {
+    public @NotNull Integer getY() {
         return this.y;
     }
 }

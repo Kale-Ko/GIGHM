@@ -2,17 +2,24 @@ package io.github.kale_ko.gighm.scene.components;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import io.github.kale_ko.gighm.util.NotNull;
+import io.github.kale_ko.gighm.util.NullUtils;
 
 /**
  * A camera to render from
+ * 
+ * @author Kale Ko
  * 
  * @version 1.0.0
  * @since 1.0.0
  */
 public class Camera extends Component {
     /**
-     * The type of a camera
+     * The types of cameras
      * 
+     * @author Kale Ko
+     * 
+     * @version 1.0.0
      * @since 1.0.0
      */
     public enum CameraType {
@@ -36,65 +43,67 @@ public class Camera extends Component {
      * 
      * @since 1.0.0
      */
-    private CameraType type;
+    private @NotNull CameraType type;
 
     /**
      * The width of the camera
      * 
      * @since 1.0.0
      */
-    private float width;
+    private Float width;
 
     /**
      * The height of the camera
      * 
      * @since 1.0.0
      */
-    private float height;
+    private Float height;
 
     /**
-     * The fov of the camera
+     * The field of view of the camera
      * 
      * @since 1.0.0
      */
-    private float fov;
+    private Float fov;
 
     /**
-     * The aspect of the camera
+     * The aspect ratio of the camera (Generally width over height)
      * 
      * @since 1.0.0
      */
-    private float aspect;
+    private Float aspect;
 
     /**
-     * The near plane of the camera
+     * The near plane of the camera (Closest thing that will render)
      * 
      * @since 1.0.0
      */
-    private float near;
+    private Float near;
 
     /**
-     * The far plane of the camera
+     * The far plane of the camera (Farthest thing that will render)
      * 
      * @since 1.0.0
      */
-    private float far;
+    private Float far;
 
     /**
-     * The projection of the camera
+     * The projection matrix of the camera
      * 
      * @since 1.0.0
      */
-    private Matrix4f projection;
+    private @NotNull Matrix4f projection;
 
     /**
-     * Create a camera to render from
+     * Create a camera
      * 
      * @param type The type of the camera
      * 
      * @since 1.0.0
      */
-    protected Camera(CameraType type) {
+    protected Camera(@NotNull CameraType type) {
+        NullUtils.checkNulls(type, "type");
+
         this.type = type;
     }
 
@@ -103,16 +112,23 @@ public class Camera extends Component {
      * 
      * @param width The width of the camera
      * @param height The height of the camera
-     * @param far The far plane of the camera
+     * @param far The far plane of the camera (Farthest thing that will render)
      * 
-     * @return A new {@link Camera} with the passed paramiters
+     * @return A new orthagraphic camera with the passed paramiters
      */
-    public static Camera createOrthagraphic(int width, int height, float far) {
+    public static Camera createOrthagraphic(Integer width, Integer height, Float far) {
+        NullUtils.checkNulls(width, "width");
+        NullUtils.checkNulls(height, "height");
+        NullUtils.checkNulls(far, "far");
+
         Camera camera = new Camera(CameraType.ORTHAGRAPHIC);
-        camera.width = width;
-        camera.height = height;
+
+        camera.width = (float) width;
+        camera.height = (float) height;
         camera.far = far;
+
         camera.recalculateProjection();
+
         return camera;
     }
 
@@ -126,13 +142,21 @@ public class Camera extends Component {
      * 
      * @return A new {@link Camera} with the passed paramiters
      */
-    public static Camera createPerspective(float fov, float aspect, float near, float far) {
+    public static Camera createPerspective(Float fov, Float aspect, Float near, Float far) {
+        NullUtils.checkNulls(fov, "fov");
+        NullUtils.checkNulls(aspect, "aspect");
+        NullUtils.checkNulls(near, "near");
+        NullUtils.checkNulls(far, "far");
+
         Camera camera = new Camera(CameraType.PERSPECTIVE);
+
         camera.fov = fov;
         camera.aspect = aspect;
         camera.near = near;
         camera.far = far;
+
         camera.recalculateProjection();
+
         return camera;
     }
 
@@ -143,18 +167,18 @@ public class Camera extends Component {
      * 
      * @since 1.0.0
      */
-    public CameraType getType() {
+    public @NotNull CameraType getType() {
         return this.type;
     }
 
     /**
-     * Get the fov of the camera
+     * Get the width of the camera
      * 
-     * @return The fov of the camera
+     * @return The width of the camera
      * 
      * @since 1.0.0
      */
-    public float getWidth() {
+    public Float getWidth() {
         return this.width;
     }
 
@@ -165,20 +189,22 @@ public class Camera extends Component {
      * 
      * @since 1.0.0
      */
-    public void setWidth(float width) {
+    public void setWidth(@NotNull Float width) {
+        NullUtils.checkNulls(width, "width");
+
         this.width = width;
 
         this.recalculateProjection();
     }
 
     /**
-     * Get the fov of the camera
+     * Get the height of the camera
      * 
-     * @return The fov of the camera
+     * @return The height of the camera
      * 
      * @since 1.0.0
      */
-    public float getHeight() {
+    public Float getHeight() {
         return this.height;
     }
 
@@ -189,116 +215,126 @@ public class Camera extends Component {
      * 
      * @since 1.0.0
      */
-    public void setHeight(float height) {
+    public void setHeight(@NotNull Float height) {
+        NullUtils.checkNulls(height, "height");
+
         this.height = height;
 
         this.recalculateProjection();
     }
 
     /**
-     * Get the fov of the camera
+     * Get the field of view of the camera
      * 
-     * @return The fov of the camera
+     * @return The field of view of the camera
      * 
      * @since 1.0.0
      */
-    public float getFOV() {
+    public Float getFOV() {
         return this.fov;
     }
 
     /**
-     * Set the fov of the camera
+     * Set the field of view of the camera
      * 
-     * @param fov The fov of the camera
+     * @param fov The field of view of the camera
      * 
      * @since 1.0.0
      */
-    public void setFOV(float fov) {
+    public void setFOV(@NotNull Float fov) {
+        NullUtils.checkNulls(fov, "fov");
+
         this.fov = fov;
 
         this.recalculateProjection();
     }
 
     /**
-     * Get the aspect of the camera
+     * Get the aspect ratio of the camera (Generally width over height)
      * 
-     * @return The aspect of the camera
+     * @return The aspect ratio of the camera (Generally width over height)
      * 
      * @since 1.0.0
      */
-    public float getAspect() {
+    public Float getAspect() {
         return this.aspect;
     }
 
     /**
-     * Set the aspect of the camera
+     * Set the aspect ratio of the camera
      * 
-     * @param aspect The aspect of the camera
+     * @param aspect The aspect ratio of the camera
      * 
      * @since 1.0.0
      */
-    public void setAspect(float aspect) {
+    public void setAspect(@NotNull Float aspect) {
+        NullUtils.checkNulls(aspect, "aspect");
+
         this.aspect = aspect;
 
         this.recalculateProjection();
     }
 
     /**
-     * Get the near plane of the camera
+     * Get the near plane of the camera (Closest thing that will render)
      * 
-     * @return The near plane of the camera
+     * @return The near plane of the camera (Closest thing that will render)
      * 
      * @since 1.0.0
      */
-    public float getNear() {
+    public Float getNear() {
         return this.near;
     }
 
     /**
-     * Set the near plane of the camera
+     * Set the near plane of the camera (Closest thing that will render)
      * 
-     * @param near The near plane of the camera
+     * @param near The near plane of the camera (Closest thing that will render)
      * 
      * @since 1.0.0
      */
-    public void setNear(float near) {
+    public void setNear(Float near) {
+        NullUtils.checkNulls(near, "near");
+
         this.near = near;
 
         this.recalculateProjection();
     }
 
     /**
-     * Get the far plane of the camera
+     * Get the far plane of the camera (Farthest thing that will render)
      * 
-     * @return The far plane of the camera
+     * @return The far plane of the camera (Farthest thing that will render)
      * 
      * @since 1.0.0
      */
-    public float getFar() {
+    public Float getFar() {
         return this.far;
     }
 
     /**
-     * Set the far plane of the camera
+     * Set the far plane of the camera (Farthest thing that will render)
      * 
-     * @param far The far plane of the camera
+     * @param far The far plane of the camera (Farthest thing that will render)
      * 
      * @since 1.0.0
      */
-    public void setFar(float far) {
+    public void setFar(Float far) {
+        NullUtils.checkNulls(far, "far");
+
         this.far = far;
 
         this.recalculateProjection();
     }
 
     /**
-     * Get the projection of the camera
+     * Get the projection matrix of the camera
      * 
-     * @return The projection of the camera
+     * @return The projection matrix of the camera
      * 
      * @since 1.0.0
      */
-    public Matrix4f getProjection() {
+    public @NotNull Matrix4f getProjection() {
         Matrix4f target = new Matrix4f();
 
         Matrix4f position = new Matrix4f().setTranslation(this.getGameObject().getComponent(Transform.class).getPosition().get(new Vector3f()));
@@ -310,7 +346,8 @@ public class Camera extends Component {
     }
 
     /**
-     * Recalculate the projection of the camera (This is done automatically when using set{x} functions)
+     * Recalculate the projection matrix of the camera
+     * (This is done automatically when using set{x} functions)
      * 
      * @since 1.0.0
      */

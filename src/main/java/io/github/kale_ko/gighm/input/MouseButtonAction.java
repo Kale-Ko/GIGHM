@@ -9,34 +9,27 @@ import io.github.kale_ko.gighm.util.NullUtils;
 import io.github.kale_ko.gighm.util.Nullable;
 
 /**
- * The actions a key can have
+ * The actions a mouse button can have
  * 
  * @author Kale Ko
  * 
- * @version 1.6.0
+ * @version 1.5.0
  * @since 1.2.0
  */
-public class KeyAction {
+public class MouseButtonAction {
     /**
-     * A key is held down
+     * A mouse button is held down
      * 
      * @since 1.2.0
      */
-    public static final KeyAction DOWN = new KeyAction(GLFW.GLFW_PRESS);
+    public static final MouseButtonAction DOWN = new MouseButtonAction(GLFW.GLFW_PRESS);
 
     /**
-     * A key is released
+     * A mouse button is released
      * 
      * @since 1.2.0
      */
-    public static final KeyAction UP = new KeyAction(GLFW.GLFW_RELEASE);
-
-    /**
-     * A key repeats (Is still held down)
-     * 
-     * @since 1.2.0
-     */
-    public static final KeyAction REPEAT = new KeyAction(GLFW.GLFW_REPEAT);
+    public static final MouseButtonAction UP = new MouseButtonAction(GLFW.GLFW_RELEASE);
 
     /**
      * The id of the glfw event corresponding with the action
@@ -46,13 +39,13 @@ public class KeyAction {
     private final @NotNull Integer glfwEventId;
 
     /**
-     * Create a key action
+     * Create a mouse action
      * 
      * @param glfwEventId The id of the glfw event corresponding with the action
      * 
      * @since 1.2.0
      */
-    private KeyAction(@NotNull Integer glfwEventId) {
+    private MouseButtonAction(@NotNull Integer glfwEventId) {
         NullUtils.checkNulls(glfwEventId, "glfwEventId");
 
         this.glfwEventId = glfwEventId;
@@ -67,11 +60,11 @@ public class KeyAction {
      */
     @Override
     public @NotNull String toString() {
-        for (Field field : KeyAction.class.getFields()) {
+        for (Field field : MouseButtonAction.class.getFields()) {
             try {
                 field.setAccessible(true);
 
-                if (((KeyAction) field.get(null)).equals(this)) {
+                if (((MouseButtonAction) field.get(null)).equals(this)) {
                     return field.getName();
                 }
 
@@ -91,14 +84,14 @@ public class KeyAction {
      * 
      * @since 1.5.0
      */
-    public static @NotNull KeyAction[] values() {
-        List<KeyAction> mods = new ArrayList<KeyAction>();
+    public static @NotNull MouseButtonAction[] values() {
+        List<MouseButtonAction> mods = new ArrayList<MouseButtonAction>();
 
-        for (Field field : KeyAction.class.getFields()) {
+        for (Field field : MouseButtonAction.class.getFields()) {
             try {
                 field.setAccessible(true);
 
-                mods.add((KeyAction) field.get(null));
+                mods.add((MouseButtonAction) field.get(null));
 
                 field.setAccessible(false);
             } catch (IllegalArgumentException | IllegalAccessException e) {
@@ -106,7 +99,7 @@ public class KeyAction {
             }
         }
 
-        return mods.toArray(new KeyAction[] {});
+        return mods.toArray(new MouseButtonAction[] {});
     }
 
     /**
@@ -118,10 +111,10 @@ public class KeyAction {
      * 
      * @since 1.2.0
      */
-    public static @Nullable KeyAction valueOfGLFWEvent(@NotNull Integer id) {
+    public static @Nullable MouseButtonAction valueOfGLFWEvent(@NotNull Integer id) {
         NullUtils.checkNulls(id, "id");
 
-        for (KeyAction action : values()) {
+        for (MouseButtonAction action : values()) {
             if (action.glfwEventId == id) {
                 return action;
             }

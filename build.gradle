@@ -45,8 +45,9 @@ tasks.withType(JavaCompile) {
 }
 
 jar {
-    destinationDirectory = file("./")
-    archiveFileName = "${project.name}-${project.version}.jar"
+    manifest {
+        attributes "Name": project.group.replace(".", "/") + "/" + project.archivesBaseName + "/"
+    }   
 }
 
 tasks.register("buildFat", Jar) {
@@ -56,23 +57,34 @@ tasks.register("buildFat", Jar) {
     targetCompatibility = JavaVersion.toVersion(project.java_version)
 
     duplicatesStrategy = "exclude"
-    destinationDirectory = file("./")
-    archiveFileName = "${project.name}-${project.version}-fat.jar"
     classifier = "fat"
 
     from files(project.sourceSets.main.output)
     from files(project.configurations.depencancy.collect { it.isDirectory() ? it : zipTree(it) })
+
+    manifest {
+        attributes "Name": project.group.replace(".", "/") + "/" + project.archivesBaseName + "/",
+            "Main-Class": project.group + "." + project.archivesBaseName + ".tests.Renderer2DTest",
+            "Application-Name": project.name,
+            "Specification-Title": project.name,
+            "Specification-Version": project.version
+    }
 }
 
 tasks.register("buildSources", Jar) {
     dependsOn tasks.build
 
+    sourceCompatibility = JavaVersion.toVersion(project.java_version)
+    targetCompatibility = JavaVersion.toVersion(project.java_version)
+
     duplicatesStrategy = "exclude"
-    destinationDirectory = file("./")
-    archiveFileName = "${project.name}-${project.version}-sources.jar"
     classifier = "sources"
 
-    from sourceSets.main.allJava
+    manifest {
+        attributes "Name": project.group.replace(".", "/") + "/" + project.archivesBaseName + "/"
+    }
+
+    from project.sourceSets.main.allJava
 }
 
 tasks.register("genJavaDocs", Javadoc) {
@@ -98,10 +110,15 @@ tasks.register("genJavaDocs", Javadoc) {
 tasks.register("buildJavaDocs", Jar) {
     dependsOn tasks.genJavaDocs
 
+    sourceCompatibility = JavaVersion.toVersion(project.java_version)
+    targetCompatibility = JavaVersion.toVersion(project.java_version)
+
     duplicatesStrategy = "exclude"
-    destinationDirectory = file("./")
-    archiveFileName = "${project.name}-${project.version}-javadoc.jar"
     classifier = "javadoc"
+
+    manifest {
+        attributes "Name": project.group.replace(".", "/") + "/" + project.archivesBaseName + "/"
+    }
 
     from tasks.genJavaDocs
 }
@@ -111,36 +128,16 @@ tasks.register("buildAll") {
     dependsOn tasks.buildFat
     dependsOn tasks.buildSources
     dependsOn tasks.buildJavaDocs
-
-    doLast {
-        fileTree(project.projectDir).visit(details -> {
-            if (details.file.path.replace("\\", "/").startsWith(project.projectDir.getPath().replace("\\", "/") + "/GIGHM-")) {
-                def isCurrent = false
-
-                tasks.buildAll.dependsOn.each {
-                    it.outputs.files.each {
-                        if (details.file.equals(it)) {
-                            isCurrent = true
-                        }
-                    }
-                }
-
-                if (!isCurrent) {
-                    delete(details.file.path)
-                }
-            }
-        })
-    }
 }
 
 publishing {
     repositories {
         maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/Kale-Ko/GIGHM")
+            name = "GitHub-Packages"
+            url = "https://maven.pkg.github.com/Kale-Ko/GIGHM"
 
             credentials {
-                username = "Kale-Ko"
+                username = System.getenv("GH_PACKAGES_USER")
                 password = System.getenv("GH_PACKAGES_TOKEN")
             }
         }
@@ -194,7 +191,7 @@ publishing {
                             dep.appendNode("groupId", depend.moduleGroup)
                             dep.appendNode("artifactId", depend.moduleName)
                             dep.appendNode("version", depend.moduleVersion)
-                            dep.appendNode("classifier", it) 
+                            dep.appendNode("classifier", it)
                         }
                     }
                 }

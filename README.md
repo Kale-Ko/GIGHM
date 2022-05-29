@@ -6,7 +6,9 @@ GIGHM is a game engine written in Java using GLFW that supports both 2D and 3D.
 
 Currently GIGHM supports rendering scenes of game objects with custom tramsforms, meshes, and textures.
 
-There is also an event system so you can listen for key presses, renders, etc and an input system which supports checking if keyboard keys or mouse buttons are down and also allows getting the mouse pos and scroll.
+There is an event system so you can listen for key presses, renders, etc and an input system which supports checking if keys are pressed or buttons are clicked, and also allows getting the mouse pos and scroll.
+
+It also has an extendable component system for more easily writing custom logic for game objects and is [fully documented](https://gighm.kaleko.ga/docs/)!
 
 ## Setup
 
@@ -62,8 +64,11 @@ Shader shader = ShaderLoader.loadDefault(); // Load the default shader
 Renderer renderer = new Renderer(scene, camera, shader); // Create the renderer with the scene, camera, and shader
 
 Window window = new Window(renderer, "Simple Demo", width, height); // Create the window with the render
+
+window.setTitle("Demo!"); // Change the window title once it is created
 ```
 
-For a complete example see [here](https://github.com/Kale-Ko/GIGHM/blob/master/src/main/java/io/github/kale_ko/gighm/tests/SimpleTest.java).
+For the complete example see [here](https://github.com/Kale-Ko/GIGHM/blob/master/src/main/java/io/github/kale_ko/gighm/tests/SimpleTest.java).
+For a simple rendering example see [here](https://github.com/Kale-Ko/GIGHM/blob/master/src/main/java/io/github/kale_ko/gighm/tests/Renderer2DTest.java).
 
 For more info on the usage of the api see the [Javadocs](https://gighm.kaleko.ga/docs/).

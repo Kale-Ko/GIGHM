@@ -1,9 +1,14 @@
 package io.github.kale_ko.gighm.events.types.rendering;
 
 import io.github.kale_ko.gighm.events.types.Event;
+import io.github.kale_ko.gighm.util.NotNull;
+import io.github.kale_ko.gighm.util.NullUtils;
 
 /**
- * A render event (Fires every time the window is rendered)
+ * A render event
+ * Fires every time the window is rendered
+ * 
+ * @author Kale Ko
  * 
  * @version 1.6.0
  * @since 1.6.0
@@ -14,7 +19,7 @@ public class RenderEvent extends Event {
      * 
      * @since 1.6.0
      */
-    private double delta;
+    private @NotNull Double delta;
 
     /**
      * Create a render event
@@ -23,7 +28,9 @@ public class RenderEvent extends Event {
      * 
      * @since 1.6.0
      */
-    public RenderEvent(double delta) {
+    public RenderEvent(@NotNull Double delta) {
+        NullUtils.checkNulls(delta, "delta");
+
         this.delta = delta;
     }
 
@@ -34,7 +41,7 @@ public class RenderEvent extends Event {
      * 
      * @since 1.6.0
      */
-    public double getDelta() {
+    public @NotNull Double getDelta() {
         return this.delta;
     }
 }
