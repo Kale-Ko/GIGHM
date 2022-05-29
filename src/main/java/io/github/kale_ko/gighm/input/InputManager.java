@@ -1,5 +1,6 @@
 package io.github.kale_ko.gighm.input;
 
+import java.util.ArrayList;
 import java.util.List;
 import io.github.kale_ko.gighm.events.EventManager;
 import io.github.kale_ko.gighm.events.types.input.KeyEvent;
@@ -7,10 +8,13 @@ import io.github.kale_ko.gighm.events.types.input.MouseButtonEvent;
 import io.github.kale_ko.gighm.events.types.input.MouseMoveEvent;
 import io.github.kale_ko.gighm.events.types.input.MouseScrollEvent;
 import io.github.kale_ko.gighm.events.types.rendering.RenderEvent;
-import java.util.ArrayList;
+import io.github.kale_ko.gighm.util.NotNull;
+import io.github.kale_ko.gighm.util.NullUtils;
 
 /**
- * An input manager
+ * An input manager for getting user input
+ * 
+ * @author Kale Ko
  * 
  * @version 1.7.0
  * @since 1.2.0
@@ -21,70 +25,70 @@ public class InputManager {
      * 
      * @since 1.7.0
      */
-    private EventManager eventManager;
+    private @NotNull EventManager eventManager;
 
     /**
      * The list of keys currently down
      * 
      * @since 1.2.0
      */
-    private List<KeyCode> keysDown = new ArrayList<KeyCode>();
+    private @NotNull List<KeyCode> keysDown = new ArrayList<KeyCode>();
 
     /**
-     * The list of buttons currently down
+     * The list of mouse buttons currently down
      * 
      * @since 1.2.0
      */
-    private List<MouseButton> buttonsDown = new ArrayList<MouseButton>();
+    private @NotNull List<MouseButton> buttonsDown = new ArrayList<MouseButton>();
 
     /**
      * The current mouse x
      * 
      * @since 1.2.0
      */
-    private int mouseX = -1;
+    private @NotNull Integer mouseX = -1;
 
     /**
      * The current mouse y
      * 
      * @since 1.2.0
      */
-    private int mouseY = -1;
+    private @NotNull Integer mouseY = -1;
 
     /**
      * The distance the mouse has moved in the last frame on the x
      * 
      * @since 1.2.0
      */
-    private int mouseDeltaX = 0;
+    private @NotNull Integer mouseDeltaX = 0;
 
     /**
      * The distance the mouse has moved in the last frame on the y
      * 
      * @since 1.2.0
      */
-    private int mouseDeltaY = 0;
+    private @NotNull Integer mouseDeltaY = 0;
 
     /**
      * The distance the scroll wheel was turned in the last frame on the x
      * 
      * @since 1.2.0
      */
-    private int mouseDeltaScrollX = 0;
+    private @NotNull Integer mouseDeltaScrollX = 0;
 
     /**
      * The distance the scroll wheel was turned in the last frame on the y
      * 
      * @since 1.2.0
      */
-    private int mouseDeltaScrollY = 0;
+    private @NotNull Integer mouseDeltaScrollY = 0;
 
     /**
      * Weather the delta is auto reset
      * 
      * @since 1.5.0
      */
-    private boolean autoResetDelta = true;
+    private @NotNull Boolean autoResetDelta = true;
 
     /**
      * Create an input manager
@@ -93,7 +97,9 @@ public class InputManager {
      * 
      * @since 1.7.0
      */
-    public InputManager(EventManager eventManager) {
+    public InputManager(@NotNull EventManager eventManager) {
+        NullUtils.checkNulls(eventManager, "eventManager");
+
         this.eventManager = eventManager;
 
         this.eventManager.addEventListener(KeyEvent.class, (event) -> {
@@ -109,11 +115,11 @@ public class InputManager {
         });
 
         this.eventManager.addEventListener(MouseButtonEvent.class, (event) -> {
-            if (event.getAction() == MouseAction.DOWN) {
+            if (event.getAction() == MouseButtonAction.DOWN) {
                 if (!buttonsDown.contains(event.getButton())) {
                     buttonsDown.add(event.getButton());
                 }
-            } else if (event.getAction() == MouseAction.UP) {
+            } else if (event.getAction() == MouseButtonAction.UP) {
                 if (buttonsDown.contains(event.getButton())) {
                     buttonsDown.remove(event.getButton());
                 }
@@ -141,28 +147,32 @@ public class InputManager {
     }
 
     /**
-     * Get weather a key is down or not
+     * Get weather a key is currently pressed down
      * 
      * @param key The key to check
      * 
-     * @return Weather the key is down or not
+     * @return Weather a key is currently pressed down
      * 
      * @since 1.2.0
      */
-    public boolean getKeyDown(KeyCode key) {
+    public @NotNull Boolean getKeyDown(@NotNull KeyCode key) {
+        NullUtils.checkNulls(key, "key");
+
         return this.keysDown.contains(key);
     }
 
     /**
-     * Get weather a button is down or not
+     * Get weather a mouse button is currently pressed down
      * 
-     * @param button The button to check
+     * @param button The mouse button to check
      * 
-     * @return Weather the button is down or not
+     * @return Weather a mouse button is currently pressed down
      * 
      * @since 1.2.0
      */
-    public boolean getButtonDown(MouseButton button) {
+    public @NotNull Boolean getButtonDown(@NotNull MouseButton button) {
+        NullUtils.checkNulls(button, "button");
+
         return this.buttonsDown.contains(button);
     }
 
@@ -173,7 +183,7 @@ public class InputManager {
      * 
      * @since 1.2.0
      */
-    public int getMouseX() {
+    public @NotNull Integer getMouseX() {
         return this.mouseX;
     }
 
@@ -184,7 +194,7 @@ public class InputManager {
      * 
      * @since 1.2.0
      */
-    public int getMouseY() {
+    public @NotNull Integer getMouseY() {
         return this.mouseY;
     }
 
@@ -195,7 +205,7 @@ public class InputManager {
      * 
      * @since 1.2.0
      */
-    public int getMouseDeltaX() {
+    public @NotNull Integer getMouseDeltaX() {
         return this.mouseDeltaX;
     }
 
@@ -206,7 +216,7 @@ public class InputManager {
      * 
      * @since 1.2.0
      */
-    public int getMouseDeltaY() {
+    public @NotNull Integer getMouseDeltaY() {
         return this.mouseDeltaY;
     }
 
@@ -217,7 +227,7 @@ public class InputManager {
      * 
      * @since 1.2.0
      */
-    public int getScrollDeltaX() {
+    public @NotNull Integer getScrollDeltaX() {
         return this.mouseDeltaScrollX;
     }
 
@@ -228,7 +238,7 @@ public class InputManager {
      * 
      * @since 1.2.0
      */
-    public int getScrollDeltaY() {
+    public @NotNull Integer getScrollDeltaY() {
         return this.mouseDeltaScrollY;
     }
 
@@ -239,18 +249,21 @@ public class InputManager {
      * 
      * @since 1.5.0
      */
-    public boolean getAutoResetDelta() {
+    public @NotNull Boolean getAutoResetDelta() {
         return this.autoResetDelta;
     }
 
     /**
-     * Set weather the delta is auto reset (Note if you set this to false you must call {@link #resetDelta} yourself each update)
+     * Set weather the delta is auto reset
+     * (Note if you set this to false you must call {@link #resetDelta} yourself each update)
      * 
      * @param flag Weather the delta is auto reset
      * 
      * @since 1.5.0
      */
-    public void setAutoResetDelta(boolean flag) {
+    public void setAutoResetDelta(@NotNull Boolean flag) {
+        NullUtils.checkNulls(flag, "flag");
+
         this.autoResetDelta = flag;
     }
 

@@ -1,49 +1,56 @@
 package io.github.kale_ko.gighm.scene.components;
 
-import io.github.kale_ko.gighm.events.types.physics.TickEvent;
 import io.github.kale_ko.gighm.events.types.rendering.RenderEvent;
+import io.github.kale_ko.gighm.events.types.rendering.TickEvent;
 import io.github.kale_ko.gighm.scene.GameObject;
+import io.github.kale_ko.gighm.util.NotNull;
+import io.github.kale_ko.gighm.util.NullUtils;
+import io.github.kale_ko.gighm.util.Nullable;
 
 /**
- * A base component
+ * A abstract component object
+ * 
+ * @author Kale Ko
  * 
  * @version 1.0.0
  * @since 1.0.0
  */
 public abstract class Component {
     /**
-     * The gameobject this component is a part of
+     * The game object this component is a part of
      * 
      * @since 1.0.0
      */
-    private GameObject gameObject = null;
+    private @Nullable GameObject gameObject = null;
 
     /**
-     * Create a base component
+     * Create a abstract component object
      * 
      * @since 1.0.0
      */
     protected Component() {}
 
     /**
-     * Get the gameobject this component is a part of
+     * Get the game object this component is a part of
      * 
-     * @return The gameobject this component is a part of
+     * @return The game object this component is a part of
      * 
      * @since 1.0.0
      */
-    public GameObject getGameObject() {
+    public @Nullable GameObject getGameObject() {
         return this.gameObject;
     }
 
     /**
-     * Set the gameobject this component is a part of (Only used internally)
+     * Set the game object this component is a part of (Only used Internally)
      * 
-     * @param gameObject The gameobject this component should be a part of
+     * @param gameObject The game object this component should be a part of
      * 
      * @since 1.0.0
      */
-    public void _setGameObject(GameObject gameObject) {
+    public void _setGameObject(@NotNull GameObject gameObject) {
+        NullUtils.checkNulls(gameObject, "gameObject");
+
         this.gameObject = gameObject;
     }
 
@@ -54,25 +61,14 @@ public abstract class Component {
      * 
      * @since 1.7.0
      */
-    public void render(double delta) {}
+    public void render(@NotNull Double delta) {
+        NullUtils.checkNulls(delta, "delta");
+    }
 
     /**
      * Called at the same time as {@link TickEvent}
      * 
-     * @param cycle The cycle the tick is on
-     * 
      * @since 1.7.0
      */
-    public void tick(long cycle) {}
-
-    /**
-     * Get the name of the component
-     * 
-     * @return The name of the component
-     * 
-     * @since 1.0.0
-     */
-    public static String getName() {
-        return "Component";
-    }
+    public void tick() {}
 }

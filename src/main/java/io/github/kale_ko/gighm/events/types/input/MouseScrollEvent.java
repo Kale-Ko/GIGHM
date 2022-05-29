@@ -1,60 +1,68 @@
 package io.github.kale_ko.gighm.events.types.input;
 
 import io.github.kale_ko.gighm.events.types.CancellableEvent;
+import io.github.kale_ko.gighm.util.NotNull;
+import io.github.kale_ko.gighm.util.NullUtils;
 
 /**
  * A mouse scroll event
+ * Fires whenever the mouse wheel is scrolled
+ * 
+ * @author Kale Ko
  * 
  * @version 1.7.0
  * @since 1.6.0
  */
 public class MouseScrollEvent extends CancellableEvent {
     /**
-     * The mouse x
+     * The delta x of the scroll
      * 
      * @since 1.6.0
      */
-    private int x;
+    private @NotNull Integer x;
 
     /**
-     * The mouse y
+     * The delta y of the scroll
      * 
      * @since 1.6.0
      */
-    private int y;
+    private @NotNull Integer y;
 
     /**
      * Create a mouse scroll event
      * 
-     * @param x The mouse x
-     * @param y The mouse y
+     * @param x The delta x of the scroll
+     * @param y The delta y of the scroll
      * 
      * @since 1.6.0
      */
-    public MouseScrollEvent(int x, int y) {
+    public MouseScrollEvent(@NotNull Integer x, @NotNull Integer y) {
+        NullUtils.checkNulls(x, "x");
+        NullUtils.checkNulls(y, "y");
+
         this.x = x;
         this.y = y;
     }
 
     /**
-     * Get the mouse x
+     * Get The delta x of the scroll
      * 
-     * @return The mouse x
+     * @return The delta x of the scroll
      * 
      * @since 1.6.0
      */
-    public int getX() {
+    public @NotNull Integer getX() {
         return this.x;
     }
 
     /**
-     * Get the mouse y
+     * Get The delta y of the scroll
      * 
-     * @return The mouse y
+     * @return The delta y of the scroll
      * 
      * @since 1.6.0
      */
-    public int getY() {
+    public @NotNull Integer getY() {
         return this.y;
     }
 }

@@ -1,53 +1,60 @@
 package io.github.kale_ko.gighm.input;
 
-import static org.lwjgl.glfw.GLFW.*;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import org.lwjgl.glfw.GLFW;
+import io.github.kale_ko.gighm.util.NotNull;
+import io.github.kale_ko.gighm.util.NullUtils;
+import io.github.kale_ko.gighm.util.Nullable;
 
 /**
- * A key action
+ * The actions a key can have
+ * 
+ * @author Kale Ko
  * 
  * @version 1.6.0
  * @since 1.2.0
  */
 public class KeyAction {
     /**
-     * Key pressed
+     * A key is held down
      * 
      * @since 1.2.0
      */
-    public static final KeyAction DOWN = new KeyAction(GLFW_PRESS);
+    public static final KeyAction DOWN = new KeyAction(GLFW.GLFW_PRESS);
 
     /**
-     * Key released
+     * A key is released
      * 
      * @since 1.2.0
      */
-    public static final KeyAction UP = new KeyAction(GLFW_RELEASE);
+    public static final KeyAction UP = new KeyAction(GLFW.GLFW_RELEASE);
 
     /**
-     * Key repeated (Still held down)
+     * A key repeats (Is still held down)
      * 
      * @since 1.2.0
      */
-    public static final KeyAction REPEAT = new KeyAction(GLFW_REPEAT);
+    public static final KeyAction REPEAT = new KeyAction(GLFW.GLFW_REPEAT);
 
     /**
      * The id of the glfw event corresponding with the action
      * 
      * @since 1.2.0
      */
-    private final int glfwEventId;
+    private final @NotNull Integer glfwEventId;
 
     /**
-     * Create a {@link KeyAction}
+     * Create a key action
      * 
      * @param glfwEventId The id of the glfw event corresponding with the action
      * 
      * @since 1.2.0
      */
-    private KeyAction(int glfwEventId) {
+    private KeyAction(@NotNull Integer glfwEventId) {
+        NullUtils.checkNulls(glfwEventId, "glfwEventId");
+
         this.glfwEventId = glfwEventId;
     }
 
@@ -59,7 +66,7 @@ public class KeyAction {
      * @since 1.6.0
      */
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         for (Field field : KeyAction.class.getFields()) {
             try {
                 field.setAccessible(true);
@@ -70,21 +77,21 @@ public class KeyAction {
 
                 field.setAccessible(false);
             } catch (IllegalArgumentException | IllegalAccessException e) {
-                e.printStackTrace();
+                continue;
             }
         }
 
-        return "KeyAction";
+        return getClass().getName();
     }
 
     /**
-     * Get all of the mods defined
+     * Get all of the actions defined
      * 
-     * @return All of the mods defined
+     * @return All of the actions defined
      * 
      * @since 1.5.0
      */
-    public static KeyAction[] values() {
+    public static @NotNull KeyAction[] values() {
         List<KeyAction> mods = new ArrayList<KeyAction>();
 
         for (Field field : KeyAction.class.getFields()) {
@@ -95,7 +102,7 @@ public class KeyAction {
 
                 field.setAccessible(false);
             } catch (IllegalArgumentException | IllegalAccessException e) {
-                e.printStackTrace();
+                continue;
             }
         }
 
@@ -103,15 +110,17 @@ public class KeyAction {
     }
 
     /**
-     * Get the {@link KeyAction} associated with the inputted glfw event
+     * Get the key action corresponding to the inputted glfw event
      * 
      * @param id The id of the glfw event
      * 
-     * @return The {@link KeyAction} corresponding with the inputted glfw event
+     * @return The key action corresponding to the inputted glfw event
      * 
      * @since 1.2.0
      */
-    public static KeyAction valueOfGLFWEvent(int id) {
+    public static @Nullable KeyAction valueOfGLFWEvent(@NotNull Integer id) {
+        NullUtils.checkNulls(id, "id");
+
         for (KeyAction action : values()) {
             if (action.glfwEventId == id) {
                 return action;

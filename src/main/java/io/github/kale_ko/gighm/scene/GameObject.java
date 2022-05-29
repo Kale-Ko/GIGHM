@@ -8,34 +8,39 @@ import org.joml.Quaterniond;
 import org.joml.Vector3d;
 import io.github.kale_ko.gighm.scene.components.Component;
 import io.github.kale_ko.gighm.scene.components.Transform;
+import io.github.kale_ko.gighm.util.NotNull;
+import io.github.kale_ko.gighm.util.NullUtils;
+import io.github.kale_ko.gighm.util.Nullable;
 
 /**
- * An object that can hold different components
+ * An game object that can hold different components
+ * 
+ * @author Kale Ko
  * 
  * @version 1.7.0
  * @since 1.0.0
  */
 public class GameObject {
     /**
-     * The scene this gameobject is a part of
+     * The scene this game object is a part of
      * 
      * @since 1.7.0
      */
-    private Scene scene = null;
+    private @Nullable Scene scene = null;
 
     /**
      * The name of the game object
      * 
      * @since 1.0.0
      */
-    private String name;
+    private @NotNull String name;
 
     /**
      * The objects components
      * 
      * @since 1.0.0
      */
-    private Map<Class<? extends Component>, Component> components = new HashMap<Class<? extends Component>, Component>();
+    private @NotNull Map<Class<? extends Component>, Component> components = new HashMap<Class<? extends Component>, Component>();
 
     /**
      * Create an object that can hold different components
@@ -53,7 +58,9 @@ public class GameObject {
      * 
      * @since 1.0.0
      */
-    public GameObject(String name) {
+    public GameObject(@NotNull String name) {
+        NullUtils.checkNulls(name, "name");
+
         this.name = name;
 
         this.addComponent(new Transform(new Vector3d(0, 0, 0), new Quaterniond(0, 0, 0, 1), new Vector3d(1, 1, 1)));
@@ -66,7 +73,7 @@ public class GameObject {
      * 
      * @since 1.0.0
      */
-    public String getName() {
+    public @NotNull String getName() {
         return this.name;
     }
 
@@ -77,7 +84,9 @@ public class GameObject {
      * 
      * @since 1.0.0
      */
-    public void setName(String name) {
+    public void setName(@NotNull String name) {
+        NullUtils.checkNulls(name, "name");
+
         this.name = name;
     }
 
@@ -88,7 +97,7 @@ public class GameObject {
      * 
      * @since 1.7.0
      */
-    public List<Component> getComponents() {
+    public @NotNull List<Component> getComponents() {
         return new ArrayList<>(this.components.values());
     }
 
@@ -100,13 +109,15 @@ public class GameObject {
      * 
      * @since 1.0.0
      */
-    public <T extends Component> void addComponent(T object) {
+    public <T extends Component> void addComponent(@NotNull T object) {
+        NullUtils.checkNulls(object, "object");
+
         if (object.getGameObject() == null) {
             object._setGameObject(this);
 
             this.components.put(object.getClass(), object);
         } else {
-            throw new RuntimeException("You can't add a component to multiple gameobjects");
+            throw new RuntimeException("You can't add a component to multiple game objects");
         }
     }
 
@@ -120,7 +131,9 @@ public class GameObject {
      * 
      * @since 1.7.0
      */
-    public <T extends Component> boolean hasComponent(Class<T> clazz) {
+    public @NotNull <T extends Component> Boolean hasComponent(@NotNull Class<T> clazz) {
+        NullUtils.checkNulls(clazz, "clazz");
+
         return getComponent(clazz) != null;
     }
 
@@ -135,7 +148,9 @@ public class GameObject {
      * @since 1.0.0
      */
     @SuppressWarnings("unchecked")
-    public <T extends Component> T getComponent(Class<T> clazz) {
+    public @Nullable <T extends Component> T getComponent(@NotNull Class<T> clazz) {
+        NullUtils.checkNulls(clazz, "clazz");
+
         return (T) this.components.get(clazz);
     }
 
@@ -147,7 +162,9 @@ public class GameObject {
      * 
      * @since 1.0.0
      */
-    public <T extends Component> void removeComponent(Class<T> clazz) {
+    public <T extends Component> void removeComponent(@NotNull Class<T> clazz) {
+        NullUtils.checkNulls(clazz, "clazz");
+
         this.components.remove(clazz);
     }
 
@@ -158,18 +175,20 @@ public class GameObject {
      * 
      * @since 1.0.0
      */
-    public Scene getScene() {
+    public @Nullable Scene getScene() {
         return this.scene;
     }
 
     /**
-     * Set the scene this component is a part of (Only used internally)
+     * Set the scene this component is a part of (Only used Internally)
      * 
      * @param scene The scene this component should be a part of
      * 
      * @since 1.0.0
      */
-    public void _setScene(Scene scene) {
+    public void _setScene(@NotNull Scene scene) {
+        NullUtils.checkNulls(scene, "scene");
+
         this.scene = scene;
     }
 }

@@ -1,9 +1,13 @@
 package io.github.kale_ko.gighm.rendering.textures;
 
 import java.nio.ByteBuffer;
+import io.github.kale_ko.gighm.util.NotNull;
+import io.github.kale_ko.gighm.util.NullUtils;
 
 /**
- * A 2D texture
+ * A 2D texture for applying to meshes
+ * 
+ * @author Kale Ko
  * 
  * @version 1.3.0
  * @since 1.0.0
@@ -14,21 +18,21 @@ public class Texture2D {
      * 
      * @since 1.0.0
      */
-    private int width;
+    private @NotNull Integer width;
 
     /**
      * The height of the texture
      * 
      * @since 1.0.0
      */
-    private int height;
+    private @NotNull Integer height;
 
     /**
      * The raw data of the texture
      * 
      * @since 1.0.0
      */
-    private ByteBuffer data;
+    private @NotNull ByteBuffer data;
 
     /**
      * Create a 2D texture
@@ -37,15 +41,23 @@ public class Texture2D {
      * @param height The height of the texture
      * @param data The raw data of the texture
      * 
-     * @see Texture2DLoader#loadTexture
+     * @throws RuntimeException If the data is invalid
      * 
      * @since 1.0.0
      */
-    public Texture2D(int width, int height, ByteBuffer data) {
+    public Texture2D(@NotNull Integer width, @NotNull Integer height, @NotNull ByteBuffer data) {
+        NullUtils.checkNulls(width, "width");
+        NullUtils.checkNulls(height, "height");
+        NullUtils.checkNulls(data, "data");
+
         this.width = width;
         this.height = height;
 
         this.data = data;
+
+        if (data.capacity() / 4 != width * height && data.capacity() / 4 != width * height) {
+            throw new RuntimeException("");
+        }
     }
 
     /**
@@ -55,7 +67,7 @@ public class Texture2D {
      * 
      * @since 1.2.0
      */
-    public int getWidth() {
+    public @NotNull Integer getWidth() {
         return this.width;
     }
 
@@ -66,7 +78,7 @@ public class Texture2D {
      * 
      * @since 1.2.0
      */
-    public int getHeight() {
+    public @NotNull Integer getHeight() {
         return this.height;
     }
 
@@ -77,7 +89,7 @@ public class Texture2D {
      * 
      * @since 1.2.0
      */
-    public ByteBuffer getRawData() {
+    public @NotNull ByteBuffer getRawData() {
         return this.data;
     }
 }

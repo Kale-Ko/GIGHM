@@ -1,88 +1,96 @@
 package io.github.kale_ko.gighm.input;
 
-import static org.lwjgl.glfw.GLFW.*;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import org.lwjgl.glfw.GLFW;
+import io.github.kale_ko.gighm.util.NotNull;
+import io.github.kale_ko.gighm.util.NullUtils;
 
 /**
  * A mouse button
+ * 
+ * @author Kale Ko
  * 
  * @version 1.5.0
  * @since 1.2.0
  */
 public class MouseButton {
     /**
-     * Left mouse button
+     * The left mouse button
      * 
      * @since 1.2.0
      */
-    public static final MouseButton LEFT = new MouseButton(GLFW_MOUSE_BUTTON_1);
+    public static final MouseButton LEFT = new MouseButton(GLFW.GLFW_MOUSE_BUTTON_1);
 
     /**
-     * Right mouse button
+     * The right mouse button
      * 
      * @since 1.2.0
      */
-    public static final MouseButton RIGHT = new MouseButton(GLFW_MOUSE_BUTTON_2);
+    public static final MouseButton RIGHT = new MouseButton(GLFW.GLFW_MOUSE_BUTTON_2);
 
     /**
-     * Middle mouse button
+     * THe middle mouse button
      * 
      * @since 1.2.0
      */
-    public static final MouseButton MIDDLE = new MouseButton(GLFW_MOUSE_BUTTON_3);
+    public static final MouseButton MIDDLE = new MouseButton(GLFW.GLFW_MOUSE_BUTTON_3);
 
     /**
-     * Extra mouse button 1 (Usually the front side button (Navigate forwards))
+     * The extra mouse button 1
+     * (Often the back side button (Navigate back))
      * 
      * @since 1.2.0
      */
-    public static final MouseButton EXTRA1 = new MouseButton(GLFW_MOUSE_BUTTON_4);
+    public static final MouseButton EXTRA1 = new MouseButton(GLFW.GLFW_MOUSE_BUTTON_4);
 
     /**
-     * Extra mouse button 2 (Usually the back side button (Navigate back))
+     * The extra mouse button 2
+     * (Often the front side button (Navigate forwards))
      * 
      * @since 1.2.0
      */
-    public static final MouseButton EXTRA2 = new MouseButton(GLFW_MOUSE_BUTTON_5);
+    public static final MouseButton EXTRA2 = new MouseButton(GLFW.GLFW_MOUSE_BUTTON_5);
 
     /**
-     * Extra mouse button 3
+     * The extra mouse button 3
      * 
      * @since 1.2.0
      */
-    public static final MouseButton EXTRA3 = new MouseButton(GLFW_MOUSE_BUTTON_6);
+    public static final MouseButton EXTRA3 = new MouseButton(GLFW.GLFW_MOUSE_BUTTON_6);
 
     /**
-     * Extra mouse button 4
+     * The extra mouse button 4
      * 
      * @since 1.2.0
      */
-    public static final MouseButton EXTRA4 = new MouseButton(GLFW_MOUSE_BUTTON_7);
+    public static final MouseButton EXTRA4 = new MouseButton(GLFW.GLFW_MOUSE_BUTTON_7);
 
     /**
-     * Extra mouse button 5
+     * The extra mouse button 5
      * 
      * @since 1.2.0
      */
-    public static final MouseButton EXTRA5 = new MouseButton(GLFW_MOUSE_BUTTON_8);
+    public static final MouseButton EXTRA5 = new MouseButton(GLFW.GLFW_MOUSE_BUTTON_8);
 
     /**
      * The id of the glfw button corresponding with the mouse button
      * 
      * @since 1.2.0
      */
-    private final int glfwButtonId;
+    private final Integer glfwButtonId;
 
     /**
-     * Create a {@link MouseButton}
+     * Create a mouse button
      * 
      * @param glfwButtonId The id of the glfw button corresponding with the mouse button
      * 
      * @since 1.2.0
      */
-    private MouseButton(int glfwButtonId) {
+    private MouseButton(@NotNull Integer glfwButtonId) {
+        NullUtils.checkNulls(glfwButtonId, "glfwButtonId");
+
         this.glfwButtonId = glfwButtonId;
     }
 
@@ -94,7 +102,7 @@ public class MouseButton {
      * @since 1.6.0
      */
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         for (Field field : MouseButton.class.getFields()) {
             try {
                 field.setAccessible(true);
@@ -105,11 +113,11 @@ public class MouseButton {
 
                 field.setAccessible(false);
             } catch (IllegalArgumentException | IllegalAccessException e) {
-                e.printStackTrace();
+                continue;
             }
         }
 
-        return "MouseButton";
+        return getClass().getName();
     }
 
     /**
@@ -119,7 +127,7 @@ public class MouseButton {
      * 
      * @since 1.5.0
      */
-    public static MouseButton[] values() {
+    public static @NotNull MouseButton[] values() {
         List<MouseButton> buttons = new ArrayList<MouseButton>();
 
         for (Field field : MouseButton.class.getFields()) {
@@ -130,7 +138,7 @@ public class MouseButton {
 
                 field.setAccessible(false);
             } catch (IllegalArgumentException | IllegalAccessException e) {
-                e.printStackTrace();
+                continue;
             }
         }
 
@@ -138,15 +146,17 @@ public class MouseButton {
     }
 
     /**
-     * Get the {@link MouseButton} associated with the inputted glfw button
+     * Get the mouse button corresponding to the inputted glfw button
      * 
      * @param id The id of the glfw button
      * 
-     * @return The {@link MouseButton} corresponding with the inputted glfw button
+     * @return The mouse button corresponding to the inputted glfw button
      * 
      * @since 1.2.0
      */
-    public static MouseButton valueOfGLFWButton(int id) {
+    public static @NotNull MouseButton valueOfGLFWButton(@NotNull Integer id) {
+        NullUtils.checkNulls(id, "id");
+
         for (MouseButton code : values()) {
             if (code.glfwButtonId == id) {
                 return code;

@@ -1,62 +1,93 @@
 package io.github.kale_ko.gighm.events.types.input;
 
+import java.util.List;
 import io.github.kale_ko.gighm.events.types.CancellableEvent;
-import io.github.kale_ko.gighm.input.MouseAction;
+import io.github.kale_ko.gighm.input.KeyMod;
 import io.github.kale_ko.gighm.input.MouseButton;
+import io.github.kale_ko.gighm.input.MouseButtonAction;
+import io.github.kale_ko.gighm.util.NotNull;
+import io.github.kale_ko.gighm.util.NullUtils;
 
 /**
  * A mouse button event
+ * Fires whenever a mouse button is pressed or released
  * 
- * @version 1.6.0
+ * @author Kale Ko
+ * 
+ * @version 1.8.0
  * @since 1.6.0
  */
 public class MouseButtonEvent extends CancellableEvent {
     /**
-     * The mouse button
+     * The code of the button pressed
      * 
      * @since 1.6.0
      */
-    private MouseButton button;
+    private @NotNull MouseButton button;
 
     /**
-     * The mouse action
+     * The action being performed (Press, Release)
      * 
      * @since 1.6.0
      */
-    private MouseAction action;
+    private @NotNull MouseButtonAction action;
+
+    /**
+     * The key mods being held
+     * 
+     * @since 1.8.0
+     */
+    private @NotNull List<KeyMod> mods;
 
     /**
      * Create a mouse button event
      * 
-     * @param button The mouse button
-     * @param action The mouse action
+     * @param button The code of the button pressed
+     * @param action The action being performed (Press, Release)
+     * @param mods The key mods being held
      * 
      * @since 1.6.0
      */
-    public MouseButtonEvent(MouseButton button, MouseAction action) {
+    public MouseButtonEvent(@NotNull MouseButton button, @NotNull MouseButtonAction action, @NotNull List<KeyMod> mods) {
+        NullUtils.checkNulls(button, "button");
+        NullUtils.checkNulls(action, "action");
+        NullUtils.checkNulls(mods, "mods");
+
         this.button = button;
         this.action = action;
+        this.mods = mods;
     }
 
     /**
-     * Get the mouse button
+     * Get the code of the button pressed
      * 
-     * @return The mouse button
+     * @return The code of the button pressed
      * 
      * @since 1.6.0
      */
-    public MouseButton getButton() {
+    public @NotNull MouseButton getButton() {
         return this.button;
     }
 
     /**
-     * Get the mouse action
+     * Get the action being performed (Press, Release)
      * 
-     * @return The mouse action
+     * @return The action being performed (Press, Release)
      * 
      * @since 1.6.0
      */
-    public MouseAction getAction() {
+    public @NotNull MouseButtonAction getAction() {
         return this.action;
+    }
+
+    /**
+     * Get the key mods being held
+     * 
+     * @return The key mods being held
+     * 
+     * @since 1.6.0
+     */
+    public @NotNull List<KeyMod> getMods() {
+        return this.mods;
     }
 }

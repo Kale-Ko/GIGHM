@@ -12,9 +12,10 @@ import io.github.kale_ko.gighm.scene.components.Camera;
 public class SimpleTest {
     public static void main(String[] args) {
         try {
-            int width = 800;
-            int height = 600;
-            int farPlane = 512;
+            // Just defining the variables that are used
+            Integer width = 800;
+            Integer height = 600;
+            Float farPlane = 512f;
 
             Scene scene = new Scene("Main"); // Create the main scene
 

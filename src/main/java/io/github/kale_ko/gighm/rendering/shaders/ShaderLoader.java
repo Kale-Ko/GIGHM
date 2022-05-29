@@ -5,9 +5,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import io.github.kale_ko.gighm.util.NotNull;
+import io.github.kale_ko.gighm.util.NullUtils;
 
 /**
- * Utility for loading shader data from a file to use with shaders
+ * A utility for loading shader data from a file to use with shaders
+ * 
+ * @author Kale Ko
  * 
  * @version 1.4.0
  * @since 1.0.0
@@ -16,70 +20,79 @@ public class ShaderLoader {
     /**
      * Load a shader from file
      * 
-     * @param vertexPath The vertex file to load
-     * @param fragmentPath The fragment file to load
+     * @param vertexPath The file to load the vertex data from
+     * @param fragmentPath The file to load the fragment data from
      * 
-     * @return A {@link Shader} representing the shader
+     * @return A {@link Shader} from the data passed
      * 
      * @throws IOException If it fails to read the file
      * 
      * @since 1.0.0
      */
-    public static Shader loadShader(String vertexPath, String fragmentPath) throws IOException {
+    public static @NotNull Shader loadShader(@NotNull String vertexPath, @NotNull String fragmentPath) throws IOException {
+        NullUtils.checkNulls(vertexPath, "vertexPath");
+        NullUtils.checkNulls(fragmentPath, "fragmentPath");
+
         return loadShader(new File(vertexPath), new File(fragmentPath));
     }
 
     /**
      * Load a shader from file
      * 
-     * @param vertexFile The vertex file to load
-     * @param fragmentFile The fragment file to load
+     * @param vertexFile The file to load the vertex data from
+     * @param fragmentFile The file to load the fragment data from
      * 
-     * @return A {@link Shader} representing the shader
+     * @return A {@link Shader} from the data passed
      * 
      * @throws IOException If it fails to read the file
      * 
      * @since 1.0.0
      */
-    public static Shader loadShader(File vertexFile, File fragmentFile) throws IOException {
+    public static @NotNull Shader loadShader(@NotNull File vertexFile, @NotNull File fragmentFile) throws IOException {
+        NullUtils.checkNulls(vertexFile, "vertexFile");
+        NullUtils.checkNulls(fragmentFile, "fragmentFile");
+
         return loadShader(new FileInputStream(vertexFile), new FileInputStream(fragmentFile));
     }
 
     /**
      * Load a shader from stream
      * 
-     * @param vertexStream The vertex stream to load
-     * @param fragmentStream The fragment stream to load
+     * @param vertexStream The stream to load the vertex data from
+     * @param fragmentStream The stream to load the fragment data from
      * 
-     * @return A {@link Shader} representing the shader
+     * @return A {@link Shader} from the data passed
      * 
      * @throws IOException If it fails to read the stream
      * 
      * @since 1.0.0
      */
-    public static Shader loadShader(InputStream vertexStream, InputStream fragmentStream) throws IOException {
+    public static @NotNull Shader loadShader(@NotNull InputStream vertexStream, @NotNull InputStream fragmentStream) throws IOException {
+        NullUtils.checkNulls(vertexStream, "vertexStream");
+        NullUtils.checkNulls(fragmentStream, "fragmentStream");
+
         return new Shader(loadShaderData(vertexStream), loadShaderData(fragmentStream));
     }
 
     /**
      * Load the default shader
      * 
-     * @return The default {@link Shader}
+     * @return The default shader
      * 
      * @throws IOException If it fails to read the file
      * 
      * @since 1.4.0
      */
-    public static Shader loadDefault() throws IOException {
+    public static @NotNull Shader loadDefault() throws IOException {
         return loadShader(ShaderLoader.class.getResourceAsStream("/vertex.glsl"), ShaderLoader.class.getResourceAsStream("/fragment.glsl"));
     }
 
     /**
-     * Load a shader's data from file
+     * Load a file's contents
      * 
-     * @param path The file to load
+     * @param path The file to load from
      * 
-     * @return A {@link String} representing the shader
+     * @return A {@link String} representing the data
      * 
      * @throws IOException If it fails to read the file
      * 
@@ -90,11 +103,11 @@ public class ShaderLoader {
     }
 
     /**
-     * Load a shader's data from file
+     * Load a file's contents
      * 
-     * @param file The file to load
+     * @param file The file to load from
      * 
-     * @return A {@link String} representing the shader
+     * @return A {@link String} representing the data
      * 
      * @throws IOException If it fails to read the file
      * 
@@ -105,11 +118,11 @@ public class ShaderLoader {
     }
 
     /**
-     * Load a shader's data from stream
+     * Load a stream's contents
      * 
-     * @param stream The stream to load
+     * @param stream The stream to load from
      * 
-     * @return A {@link String} representing the shader
+     * @return A {@link String} representing the data
      * 
      * @throws IOException If it fails to read the stream
      * 
@@ -119,7 +132,7 @@ public class ShaderLoader {
         BufferedInputStream reader = new BufferedInputStream(stream);
         StringBuilder data = new StringBuilder();
 
-        int read;
+        Integer read;
         byte[] contents = new byte[1024];
         while ((read = reader.read(contents)) != -1) {
             data.append(new String(contents, 0, read));
