@@ -1,7 +1,6 @@
 io.github.kale_ko.gighm.events
 io.github.kale_ko.gighm.events.types
 io.github.kale_ko.gighm.events.types.input
-io.github.kale_ko.gighm.events.types.physics
 io.github.kale_ko.gighm.events.types.rendering
 io.github.kale_ko.gighm.input
 io.github.kale_ko.gighm.rendering
@@ -9,3 +8,4 @@ io.github.kale_ko.gighm.rendering.shaders
 io.github.kale_ko.gighm.rendering.textures
 io.github.kale_ko.gighm.scene
 io.github.kale_ko.gighm.scene.components
+io.github.kale_ko.gighm.util
