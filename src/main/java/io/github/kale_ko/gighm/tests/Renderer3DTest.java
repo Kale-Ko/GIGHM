@@ -20,13 +20,13 @@ import io.github.kale_ko.gighm.scene.components.Transform;
 public class Renderer3DTest {
     public static void main(String[] args) {
         try {
-            int width = 800;
-            int height = 600;
+            Integer width = 800;
+            Integer height = 600;
 
             Scene scene = new Scene("Main");
 
             GameObject cameraObject = new GameObject("Camera");
-            Camera camera = Camera.createPerspective(179, width / height, 0.01f, 512);
+            Camera camera = Camera.createPerspective(179f, (float) (width / height), 0.01f, 512f);
             cameraObject.addComponent(camera);
             cameraObject.getComponent(Transform.class).setPosition(new Vector3d(0, 0, -20));
             scene.addObjects(cameraObject);
@@ -41,19 +41,19 @@ public class Renderer3DTest {
             window.setEventManager(eventManager);
 
             eventManager.addEventListener(RenderEvent.class, event -> {
-                System.out.println("FPS: " + (1 / event.getDelta()));
+                System.out.println("FPS: " + Math.round(1 / event.getDelta()));
             });
 
             GameObject object1 = new GameObject("Test Object");
             Texture2D texture1 = Texture2DLoader.loadTexture(Renderer3DTest.class.getResourceAsStream("/tests/kale.png"));
-            Mesh mesh1 = new Mesh(new float[] { -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f }, 2, texture1, new float[] { 0, 0, 1, 0, 1, 1, 0, 1 }, new int[] { 0, 1, 2, 2, 3, 0 });
+            Mesh mesh1 = new Mesh(new Float[] { -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f }, 2, texture1, new Float[] { 0f, 0f, 1f, 0f, 1f, 1f, 0f, 1f }, new Integer[] { 0, 1, 2, 2, 3, 0 });
             object1.addComponent(mesh1);
             object1.getComponent(Transform.class).setPosition(new Vector3d(125, -65, 10));
             object1.getComponent(Transform.class).setScale(new Vector3d(32));
 
             GameObject object2 = new GameObject("Test Object 2");
             Texture2D texture2 = Texture2DLoader.loadTexture(Renderer2DTest.class.getResourceAsStream("/tests/noise.png"));
-            Mesh mesh2 = new Mesh(new float[] { -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f }, 2, texture2, new float[] { 0, 0, 1, 0, 1, 1, 0, 1 }, new int[] { 0, 1, 2, 2, 3, 0 });
+            Mesh mesh2 = new Mesh(new Float[] { -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f }, 2, texture2, new Float[] { 0f, 0f, 1f, 0f, 1f, 1f, 0f, 1f }, new Integer[] { 0, 1, 2, 2, 3, 0 });
             object2.addComponent(mesh2);
             object2.getComponent(Transform.class).setPosition(new Vector3d(45, 240, 10));
             object2.getComponent(Transform.class).setScale(new Vector3d(16));

@@ -5,80 +5,89 @@ import io.github.kale_ko.gighm.events.types.CancellableEvent;
 import io.github.kale_ko.gighm.input.KeyAction;
 import io.github.kale_ko.gighm.input.KeyCode;
 import io.github.kale_ko.gighm.input.KeyMod;
+import io.github.kale_ko.gighm.util.NotNull;
+import io.github.kale_ko.gighm.util.NullUtils;
 
 /**
  * A key event
+ * Fires whenever a keyboard key is pressed or released
+ * 
+ * @author Kale Ko
  * 
  * @version 1.6.0
  * @since 1.6.0
  */
 public class KeyEvent extends CancellableEvent {
     /**
-     * The key code
+     * The code of the key pressed
      * 
      * @since 1.6.0
      */
-    private KeyCode code;
+    private @NotNull KeyCode code;
 
     /**
-     * The key action
+     * The action being performed (Press, Release, Repeat)
      * 
      * @since 1.6.0
      */
-    private KeyAction action;
+    private @NotNull KeyAction action;
 
     /**
-     * The key mods
+     * The key mods being held
      * 
      * @since 1.6.0
      */
-    private List<KeyMod> mods;
+    private @NotNull List<KeyMod> mods;
 
     /**
      * Create a key event
      * 
-     * @param code The key code
-     * @param action The key action
-     * @param mods The key mods
+     * @param code The code of the key pressed
+     * @param action The action being performed (Press, Release, Repeat)
+     * @param mods The key mods being held
      * 
      * @since 1.6.0
      */
-    public KeyEvent(KeyCode code, KeyAction action, List<KeyMod> mods) {
+    public KeyEvent(@NotNull KeyCode code, @NotNull KeyAction action, @NotNull List<KeyMod> mods) {
+        NullUtils.checkNulls(code, "code");
+        NullUtils.checkNulls(action, "action");
+        NullUtils.checkNulls(mods, "mods");
+
         this.code = code;
         this.action = action;
         this.mods = mods;
     }
 
     /**
-     * Get the key code
+     * Get the code of the key pressed
      * 
-     * @return The key code
+     * @return The code of the key pressed
      * 
      * @since 1.6.0
      */
-    public KeyCode getCode() {
+    public @NotNull KeyCode getCode() {
         return this.code;
     }
 
     /**
-     * Get the key action
+     * Get the action being performed (Press, Release, Repeat)
      * 
-     * @return The key action
+     * @return The action being performed (Press, Release, Repeat)
      * 
      * @since 1.6.0
      */
-    public KeyAction getAction() {
+    public @NotNull KeyAction getAction() {
         return this.action;
     }
 
     /**
-     * Get the key mods
+     * Get the key mods being held
      * 
-     * @return The key mods
+     * @return The key mods being held
      * 
      * @since 1.6.0
      */
-    public List<KeyMod> getMods() {
+    public @NotNull List<KeyMod> getMods() {
         return this.mods;
     }
 }

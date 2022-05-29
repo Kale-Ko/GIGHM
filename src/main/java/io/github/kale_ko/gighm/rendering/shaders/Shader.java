@@ -1,7 +1,12 @@
 package io.github.kale_ko.gighm.rendering.shaders;
 
+import io.github.kale_ko.gighm.util.NotNull;
+import io.github.kale_ko.gighm.util.NullUtils;
+
 /**
- * A shader
+ * A shader used durring rendering
+ * 
+ * @author Kale Ko
  * 
  * @version 1.3.0
  * @since 1.0.0
@@ -12,14 +17,14 @@ public class Shader {
      * 
      * @since 1.0.0
      */
-    private String vertexSource;
+    private @NotNull String vertexSource;
 
     /**
      * The source data of the fragment shader
      * 
      * @since 1.0.0
      */
-    private String fragmentSource;
+    private @NotNull String fragmentSource;
 
     /**
      * Create a shader
@@ -27,11 +32,12 @@ public class Shader {
      * @param vertexSource The source data of the vertex shader
      * @param fragmentSource The source data of the fragment shader
      * 
-     * @see ShaderLoader#loadShader
-     * 
      * @since 1.0.0
      */
-    public Shader(String vertexSource, String fragmentSource) {
+    public Shader(@NotNull String vertexSource, @NotNull String fragmentSource) {
+        NullUtils.checkNulls(vertexSource, "vertexSource");
+        NullUtils.checkNulls(fragmentSource, "fragmentSource");
+
         this.vertexSource = vertexSource;
         this.fragmentSource = fragmentSource;
     }
@@ -43,7 +49,7 @@ public class Shader {
      * 
      * @since 1.2.0
      */
-    public String getVertexSource() {
+    public @NotNull String getVertexSource() {
         return this.vertexSource;
     }
 
@@ -54,7 +60,7 @@ public class Shader {
      * 
      * @since 1.2.0
      */
-    public String getFragmentSource() {
+    public @NotNull String getFragmentSource() {
         return this.fragmentSource;
     }
 }

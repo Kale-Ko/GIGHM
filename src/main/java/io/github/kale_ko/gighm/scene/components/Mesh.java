@@ -1,9 +1,14 @@
 package io.github.kale_ko.gighm.scene.components;
 
 import io.github.kale_ko.gighm.rendering.textures.Texture2D;
+import io.github.kale_ko.gighm.util.NotNull;
+import io.github.kale_ko.gighm.util.NullUtils;
+import io.github.kale_ko.gighm.util.Nullable;
 
 /**
- * A mesh to render
+ * A mesh that can be rendered
+ * 
+ * @author Kale Ko
  * 
  * @version 1.7.0
  * @since 1.0.0
@@ -14,45 +19,45 @@ public class Mesh extends Component {
      * 
      * @since 1.0.0
      */
-    private float[] vertices;
+    private @NotNull Float[] vertices;
 
     /**
-     * The size of a vertice in the mesh
+     * How many numbers define a point in the mesh
      * 
      * @since 1.0.0
      */
-    private int verticeSize;
+    private @NotNull Integer verticeSize;
 
     /**
      * The texture of the mesh
      * 
      * @since 1.0.0
      */
-    private Texture2D texture;
+    private @Nullable Texture2D texture;
 
     /**
      * The uvs of the mesh
      * 
      * @since 1.0.0
      */
-    private float[] uvs;
+    private @Nullable Float[] uvs;
 
     /**
      * The triangles of the mesh
      * 
      * @since 1.0.0
      */
-    private int[] triangles;
+    private @Nullable Integer[] triangles;
 
     /**
-     * Create a mesh to render
+     * Create a mesh
      * 
      * @param vertices The vertices of the mesh
-     * @param verticeSize The size of a vertice in the mesh
+     * @param verticeSize How many numbers define a point in the mesh
      * 
      * @since 1.0.0
      */
-    public Mesh(float[] vertices, int verticeSize) {
+    public Mesh(@NotNull Float[] vertices, @NotNull Integer verticeSize) {
         this(vertices, verticeSize, null);
     }
 
@@ -60,12 +65,12 @@ public class Mesh extends Component {
      * Create a mesh to render
      * 
      * @param vertices The vertices of the mesh
-     * @param verticeSize The size of a vertice in the mesh
+     * @param verticeSize How many numbers define a point in the mesh
      * @param triangles The triangles of the mesh
      * 
      * @since 1.0.0
      */
-    public Mesh(float[] vertices, int verticeSize, int[] triangles) {
+    public Mesh(@NotNull Float[] vertices, @NotNull Integer verticeSize, @Nullable Integer[] triangles) {
         this(vertices, verticeSize, null, null, triangles);
     }
 
@@ -73,13 +78,13 @@ public class Mesh extends Component {
      * Create a mesh to render
      * 
      * @param vertices The vertices of the mesh
-     * @param verticeSize The size of a vertice in the mesh
+     * @param verticeSize How many numbers define a point in the mesh
      * @param texture The texture of the mesh
      * @param uvs The uvs of the mesh
      * 
      * @since 1.0.0
      */
-    public Mesh(float[] vertices, int verticeSize, Texture2D texture, float[] uvs) {
+    public Mesh(@NotNull Float[] vertices, @NotNull Integer verticeSize, @Nullable Texture2D texture, @Nullable Float[] uvs) {
         this(vertices, verticeSize, texture, uvs, null);
     }
 
@@ -87,26 +92,29 @@ public class Mesh extends Component {
      * Create a mesh to render
      * 
      * @param vertices The vertices of the mesh
-     * @param verticeSize The size of a vertice in the mesh
+     * @param verticeSize How many numbers define a point in the mesh
      * @param texture The texture of the mesh
      * @param uvs The uvs of the mesh
      * @param triangles The triangles of the mesh
      * 
      * @since 1.0.0
      */
-    public Mesh(float[] vertices, int verticeSize, Texture2D texture, float[] uvs, int[] triangles) {
+    public Mesh(@NotNull Float[] vertices, @NotNull Integer verticeSize, @Nullable Texture2D texture, @Nullable Float[] uvs, @Nullable Integer[] triangles) {
+        NullUtils.checkNulls(vertices, "vertices");
+        NullUtils.checkNulls(verticeSize, "verticeSize");
+
         this.vertices = vertices;
+        this.verticeSize = verticeSize;
 
         this.texture = texture;
+
         this.uvs = uvs;
 
-        this.verticeSize = verticeSize;
+        this.triangles = triangles;
 
         if (this.verticeSize != 2 && this.verticeSize != 3) {
             throw new RuntimeException("Vertice size must be either 2 or 3");
         }
-
-        this.triangles = triangles;
     }
 
     /**
@@ -116,18 +124,18 @@ public class Mesh extends Component {
      * 
      * @since 1.0.0
      */
-    public float[] getVertices() {
+    public @NotNull Float[] getVertices() {
         return this.vertices;
     }
 
     /**
-     * Get the size of a vertice in the mesh
+     * Get how many numbers define a point in the mesh
      * 
-     * @return The size of a vertice in the mesh
+     * @return How many numbers define a point in the mesh
      * 
      * @since 1.0.0
      */
-    public int getVerticeSize() {
+    public @NotNull Integer getVerticeSize() {
         return this.verticeSize;
     }
 
@@ -138,7 +146,7 @@ public class Mesh extends Component {
      * 
      * @since 1.0.0
      */
-    public Texture2D getTexture() {
+    public @Nullable Texture2D getTexture() {
         return this.texture;
     }
 
@@ -149,7 +157,7 @@ public class Mesh extends Component {
      * 
      * @since 1.0.0
      */
-    public float[] getUVs() {
+    public @Nullable Float[] getUVs() {
         return this.uvs;
     }
 
@@ -160,35 +168,24 @@ public class Mesh extends Component {
      * 
      * @since 1.0.0
      */
-    public int[] getTriangles() {
+    public @Nullable Integer[] getTriangles() {
         return this.triangles;
     }
 
     /**
-     * Get the complete vertices of the mesh
+     * Get the complete vertices of the mesh (The combined vertices and triangles)
      * 
-     * @return The complete vertices of the mesh
+     * @return The complete vertices of the mesh (The combined vertices and triangles)
      * 
      * @since 1.7.0
      */
-    public float[] getFullVertices() {
-        float[] fullVertices = new float[this.getTriangles().length];
+    public @NotNull Float[] getFullVertices() {
+        Float[] fullVertices = new Float[this.getTriangles().length];
 
-        for (int i = 0; i < this.getTriangles().length; i++) {
+        for (Integer i = 0; i < this.getTriangles().length; i++) {
             fullVertices[i] = this.getVertices()[this.getTriangles()[i]];
         }
 
         return fullVertices;
-    }
-
-    /**
-     * Get the name of the component
-     * 
-     * @return The name of the component
-     * 
-     * @since 1.0.0
-     */
-    public static String getName() {
-        return "Mesh";
     }
 }

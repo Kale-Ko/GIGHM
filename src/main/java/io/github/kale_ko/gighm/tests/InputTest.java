@@ -19,7 +19,7 @@ public class InputTest {
         try {
             Scene scene = new Scene("Main");
 
-            Camera camera = Camera.createOrthagraphic(1, 1, 1);
+            Camera camera = Camera.createOrthagraphic(1, 1, 256f);
 
             Shader shader = ShaderLoader.loadShader(InputTest.class.getResourceAsStream("/vertex.glsl"), InputTest.class.getResourceAsStream("/fragment.glsl"));
             Renderer renderer = new Renderer(scene, camera, shader);

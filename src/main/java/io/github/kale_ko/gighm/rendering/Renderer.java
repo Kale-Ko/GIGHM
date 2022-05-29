@@ -1,7 +1,7 @@
 package io.github.kale_ko.gighm.rendering;
 
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
 import java.awt.Color;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -16,83 +16,132 @@ import io.github.kale_ko.gighm.scene.Scene;
 import io.github.kale_ko.gighm.scene.components.Camera;
 import io.github.kale_ko.gighm.scene.components.Mesh;
 import io.github.kale_ko.gighm.scene.components.Transform;
+import io.github.kale_ko.gighm.util.ArrayUtils;
+import io.github.kale_ko.gighm.util.NotNull;
+import io.github.kale_ko.gighm.util.NullUtils;
 
 /**
- * A renderer to render a scene
+ * A renderer for rendering scenes to windows
+ * 
+ * @author Kale Ko
  * 
  * @version 1.5.0
  * @since 1.0.0
  */
 public class Renderer {
     /**
-     * The scene to render
+     * The scene to be rendered
      * 
      * @since 1.0.0
      */
-    private Scene scene;
+    private @NotNull Scene scene;
 
     /**
      * The camera to render from
      * 
      * @since 1.0.0
      */
-    private Camera camera;
+    private @NotNull Camera camera;
 
     /**
-     * The shader to use
+     * The shader to use while rendering
      * 
      * @since 1.0.0
      */
-    private Shader shader;
+    private @NotNull Shader shader;
 
     /**
      * The color to clear the background with
      * 
      * @since 1.1.0
      */
-    private Color clearColor;
+    private @NotNull Color clearColor;
 
     /**
      * Weather the window is initialized
      * 
      * @since 1.0.0
      */
-    private boolean initialized = false;
-
-    private Map<Shader, Integer> shaderPrograms = new HashMap<Shader, Integer>();
-    private Map<Shader, Integer> shaderVertexShaders = new HashMap<Shader, Integer>();
-    private Map<Shader, Integer> shaderFragmentShaders = new HashMap<Shader, Integer>();
-
-    private Map<Mesh, Integer> meshVertBuffers = new HashMap<Mesh, Integer>();
-    private Map<Mesh, Integer> meshUvBuffers = new HashMap<Mesh, Integer>();
-    private Map<Mesh, Integer> meshTriBuffers = new HashMap<Mesh, Integer>();
-
-    private Map<Texture2D, Integer> textures = new HashMap<Texture2D, Integer>();
+    private @NotNull Boolean initialized = false;
 
     /**
-     * Create a renderer to render a scene
+     * A map of shaders to their gl program ids (Only used internally)
      * 
-     * @param scene The scene to render
+     * @since 1.3.0
+     */
+    private @NotNull Map<Shader, Integer> shaderPrograms = new HashMap<Shader, Integer>();
+
+    /**
+     * A map of shaders to their gl vertex shader ids (Only used internally)
+     * 
+     * @since 1.3.0
+     */
+    private @NotNull Map<Shader, Integer> shaderVertexShaders = new HashMap<Shader, Integer>();
+
+    /**
+     * A map of shaders to their gl fragment shader ids (Only used internally)
+     * 
+     * @since 1.3.0
+     */
+    private @NotNull Map<Shader, Integer> shaderFragmentShaders = new HashMap<Shader, Integer>();
+
+    /**
+     * A map of meshes to their gl vertex buffer ids (Only used internally)
+     * 
+     * @since 1.3.0
+     */
+    private @NotNull Map<Mesh, Integer> meshVertBuffers = new HashMap<Mesh, Integer>();
+
+    /**
+     * A map of meshes to their gl uv buffer ids (Only used internally)
+     * 
+     * @since 1.3.0
+     */
+    private @NotNull Map<Mesh, Integer> meshUvBuffers = new HashMap<Mesh, Integer>();
+
+    /**
+     * A map of meshes to their gl triangle buffer ids (Only used internally)
+     * 
+     * @since 1.3.0
+     */
+    private @NotNull Map<Mesh, Integer> meshTriBuffers = new HashMap<Mesh, Integer>();
+
+    /**
+     * A map of textures to their gl texture ids (Only used internally)
+     * 
+     * @since 1.3.0
+     */
+    private @NotNull Map<Texture2D, Integer> textures = new HashMap<Texture2D, Integer>();
+
+    /**
+     * Create a renderer
+     * 
+     * @param scene The scene to be rendered
      * @param camera The camera to render from
-     * @param shader The shader to use
+     * @param shader The shader to use while rendering
      * 
      * @since 1.0.0
      */
-    public Renderer(Scene scene, Camera camera, Shader shader) {
+    public Renderer(@NotNull Scene scene, @NotNull Camera camera, @NotNull Shader shader) {
         this(scene, camera, shader, new Color(0, 0, 0));
     }
 
     /**
-     * Create a renderer to render a scene
+     * Create a renderer
      * 
-     * @param scene The scene to render
+     * @param scene The scene to be rendered
      * @param camera The camera to render from
-     * @param shader The shader to use
+     * @param shader The shader to use while rendering
      * @param clearColor The color to clear the background with
      * 
      * @since 1.0.0
      */
-    public Renderer(Scene scene, Camera camera, Shader shader, Color clearColor) {
+    public Renderer(@NotNull Scene scene, @NotNull Camera camera, @NotNull Shader shader, @NotNull Color clearColor) {
+        NullUtils.checkNulls(scene, "scene");
+        NullUtils.checkNulls(camera, "camera");
+        NullUtils.checkNulls(shader, "shader");
+        NullUtils.checkNulls(clearColor, "clearColor");
+
         this.scene = scene;
         this.camera = camera;
 
@@ -104,11 +153,15 @@ public class Renderer {
     /**
      * Initialize the renderer (Must be called from a {@link Window})
      * 
-     * @throws RuntimeException If the renderer is already initialized
+     * @throws RuntimeException If the renderer is already initialized or the method is not called from the window
      * 
      * @since 1.0.0
      */
     public void init() {
+        if (!Thread.currentThread().getName().startsWith("GIGHM-")) {
+            throw new RuntimeException("You can only call this method from a Window");
+        }
+
         if (this.initialized) {
             throw new RuntimeException("The renderer is already initialized");
         }
@@ -121,20 +174,30 @@ public class Renderer {
     }
 
     /**
-     * Render a frame to a window (Must be called from a {@link Window})
+     * Render the scene to the window (Must be called from a {@link Window})
+     * 
+     * @throws RuntimeException If the renderer not initialized or the method is not called from the window
      * 
      * @since 1.0.0
      */
     public void render() {
+        if (!Thread.currentThread().getName().startsWith("GIGHM-")) {
+            throw new RuntimeException("You can only call this method from a Window");
+        }
+
+        if (!this.initialized) {
+            throw new RuntimeException("The renderer is not initialized");
+        }
+
         glClearColor(((float) this.clearColor.getRed()) / 255f, ((float) this.clearColor.getGreen()) / 255f, ((float) this.clearColor.getBlue()) / 255f, 1.0f);
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         if (!this.shaderPrograms.containsKey(shader)) {
-            int programId = glCreateProgram();
+            Integer programId = glCreateProgram();
             this.shaderPrograms.put(shader, programId);
 
-            int vertexId = glCreateShader(GL_VERTEX_SHADER);
+            Integer vertexId = glCreateShader(GL_VERTEX_SHADER);
             this.shaderVertexShaders.put(shader, vertexId);
             glShaderSource(vertexId, shader.getVertexSource());
             glCompileShader(vertexId);
@@ -143,7 +206,7 @@ public class Renderer {
                 throw new RuntimeException("Failed to compile vertex shader");
             }
 
-            int fragmentId = glCreateShader(GL_FRAGMENT_SHADER);
+            Integer fragmentId = glCreateShader(GL_FRAGMENT_SHADER);
             this.shaderFragmentShaders.put(shader, fragmentId);
             glShaderSource(fragmentId, shader.getFragmentSource());
             glCompileShader(fragmentId);
@@ -176,11 +239,11 @@ public class Renderer {
             Mesh mesh = object.getComponent(Mesh.class);
             if (mesh != null) {
                 if (!this.meshVertBuffers.containsKey(mesh)) {
-                    int vertId = glGenBuffers();
+                    Integer vertId = glGenBuffers();
                     this.meshVertBuffers.put(mesh, vertId);
 
                     FloatBuffer vertBuffer = BufferUtils.createFloatBuffer(mesh.getVertices().length);
-                    vertBuffer.put(mesh.getVertices());
+                    vertBuffer.put(ArrayUtils.toPrimative(mesh.getVertices()));
                     vertBuffer.flip();
 
                     glBindBuffer(GL_ARRAY_BUFFER, vertId);
@@ -189,11 +252,11 @@ public class Renderer {
                     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
                     if (mesh.getUVs() != null) {
-                        int uvId = glGenBuffers();
+                        Integer uvId = glGenBuffers();
                         this.meshUvBuffers.put(mesh, uvId);
 
                         FloatBuffer uvBuffer = BufferUtils.createFloatBuffer(mesh.getUVs().length);
-                        uvBuffer.put(mesh.getUVs());
+                        uvBuffer.put(ArrayUtils.toPrimative(mesh.getUVs()));
                         uvBuffer.flip();
 
                         glBindBuffer(GL_ARRAY_BUFFER, uvId);
@@ -203,11 +266,11 @@ public class Renderer {
                     }
 
                     if (mesh.getTriangles() != null) {
-                        int triId = glGenBuffers();
+                        Integer triId = glGenBuffers();
                         this.meshTriBuffers.put(mesh, triId);
 
                         IntBuffer triBuffer = BufferUtils.createIntBuffer(mesh.getTriangles().length);
-                        triBuffer.put(mesh.getTriangles());
+                        triBuffer.put(ArrayUtils.toPrimative(mesh.getTriangles()));
                         triBuffer.flip();
 
                         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, triId);
@@ -220,7 +283,7 @@ public class Renderer {
                 Texture2D texture = mesh.getTexture();
                 if (texture != null) {
                     if (!this.textures.containsKey(texture)) {
-                        int textureId = glGenTextures();
+                        Integer textureId = glGenTextures();
                         this.textures.put(texture, textureId);
                         glBindTexture(GL_TEXTURE_2D, textureId);
 
@@ -230,20 +293,20 @@ public class Renderer {
                         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture.getWidth(), texture.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, texture.getRawData());
                     }
 
-                    int loc = glGetUniformLocation(this.shaderPrograms.get(shader), "sampler");
+                    Integer loc = glGetUniformLocation(this.shaderPrograms.get(shader), "sampler");
                     glUniform1i(loc, this.textures.get(texture));
 
                     glActiveTexture(GL_TEXTURE0 + this.textures.get(texture));
                     glBindTexture(GL_TEXTURE_2D, this.textures.get(texture));
                 } else {
-                    int loc = glGetUniformLocation(this.shaderPrograms.get(shader), "sampler");
+                    Integer loc = glGetUniformLocation(this.shaderPrograms.get(shader), "sampler");
                     glUniform1i(loc, -1);
 
                     glActiveTexture(0);
                     glBindTexture(GL_TEXTURE_2D, 0);
                 }
 
-                int loc = glGetUniformLocation(this.shaderPrograms.get(shader), "projection");
+                Integer loc = glGetUniformLocation(this.shaderPrograms.get(shader), "projection");
                 FloatBuffer projectionBuffer = BufferUtils.createFloatBuffer(16);
                 camera.getProjection().mul(object.getComponent(Transform.class).getMatrix()).get(projectionBuffer);
                 glUniformMatrix4fv(loc, false, projectionBuffer);
@@ -278,24 +341,26 @@ public class Renderer {
     }
 
     /**
-     * Get the scene to render
+     * Get the scene to be rendered
      * 
-     * @return The scene to render
+     * @return The scene to be rendered
      * 
      * @since 1.2.0
      */
-    public Scene getScene() {
+    public @NotNull Scene getScene() {
         return this.scene;
     }
 
     /**
-     * Set the scene to render
+     * Set the scene to be rendered
      * 
-     * @param scene The scene to render
+     * @param scene The scene to be rendered
      * 
      * @since 1.2.0
      */
-    public void setScene(Scene scene) {
+    public void setScene(@NotNull Scene scene) {
+        NullUtils.checkNulls(scene, "scene");
+
         this.scene = scene;
     }
 
@@ -306,7 +371,7 @@ public class Renderer {
      * 
      * @since 1.2.0
      */
-    public Camera getCamera() {
+    public @NotNull Camera getCamera() {
         return this.camera;
     }
 
@@ -317,51 +382,57 @@ public class Renderer {
      * 
      * @since 1.2.0
      */
-    public void setCamera(Camera camera) {
+    public void setCamera(@NotNull Camera camera) {
+        NullUtils.checkNulls(camera, "camera");
+
         this.camera = camera;
     }
 
     /**
-     * Get the shader to use
+     * Get the shader to use while rendering
      * 
-     * @return The shader to use
+     * @return The shader to use while rendering
      * 
      * @since 1.2.0
      */
-    public Shader getShader() {
+    public @NotNull Shader getShader() {
         return this.shader;
     }
 
     /**
-     * Set the shader to use
+     * Set the shader to use while rendering
      * 
-     * @param shader The shader to use
+     * @param shader The shader to use while rendering
      * 
      * @since 1.5.0
      */
-    public void setShader(Shader shader) {
+    public void setShader(@NotNull Shader shader) {
+        NullUtils.checkNulls(shader, "shader");
+
         this.shader = shader;
     }
 
     /**
-     * Get the clear/background color
+     * Get the color to clear the background with
      * 
-     * @return The clear/background color
+     * @return The color to clear the background with
      * 
      * @since 1.2.0
      */
-    public Color getClearColor() {
+    public @NotNull Color getClearColor() {
         return this.clearColor;
     }
 
     /**
-     * Set the clear/background color
+     * Set the color to clear the background with
      * 
-     * @param color Set the clear/background color
+     * @param color Set the color to clear the background with
      * 
      * @since 1.1.0
      */
-    public void setClearColor(Color color) {
+    public void setClearColor(@NotNull Color color) {
+        NullUtils.checkNulls(color, "color");
+
         this.clearColor = color;
     }
 
@@ -372,7 +443,7 @@ public class Renderer {
      * 
      * @since 1.2.0
      */
-    public boolean getInitialized() {
+    public @NotNull Boolean getInitialized() {
         return this.initialized;
     }
 }

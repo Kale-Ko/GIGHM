@@ -1,9 +1,12 @@
-package io.github.kale_ko.gighm.events.types.physics;
+package io.github.kale_ko.gighm.events.types.rendering;
 
 import io.github.kale_ko.gighm.events.types.Event;
 
 /**
- * A tick event (Fires every time the physics system updates (Every 20 milliseconds))
+ * A tick event
+ * Fires every 20 milliseconds
+ * 
+ * @author Kale Ko
  * 
  * @version 1.7.0
  * @since 1.7.0

@@ -2,9 +2,14 @@ package io.github.kale_ko.gighm.scene;
 
 import java.util.ArrayList;
 import java.util.List;
+import io.github.kale_ko.gighm.util.NotNull;
+import io.github.kale_ko.gighm.util.NullUtils;
+import io.github.kale_ko.gighm.util.Nullable;
 
 /**
- * A scene that can be rendered
+ * A scene for holding game objects that can be rendered
+ * 
+ * @author Kale Ko
  * 
  * @version 1.7.0
  * @since 1.0.0
@@ -15,17 +20,17 @@ public class Scene {
      * 
      * @since 1.0.0
      */
-    private String name;
+    private @NotNull String name;
 
     /**
      * The objects inside the scene
      * 
      * @since 1.0.0
      */
-    private List<GameObject> objects;
+    private @NotNull List<GameObject> objects = new ArrayList<GameObject>();;
 
     /**
-     * Create a scene that can be rendered
+     * Create a scene
      * 
      * @since 1.4.0
      */
@@ -34,14 +39,16 @@ public class Scene {
     }
 
     /**
-     * Create a scene that can be rendered
+     * Create a scene
      * 
      * @param name The name of the scene
      * 
      * @since 1.0.0
      */
-    public Scene(String name) {
-        this.objects = new ArrayList<GameObject>();
+    public Scene(@NotNull String name) {
+        NullUtils.checkNulls(name, "name");
+
+        this.name = name;
     }
 
     /**
@@ -51,7 +58,7 @@ public class Scene {
      * 
      * @since 1.0.0
      */
-    public String getName() {
+    public @NotNull String getName() {
         return this.name;
     }
 
@@ -62,7 +69,7 @@ public class Scene {
      * 
      * @since 1.0.0
      */
-    public List<GameObject> getObjects() {
+    public @NotNull List<GameObject> getObjects() {
         return this.objects;
     }
 
@@ -71,11 +78,11 @@ public class Scene {
      * 
      * @param name The name of the objects
      * 
-     * @return The gameobjects requested
+     * @return The game objects requested
      * 
      * @since 1.0.0
      */
-    public List<GameObject> getObjects(String name) {
+    public @NotNull List<GameObject> getObjects(@NotNull String name) {
         return this.getObjects(name, true);
     }
 
@@ -85,11 +92,14 @@ public class Scene {
      * @param name The name of the objects
      * @param caseSensitive Weather the name check is case sensitive or not
      * 
-     * @return The gameobjects requested
+     * @return The game objects requested
      * 
      * @since 1.0.0
      */
-    public List<GameObject> getObjects(String name, boolean caseSensitive) {
+    public @NotNull List<GameObject> getObjects(@NotNull String name, @NotNull Boolean caseSensitive) {
+        NullUtils.checkNulls(name, "name");
+        NullUtils.checkNulls(caseSensitive, "caseSensitive");
+
         List<GameObject> found = new ArrayList<GameObject>();
 
         for (GameObject object : this.objects) {
@@ -106,11 +116,11 @@ public class Scene {
      * 
      * @param name The name of the object
      * 
-     * @return The gameobject requested or null
+     * @return The game object requested or null
      * 
      * @since 1.0.0
      */
-    public GameObject getObject(String name) {
+    public @Nullable GameObject getObject(@NotNull String name) {
         return this.getObject(name, true);
     }
 
@@ -120,11 +130,14 @@ public class Scene {
      * @param name The name of the object
      * @param caseSensitive Weather the name check is case sensitive or not
      * 
-     * @return The gameobject requested or null
+     * @return The game object requested or null
      * 
      * @since 1.0.0
      */
-    public GameObject getObject(String name, boolean caseSensitive) {
+    public @Nullable GameObject getObject(@NotNull String name, @NotNull Boolean caseSensitive) {
+        NullUtils.checkNulls(name, "name");
+        NullUtils.checkNulls(caseSensitive, "caseSensitive");
+
         for (GameObject object : this.objects) {
             if ((caseSensitive && object.getName().equals(name)) || (!caseSensitive && object.getName().equalsIgnoreCase(name))) {
                 return object;
@@ -141,13 +154,15 @@ public class Scene {
      * 
      * @since 1.0.0
      */
-    public void addObjects(GameObject object) {
+    public void addObjects(@NotNull GameObject object) {
+        NullUtils.checkNulls(object, "object");
+
         if (object.getScene() == null) {
             object._setScene(this);
 
             this.objects.add(object);
         } else {
-            throw new RuntimeException("You can't add a gameobject to multiple scenes");
+            throw new RuntimeException("You can't add a game object to multiple scenes");
         }
     }
 
@@ -158,7 +173,9 @@ public class Scene {
      * 
      * @since 1.0.0
      */
-    public void removeObjects(GameObject object) {
+    public void removeObjects(@NotNull GameObject object) {
+        NullUtils.checkNulls(object, "object");
+
         this.objects.remove(object);
     }
 }
