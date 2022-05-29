@@ -32,6 +32,7 @@ jobs:
         with:
           arguments: publish
         env:
+          GH_PACKAGES_USER: Kale-Ko
           GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
 
       - name: Publish to Github Pages
