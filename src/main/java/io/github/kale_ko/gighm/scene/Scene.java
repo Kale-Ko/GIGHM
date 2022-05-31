@@ -27,7 +27,7 @@ public class Scene {
      * 
      * @since 1.0.0
      */
-    private @NotNull List<GameObject> objects = new ArrayList<GameObject>();;
+    private @NotNull List<GameObject> objects = new ArrayList<GameObject>();
 
     /**
      * Create a scene
