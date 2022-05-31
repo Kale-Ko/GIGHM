@@ -19,11 +19,7 @@ public class NullUtils {
      * @since 1.8.0
      */
     public static @NotNull Boolean silentCheckNulls(@Nullable Object object) {
-        if (object == null) {
-            return false;
-        } else {
-            return true;
-        }
+        return object != null;
     }
 
     /**

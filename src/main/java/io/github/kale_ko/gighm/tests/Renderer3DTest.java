@@ -26,7 +26,7 @@ public class Renderer3DTest {
             Scene scene = new Scene("Main");
 
             GameObject cameraObject = new GameObject("Camera");
-            Camera camera = Camera.createPerspective(179f, (float) (width / height), 0.01f, 512f);
+            Camera camera = Camera.createPerspective(90f, (float) (width / height), 0.01f, 512f);
             cameraObject.addComponent(camera);
             cameraObject.getComponent(Transform.class).setPosition(new Vector3d(0, 0, -20));
             scene.addObjects(cameraObject);
@@ -48,15 +48,15 @@ public class Renderer3DTest {
             Texture2D texture1 = Texture2DLoader.loadTexture(Renderer3DTest.class.getResourceAsStream("/tests/kale.png"));
             Mesh mesh1 = new Mesh(new Float[] { -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f }, 2, texture1, new Float[] { 0f, 0f, 1f, 0f, 1f, 1f, 0f, 1f }, new Integer[] { 0, 1, 2, 2, 3, 0 });
             object1.addComponent(mesh1);
-            object1.getComponent(Transform.class).setPosition(new Vector3d(125, -65, 10));
-            object1.getComponent(Transform.class).setScale(new Vector3d(32));
+            object1.getComponent(Transform.class).setPosition(new Vector3d(3, -6, 10));
+            object1.getComponent(Transform.class).setScale(new Vector3d(3));
 
             GameObject object2 = new GameObject("Test Object 2");
             Texture2D texture2 = Texture2DLoader.loadTexture(Renderer2DTest.class.getResourceAsStream("/tests/noise.png"));
             Mesh mesh2 = new Mesh(new Float[] { -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f }, 2, texture2, new Float[] { 0f, 0f, 1f, 0f, 1f, 1f, 0f, 1f }, new Integer[] { 0, 1, 2, 2, 3, 0 });
             object2.addComponent(mesh2);
-            object2.getComponent(Transform.class).setPosition(new Vector3d(45, 240, 10));
-            object2.getComponent(Transform.class).setScale(new Vector3d(16));
+            object2.getComponent(Transform.class).setPosition(new Vector3d(5, 2, 10));
+            object2.getComponent(Transform.class).setScale(new Vector3d(1));
 
             scene.addObjects(object1);
             scene.addObjects(object2);
