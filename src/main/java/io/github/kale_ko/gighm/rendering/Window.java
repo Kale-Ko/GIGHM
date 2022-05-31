@@ -294,7 +294,7 @@ public class Window {
             renderer.render();
 
             Instant now = Instant.now();
-            Double delta = (now.getEpochSecond() + ((double) now.getNano() / 1000000000)) - (lastRender.getEpochSecond() + ((double) lastRender.getNano() / 1000000000));
+            Float delta = (float) ((now.getEpochSecond() + ((double) now.getNano() / 1000000000)) - (lastRender.getEpochSecond() + ((double) lastRender.getNano() / 1000000000)));
 
             this.eventManager.emit(new RenderEvent(delta));
 
