@@ -1,7 +1,6 @@
 package io.github.kale_ko.gighm.scene.components;
 
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 import io.github.kale_ko.gighm.util.NotNull;
 import io.github.kale_ko.gighm.util.NullUtils;
 
@@ -337,7 +336,7 @@ public class Camera extends Component {
     public @NotNull Matrix4f getProjection() {
         Matrix4f target = new Matrix4f();
 
-        Matrix4f position = new Matrix4f().setTranslation(this.getGameObject().getComponent(Transform.class).getPosition().get(new Vector3f()));
+        Matrix4f position = new Matrix4f().setTranslation(this.getGameObject().getComponent(Transform.class).getPosition());
         Matrix4f rotation = new Matrix4f().set(this.getGameObject().getComponent(Transform.class).getRotation());
 
         target = projection.mul(position, target).mul(rotation);
