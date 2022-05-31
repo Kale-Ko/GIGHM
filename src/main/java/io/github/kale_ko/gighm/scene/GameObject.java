@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.joml.Quaterniond;
-import org.joml.Vector3d;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import io.github.kale_ko.gighm.scene.components.Component;
 import io.github.kale_ko.gighm.scene.components.Transform;
 import io.github.kale_ko.gighm.util.NotNull;
@@ -63,7 +63,7 @@ public class GameObject {
 
         this.name = name;
 
-        this.addComponent(new Transform(new Vector3d(0, 0, 0), new Quaterniond(0, 0, 0, 1), new Vector3d(1, 1, 1)));
+        this.addComponent(new Transform(new Vector3f(0, 0, 0), new Quaternionf(0, 0, 0, 1), new Vector3f(1, 1, 1)));
     }
 
     /**

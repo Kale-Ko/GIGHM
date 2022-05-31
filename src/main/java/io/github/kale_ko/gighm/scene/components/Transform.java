@@ -1,10 +1,8 @@
 package io.github.kale_ko.gighm.scene.components;
 
 import org.joml.Matrix4f;
-import org.joml.Quaterniond;
 import org.joml.Quaternionf;
-import org.joml.Vector2d;
-import org.joml.Vector3d;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import io.github.kale_ko.gighm.util.NotNull;
 import io.github.kale_ko.gighm.util.NullUtils;
@@ -14,7 +12,7 @@ import io.github.kale_ko.gighm.util.NullUtils;
  * 
  * @author Kale Ko
  * 
- * @version 1.3.0
+ * @version 1.9.0
  * @since 1.0.0
  */
 public class Transform extends Component {
@@ -23,21 +21,21 @@ public class Transform extends Component {
      * 
      * @since 1.0.0
      */
-    private @NotNull Vector3d position;
+    private @NotNull Vector3f position;
 
     /**
      * The rotation of the object
      * 
      * @since 1.0.0
      */
-    private @NotNull Quaterniond rotation;
+    private @NotNull Quaternionf rotation;
 
     /**
      * The scale of the object
      * 
      * @since 1.0.0
      */
-    private @NotNull Vector3d scale;
+    private @NotNull Vector3f scale;
 
     /**
      * Create a transform
@@ -48,8 +46,8 @@ public class Transform extends Component {
      * 
      * @since 1.0.0
      */
-    public Transform(@NotNull Vector2d position, @NotNull Double rotation, @NotNull Vector2d scale) {
-        this(new Vector3d(position, 0), new Quaterniond().rotateXYZ(rotation, 0, 0), new Vector3d(scale, 0));
+    public Transform(@NotNull Vector2f position, @NotNull Float rotation, @NotNull Vector2f scale) {
+        this(new Vector3f(position, 0), new Quaternionf().rotateXYZ(rotation, 0, 0), new Vector3f(scale, 0));
     }
 
     /**
@@ -61,8 +59,8 @@ public class Transform extends Component {
      * 
      * @since 1.0.0
      */
-    public Transform(@NotNull Vector3d position, @NotNull Vector3d rotation, @NotNull Vector3d scale) {
-        this(position, new Quaterniond().rotateXYZ(rotation.x, rotation.y, rotation.z), scale);
+    public Transform(@NotNull Vector3f position, @NotNull Vector3f rotation, @NotNull Vector3f scale) {
+        this(position, new Quaternionf().rotateXYZ(rotation.x, rotation.y, rotation.z), scale);
     }
 
     /**
@@ -74,7 +72,7 @@ public class Transform extends Component {
      * 
      * @since 1.0.0
      */
-    public Transform(@NotNull Vector3d position, @NotNull Quaterniond rotation, @NotNull Vector3d scale) {
+    public Transform(@NotNull Vector3f position, @NotNull Quaternionf rotation, @NotNull Vector3f scale) {
         NullUtils.checkNulls(position, "position");
         NullUtils.checkNulls(rotation, "rotation");
         NullUtils.checkNulls(scale, "scale");
@@ -93,7 +91,7 @@ public class Transform extends Component {
      * 
      * @since 1.0.0
      */
-    public @NotNull Vector3d getPosition() {
+    public @NotNull Vector3f getPosition() {
         return this.position;
     }
 
@@ -104,7 +102,7 @@ public class Transform extends Component {
      * 
      * @since 1.0.0
      */
-    public void setPosition(@NotNull Vector3d position) {
+    public void setPosition(@NotNull Vector3f position) {
         NullUtils.checkNulls(position, "position");
 
         this.position = position;
@@ -117,10 +115,10 @@ public class Transform extends Component {
      * 
      * @since 1.0.0
      */
-    public void setPosition(@NotNull Vector2d position) {
+    public void setPosition(@NotNull Vector2f position) {
         NullUtils.checkNulls(position, "position");
 
-        this.setPosition(new Vector3d(position, 0));
+        this.setPosition(new Vector3f(position, 0));
     }
 
     /**
@@ -130,7 +128,7 @@ public class Transform extends Component {
      * 
      * @since 1.0.0
      */
-    public @NotNull Quaterniond getRotation() {
+    public @NotNull Quaternionf getRotation() {
         return this.rotation;
     }
 
@@ -141,7 +139,7 @@ public class Transform extends Component {
      * 
      * @since 1.0.0
      */
-    public void setRotation(@NotNull Quaterniond rotation) {
+    public void setRotation(@NotNull Quaternionf rotation) {
         NullUtils.checkNulls(rotation, "rotation");
 
         this.rotation = rotation;
@@ -154,10 +152,10 @@ public class Transform extends Component {
      * 
      * @since 1.3.0
      */
-    public void setRotation(@NotNull Vector3d rotation) {
+    public void setRotation(@NotNull Vector3f rotation) {
         NullUtils.checkNulls(rotation, "rotation");
 
-        this.setRotation(new Quaterniond().rotateXYZ(rotation.x, rotation.y, rotation.z));
+        this.setRotation(new Quaternionf().rotateXYZ(rotation.x, rotation.y, rotation.z));
     }
 
     /**
@@ -167,10 +165,10 @@ public class Transform extends Component {
      * 
      * @since 1.3.0
      */
-    public void setRotation(@NotNull Double rotation) {
+    public void setRotation(@NotNull Float rotation) {
         NullUtils.checkNulls(rotation, "rotation");
 
-        this.setRotation(new Quaterniond().rotateXYZ(rotation, 0, 0));
+        this.setRotation(new Quaternionf().rotateXYZ(rotation, 0, 0));
     }
 
     /**
@@ -180,7 +178,7 @@ public class Transform extends Component {
      * 
      * @since 1.0.0
      */
-    public @NotNull Vector3d getScale() {
+    public @NotNull Vector3f getScale() {
         return this.scale;
     }
 
@@ -191,7 +189,7 @@ public class Transform extends Component {
      * 
      * @since 1.0.0
      */
-    public void setScale(@NotNull Vector3d scale) {
+    public void setScale(@NotNull Vector3f scale) {
         NullUtils.checkNulls(scale, "scale");
 
         this.scale = scale;
@@ -204,10 +202,10 @@ public class Transform extends Component {
      * 
      * @since 1.0.0
      */
-    public void setScale(@NotNull Vector2d scale) {
+    public void setScale(@NotNull Vector2f scale) {
         NullUtils.checkNulls(scale, "scale");
 
-        this.setScale(new Vector3d(scale, 1));
+        this.setScale(new Vector3f(scale, 1));
     }
 
     /**
@@ -218,6 +216,6 @@ public class Transform extends Component {
      * @since 1.0.0
      */
     public @NotNull Matrix4f getMatrix() {
-        return new Matrix4f().translate(this.position.get(new Vector3f())).rotate(this.rotation.get(new Quaternionf())).scale(this.scale.get(new Vector3f()));
+        return new Matrix4f().translate(this.position).rotate(this.rotation).scale(this.scale);
     }
 }

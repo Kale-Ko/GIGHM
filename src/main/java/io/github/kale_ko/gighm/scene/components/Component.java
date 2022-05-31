@@ -12,7 +12,7 @@ import io.github.kale_ko.gighm.util.Nullable;
  * 
  * @author Kale Ko
  * 
- * @version 1.0.0
+ * @version 1.9.0
  * @since 1.0.0
  */
 public abstract class Component {
@@ -61,7 +61,7 @@ public abstract class Component {
      * 
      * @since 1.7.0
      */
-    public void render(@NotNull Double delta) {
+    public void render(@NotNull Float delta) {
         NullUtils.checkNulls(delta, "delta");
     }
 

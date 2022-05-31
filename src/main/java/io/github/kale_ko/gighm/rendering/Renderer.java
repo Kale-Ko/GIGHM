@@ -203,6 +203,7 @@ public class Renderer {
             glCompileShader(vertexId);
             if (glGetShaderi(vertexId, GL_COMPILE_STATUS) != GL_TRUE) {
                 System.err.println(glGetShaderInfoLog(vertexId));
+
                 throw new RuntimeException("Failed to compile vertex shader");
             }
 
@@ -212,6 +213,7 @@ public class Renderer {
             glCompileShader(fragmentId);
             if (glGetShaderi(fragmentId, GL_COMPILE_STATUS) != GL_TRUE) {
                 System.err.println(glGetShaderInfoLog(fragmentId));
+
                 throw new RuntimeException("Failed to compile fragment shader");
             }
 
@@ -224,11 +226,13 @@ public class Renderer {
             glLinkProgram(programId);
             if (glGetProgrami(programId, GL_LINK_STATUS) != GL_TRUE) {
                 System.err.println(glGetProgramInfoLog(programId));
+
                 throw new RuntimeException("Failed to compile shader program");
             }
             glValidateProgram(programId);
             if (glGetProgrami(programId, GL_VALIDATE_STATUS) != GL_TRUE) {
                 System.err.println(glGetProgramInfoLog(programId));
+
                 throw new RuntimeException("Failed to compile shader program");
             }
         }
@@ -237,6 +241,7 @@ public class Renderer {
 
         for (GameObject object : this.scene.getObjects()) {
             Mesh mesh = object.getComponent(Mesh.class);
+
             if (mesh != null) {
                 if (!this.meshVertBuffers.containsKey(mesh)) {
                     Integer vertId = glGenBuffers();
@@ -306,10 +311,10 @@ public class Renderer {
                     glBindTexture(GL_TEXTURE_2D, 0);
                 }
 
-                Integer loc = glGetUniformLocation(this.shaderPrograms.get(shader), "projection");
+                Integer projectionLoc = glGetUniformLocation(this.shaderPrograms.get(shader), "projection");
                 FloatBuffer projectionBuffer = BufferUtils.createFloatBuffer(16);
                 camera.getProjection().mul(object.getComponent(Transform.class).getMatrix()).get(projectionBuffer);
-                glUniformMatrix4fv(loc, false, projectionBuffer);
+                glUniformMatrix4fv(projectionLoc, false, projectionBuffer);
 
                 glEnableVertexAttribArray(0);
                 glEnableVertexAttribArray(1);
@@ -317,9 +322,15 @@ public class Renderer {
                 glBindBuffer(GL_ARRAY_BUFFER, this.meshVertBuffers.get(mesh));
                 glVertexAttribPointer(0, mesh.getVerticeSize(), GL_FLOAT, false, 0, NULL);
 
+                Integer hasSamplerLoc = glGetUniformLocation(this.shaderPrograms.get(shader), "hasSampler");
+                glUniform1i(hasSamplerLoc, this.meshUvBuffers.containsKey(mesh) ? 1 : 0);
+
                 if (this.meshUvBuffers.containsKey(mesh)) {
                     glBindBuffer(GL_ARRAY_BUFFER, this.meshUvBuffers.get(mesh));
                     glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, NULL);
+                } else {
+                    Integer colorLoc = glGetUniformLocation(this.shaderPrograms.get(shader), "color");
+                    glUniform3f(colorLoc, mesh.getColor().getRed(), mesh.getColor().getGreen(), mesh.getColor().getBlue());
                 }
 
                 if (this.meshTriBuffers.containsKey(mesh)) {

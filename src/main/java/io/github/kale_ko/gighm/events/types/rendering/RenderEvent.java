@@ -10,7 +10,7 @@ import io.github.kale_ko.gighm.util.NullUtils;
  * 
  * @author Kale Ko
  * 
- * @version 1.6.0
+ * @version 1.9.0
  * @since 1.6.0
  */
 public class RenderEvent extends Event {
@@ -19,7 +19,7 @@ public class RenderEvent extends Event {
      * 
      * @since 1.6.0
      */
-    private @NotNull Double delta;
+    private @NotNull Float delta;
 
     /**
      * Create a render event
@@ -28,7 +28,7 @@ public class RenderEvent extends Event {
      * 
      * @since 1.6.0
      */
-    public RenderEvent(@NotNull Double delta) {
+    public RenderEvent(@NotNull Float delta) {
         NullUtils.checkNulls(delta, "delta");
 
         this.delta = delta;
@@ -41,7 +41,7 @@ public class RenderEvent extends Event {
      * 
      * @since 1.6.0
      */
-    public @NotNull Double getDelta() {
+    public @NotNull Float getDelta() {
         return this.delta;
     }
 }
