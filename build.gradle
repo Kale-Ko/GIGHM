@@ -191,10 +191,10 @@ publishing {
                             dependencyNode.appendNode("artifactId", it.moduleName)
 
                             project.lwjgl_natives.split(",").each {
-                                def dependencyNode = dependenciesNode.appendNode("dependency")
-                                dependencyNode.appendNode("groupId", depend.moduleGroup)
-                                dependencyNode.appendNode("artifactId", depend.moduleName)
-                                dependencyNode.appendNode("classifier", it)
+                                def subDependencyNode = dependenciesNode.appendNode("dependency")
+                                subDependencyNode.appendNode("groupId", depend.moduleGroup)
+                                subDependencyNode.appendNode("artifactId", depend.moduleName)
+                                subDependencyNode.appendNode("classifier", it)
                             }
                         } else {
                             dependencyNode.appendNode("groupId", it.moduleGroup)
