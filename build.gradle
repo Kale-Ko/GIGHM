@@ -177,22 +177,37 @@ publishing {
 
                 def dependenciesNode = node.appendNode("dependencies")
 
+                def dependencyManagmentNode = node.appendNode("dependencyManagement")
+                def dependenciesManagmentNode = dependencyManagmentNode.appendNode("dependencies")
+
                 configurations.depencancy.resolvedConfiguration.getFirstLevelModuleDependencies().each {
                     def depend = it
 
-                    def dep = dependenciesNode.appendNode("dependency")
-                    dep.appendNode("groupId", it.moduleGroup)
-                    dep.appendNode("artifactId", it.moduleName)
-                    dep.appendNode("version", it.moduleVersion)
+                    if (it.moduleName != "lwjgl-bom") {
+                        def dependencyNode = dependenciesNode.appendNode("dependency")
 
-                    if (it.moduleGroup == "org.lwjgl" && it.moduleName != "lwjgl-bom") {
-                        project.lwjgl_natives.split(",").each {
-                            dep = dependenciesNode.appendNode("dependency")
-                            dep.appendNode("groupId", depend.moduleGroup)
-                            dep.appendNode("artifactId", depend.moduleName)
-                            dep.appendNode("version", depend.moduleVersion)
-                            dep.appendNode("classifier", it)
+                        if (it.moduleGroup == "org.lwjgl") {
+                            dependencyNode.appendNode("groupId", it.moduleGroup)
+                            dependencyNode.appendNode("artifactId", it.moduleName)
+
+                            project.lwjgl_natives.split(",").each {
+                                def dependencyNode = dependenciesNode.appendNode("dependency")
+                                dependencyNode.appendNode("groupId", depend.moduleGroup)
+                                dependencyNode.appendNode("artifactId", depend.moduleName)
+                                dependencyNode.appendNode("classifier", it)
+                            }
+                        } else {
+                            dependencyNode.appendNode("groupId", it.moduleGroup)
+                            dependencyNode.appendNode("artifactId", it.moduleName)
+                            dependencyNode.appendNode("version", it.moduleVersion)
                         }
+                    } else {
+                        def dependencyNode = dependenciesManagmentNode.appendNode("dependency")
+                        dependencyNode.appendNode("groupId", depend.moduleGroup)
+                        dependencyNode.appendNode("artifactId", depend.moduleName)
+                        dependencyNode.appendNode("version", depend.moduleVersion)
+                        dependencyNode.appendNode("scope", "import")
+                        dependencyNode.appendNode("type", "pom")
                     }
                 }
             }
