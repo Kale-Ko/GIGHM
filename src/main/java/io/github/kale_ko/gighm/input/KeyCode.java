@@ -383,7 +383,7 @@ public class KeyCode {
         NullUtils.checkNulls(character, "character");
 
         for (KeyCode code : values()) {
-            if (code.character == character || code.upperCharacter == character) {
+            if (code.character.equals(character) || code.upperCharacter.equals(character)) {
                 return code;
             }
         }
@@ -406,7 +406,7 @@ public class KeyCode {
         NullUtils.checkNulls(shift, "shift");
 
         for (KeyCode code : values()) {
-            if (code.glfwKeyId == id && (code.shift == null || code.shift == shift)) {
+            if (code.glfwKeyId.equals(id) && (code.shift == null || code.shift.equals(shift))) {
                 return code;
             }
         }

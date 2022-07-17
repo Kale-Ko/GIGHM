@@ -55,7 +55,7 @@ To create a simple scene you only need a few lines.
 Scene scene = new Scene("Main"); // Create the main scene
 
 GameObject cameraObject = new GameObject("Camera"); // Create the camera object
-Camera camera = Camera.createOrthagraphic(width, height, farPlane); // Create the 2D camera component
+Camera camera = Camera.createOrthographic(width, height, farPlane); // Create the 2D camera component
 // OR createPerspective(fov, width / height, nearPlane, farPlane) for 3D;
 cameraObject.addComponent(camera); // Add the camera component to the camera object
 scene.addObjects(cameraObject); // Add the camera object into the scene
@@ -69,6 +69,6 @@ window.setTitle("Demo!"); // Change the window title once it is created
 ```
 
 For the complete example see [here](https://github.com/Kale-Ko/GIGHM/blob/master/src/main/java/io/github/kale_ko/gighm/tests/SimpleTest.java).
-For a simple rendering example see [here](https://github.com/Kale-Ko/GIGHM/blob/master/src/main/java/io/github/kale_ko/gighm/tests/Renderer2DTest.java).
+For a simple game example see [here](https://github.com/Kale-Ko/GIGHM/blob/master/src/main/java/io/github/kale_ko/gighm/tests/SimpleGame.java).
 
 For more info on the usage of the api see the [Javadocs](https://gighm.kaleko.ga/docs/).

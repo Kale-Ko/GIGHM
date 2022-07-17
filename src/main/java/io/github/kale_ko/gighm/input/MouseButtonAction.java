@@ -115,7 +115,7 @@ public class MouseButtonAction {
         NullUtils.checkNulls(id, "id");
 
         for (MouseButtonAction action : values()) {
-            if (action.glfwEventId == id) {
+            if (action.glfwEventId.equals(id)) {
                 return action;
             }
         }
