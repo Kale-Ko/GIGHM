@@ -156,7 +156,7 @@ public class KeyMod {
         NullUtils.checkNulls(id, "id");
 
         for (KeyMod action : values()) {
-            if (action.glfwModId == id) {
+            if (action.glfwModId.equals(id)) {
                 return action;
             }
         }

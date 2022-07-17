@@ -9,7 +9,7 @@ import io.github.kale_ko.gighm.util.NullUtils;
  * 
  * @author Kale Ko
  * 
- * @version 1.0.0
+ * @version 2.0.0
  * @since 1.0.0
  */
 public class Camera extends Component {
@@ -23,11 +23,11 @@ public class Camera extends Component {
      */
     public enum CameraType {
         /**
-         * An orthagraphic (2D) camera
+         * An orthographic (2D) camera
          * 
          * @since 1.0.0
          */
-        ORTHAGRAPHIC,
+        ORTHOGRAPHIC,
 
         /**
          * An perspective (3D) camera
@@ -49,14 +49,14 @@ public class Camera extends Component {
      * 
      * @since 1.0.0
      */
-    private Float width;
+    private Integer width;
 
     /**
      * The height of the camera
      * 
      * @since 1.0.0
      */
-    private Float height;
+    private Integer height;
 
     /**
      * The field of view of the camera
@@ -107,23 +107,23 @@ public class Camera extends Component {
     }
 
     /**
-     * Create a orthagraphic camera
+     * Create a orthographic camera
      * 
      * @param width The width of the camera
      * @param height The height of the camera
      * @param far The far plane of the camera (Farthest thing that will render)
      * 
-     * @return A new orthagraphic camera with the passed paramiters
+     * @return A new orthographic camera with the passed parameters
      */
-    public static Camera createOrthagraphic(Integer width, Integer height, Float far) {
+    public static Camera createOrthographic(Integer width, Integer height, Float far) {
         NullUtils.checkNulls(width, "width");
         NullUtils.checkNulls(height, "height");
         NullUtils.checkNulls(far, "far");
 
-        Camera camera = new Camera(CameraType.ORTHAGRAPHIC);
+        Camera camera = new Camera(CameraType.ORTHOGRAPHIC);
 
-        camera.width = (float) width;
-        camera.height = (float) height;
+        camera.width = width;
+        camera.height = height;
         camera.far = far;
 
         camera.recalculateProjection();
@@ -139,7 +139,7 @@ public class Camera extends Component {
      * @param near The near plane of the camera
      * @param far The far plane of the camera
      * 
-     * @return A new {@link Camera} with the passed paramiters
+     * @return A new {@link Camera} with the passed parameters
      */
     public static Camera createPerspective(Float fov, Float aspect, Float near, Float far) {
         NullUtils.checkNulls(fov, "fov");
@@ -177,7 +177,7 @@ public class Camera extends Component {
      * 
      * @since 1.0.0
      */
-    public Float getWidth() {
+    public Integer getWidth() {
         return this.width;
     }
 
@@ -188,7 +188,7 @@ public class Camera extends Component {
      * 
      * @since 1.0.0
      */
-    public void setWidth(@NotNull Float width) {
+    public void setWidth(@NotNull Integer width) {
         NullUtils.checkNulls(width, "width");
 
         this.width = width;
@@ -203,7 +203,7 @@ public class Camera extends Component {
      * 
      * @since 1.0.0
      */
-    public Float getHeight() {
+    public Integer getHeight() {
         return this.height;
     }
 
@@ -214,7 +214,7 @@ public class Camera extends Component {
      * 
      * @since 1.0.0
      */
-    public void setHeight(@NotNull Float height) {
+    public void setHeight(@NotNull Integer height) {
         NullUtils.checkNulls(height, "height");
 
         this.height = height;
@@ -351,10 +351,27 @@ public class Camera extends Component {
      * @since 1.0.0
      */
     public void recalculateProjection() {
-        if (this.type == CameraType.ORTHAGRAPHIC) {
+        if (this.type == CameraType.ORTHOGRAPHIC) {
             this.projection = new Matrix4f().setOrtho(-this.width / 2, this.width / 2, -this.height / 2, this.height / 2, -this.far, this.far);
         } else if (this.type == CameraType.PERSPECTIVE) {
             this.projection = new Matrix4f().setPerspective(this.fov * ((float) Math.PI / 180f), this.aspect, this.near, this.far);
         }
+    }
+
+    /**
+     * Get a copy of the camera
+     * 
+     * @return A copy of the object
+     * 
+     * @since 2.0.0
+     */
+    public Camera copy() {
+        if (this.type == CameraType.ORTHOGRAPHIC) {
+            return createOrthographic(width, height, far);
+        } else if (this.type == CameraType.PERSPECTIVE) {
+            return createPerspective(fov, aspect, near, far);
+        }
+
+        return null;
     }
 }

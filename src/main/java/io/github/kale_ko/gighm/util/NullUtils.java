@@ -1,7 +1,7 @@
 package io.github.kale_ko.gighm.util;
 
 /**
- * A utility for checking if paramiters are null
+ * A utility for checking if parameters are null
  * 
  * @author Kale Ko
  * 
@@ -14,7 +14,7 @@ public class NullUtils {
      * 
      * @param object The object to check
      * 
-     * @return If the object is null or not
+     * @return False is the object is null true otherwise
      * 
      * @since 1.8.0
      */
@@ -26,17 +26,17 @@ public class NullUtils {
      * Check if an object is null
      * 
      * @param object The object to check
-     * @param name The name of the paramitter
+     * @param name The name of the parameter
      * 
-     * @return If the object is null or not
+     * @return True if the object is not null 
      * 
      * @throws NullPointerException If the object is null
      * 
      * @since 1.8.0
      */
-    public static @NotNull Boolean checkNulls(@Nullable Object object, @NotNull String name) {
+    public static @NotNull Boolean checkNulls(@Nullable Object object, @NotNull String name) throws NullPointerException {
         if (!silentCheckNulls(object)) {
-            throw new NullPointerException("Paramitter \"" + name + "\" can not be null");
+            throw new NullPointerException("Parameter \"" + name + "\" can not be null");
         } else {
             return true;
         }
