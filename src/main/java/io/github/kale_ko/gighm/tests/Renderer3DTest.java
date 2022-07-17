@@ -3,10 +3,10 @@ package io.github.kale_ko.gighm.tests;
 import java.awt.Color;
 import java.io.IOException;
 import org.joml.Vector3f;
-import io.github.kale_ko.gighm.events.EventManager;
 import io.github.kale_ko.gighm.events.types.rendering.RenderEvent;
 import io.github.kale_ko.gighm.rendering.Renderer;
 import io.github.kale_ko.gighm.rendering.Window;
+import io.github.kale_ko.gighm.rendering.objects.PrimitiveObjects;
 import io.github.kale_ko.gighm.rendering.shaders.Shader;
 import io.github.kale_ko.gighm.rendering.shaders.ShaderLoader;
 import io.github.kale_ko.gighm.rendering.textures.Texture2D;
@@ -23,45 +23,40 @@ public class Renderer3DTest {
             Integer width = 800;
             Integer height = 600;
 
-            Scene scene = new Scene("Main");
+            Scene scene = new Scene();
 
-            GameObject cameraObject = new GameObject("Camera");
-            Camera camera = Camera.createPerspective(90f, (float) (width / height), 0.01f, 512f);
+            GameObject cameraObject = new GameObject();
+            Camera camera = Camera.createPerspective(90f, (float) width / (float) height, 0.01f, 512f);
             cameraObject.addComponent(camera);
             cameraObject.getComponent(Transform.class).setPosition(new Vector3f(0, 0, -20));
             scene.addObjects(cameraObject);
 
-            Shader shader = ShaderLoader.loadShader(Renderer2DTest.class.getResourceAsStream("/vertex.glsl"), Renderer2DTest.class.getResourceAsStream("/fragment.glsl"));
-            Renderer renderer = new Renderer(scene, camera, shader);
-            renderer.setClearColor(new Color(0.8f, 0.8f, 0.8f));
+            Shader shader = ShaderLoader.loadDefault();
+            Renderer renderer = new Renderer(scene, camera, shader, new Color(0.8f, 0.8f, 0.8f));
 
-            Window window = new Window(renderer, "Test Renderer", width, height, false, true);
+            Window window = new Window(renderer, "3D Renderer", width, height, false, true);
+            window.setIcon(Texture2DLoader.loadTexture(Renderer2DTest.class.getResourceAsStream("/tests/kale.png")));
 
-            EventManager eventManager = new EventManager();
-            window.setEventManager(eventManager);
-
-            eventManager.addEventListener(RenderEvent.class, event -> {
+            window.getEventManager().addEventListener(RenderEvent.class, event -> {
                 System.out.println("FPS: " + Math.round(1 / event.getDelta()));
             });
 
-            GameObject object1 = new GameObject("Test Object");
+            GameObject object1 = new GameObject();
             Texture2D texture1 = Texture2DLoader.loadTexture(Renderer3DTest.class.getResourceAsStream("/tests/kale.png"));
-            Mesh mesh1 = new Mesh(new Float[] { -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f }, 2, texture1, new Float[] { 0f, 0f, 1f, 0f, 1f, 1f, 0f, 1f }, new Integer[] { 0, 1, 2, 2, 3, 0 });
+            Mesh mesh1 = PrimitiveObjects.CUBE.copy(texture1);
             object1.addComponent(mesh1);
             object1.getComponent(Transform.class).setPosition(new Vector3f(3, -6, 10));
             object1.getComponent(Transform.class).setScale(new Vector3f(3));
 
-            GameObject object2 = new GameObject("Test Object 2");
-            Texture2D texture2 = Texture2DLoader.loadTexture(Renderer2DTest.class.getResourceAsStream("/tests/noise.png"));
-            Mesh mesh2 = new Mesh(new Float[] { -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f }, 2, texture2, new Float[] { 0f, 0f, 1f, 0f, 1f, 1f, 0f, 1f }, new Integer[] { 0, 1, 2, 2, 3, 0 });
+            GameObject object2 = new GameObject();
+            Texture2D texture2 = Texture2DLoader.loadTexture(Renderer3DTest.class.getResourceAsStream("/tests/noise.png"));
+            Mesh mesh2 = PrimitiveObjects.CUBE.copy(texture2);
             object2.addComponent(mesh2);
             object2.getComponent(Transform.class).setPosition(new Vector3f(5, 2, 10));
             object2.getComponent(Transform.class).setScale(new Vector3f(1));
 
             scene.addObjects(object1);
             scene.addObjects(object2);
-
-            window.setTitle("3D Renderer!");
         } catch (IOException e) {
             e.printStackTrace();
         }

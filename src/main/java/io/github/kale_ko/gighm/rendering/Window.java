@@ -11,6 +11,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
 import io.github.kale_ko.gighm.events.EventManager;
@@ -20,12 +21,16 @@ import io.github.kale_ko.gighm.events.types.input.MouseMoveEvent;
 import io.github.kale_ko.gighm.events.types.input.MouseScrollEvent;
 import io.github.kale_ko.gighm.events.types.rendering.RenderEvent;
 import io.github.kale_ko.gighm.events.types.rendering.TickEvent;
+import io.github.kale_ko.gighm.exception.AlreadyInitializedException;
+import io.github.kale_ko.gighm.exception.GLInitializeException;
+import io.github.kale_ko.gighm.exception.ThreadPauseException;
 import io.github.kale_ko.gighm.input.InputManager;
 import io.github.kale_ko.gighm.input.KeyAction;
 import io.github.kale_ko.gighm.input.KeyCode;
 import io.github.kale_ko.gighm.input.KeyMod;
 import io.github.kale_ko.gighm.input.MouseButton;
 import io.github.kale_ko.gighm.input.MouseButtonAction;
+import io.github.kale_ko.gighm.rendering.textures.Texture2D;
 import io.github.kale_ko.gighm.scene.GameObject;
 import io.github.kale_ko.gighm.scene.components.Component;
 import io.github.kale_ko.gighm.util.NotNull;
@@ -133,9 +138,11 @@ public class Window {
      * @param width The width of the window
      * @param height The height of the window
      * 
+     * @throws ThreadPauseException If the main thread can't be paused
+     * 
      * @since 1.0.0
      */
-    public Window(@NotNull Renderer renderer, @NotNull String title, @NotNull Integer width, @NotNull Integer height) {
+    public Window(@NotNull Renderer renderer, @NotNull String title, @NotNull Integer width, @NotNull Integer height) throws ThreadPauseException {
         this(renderer, title, width, height, false, true);
     }
 
@@ -146,14 +153,14 @@ public class Window {
      * @param title The title of the window
      * @param width The width of the window
      * @param height The height of the window
-     * @param maximized Weather the window should be maxamized
+     * @param maximized Weather the window should be maximized
      * @param resizable Weather the window should be resizable
      * 
-     * @throws RuntimeException If the main thread can't be paused
+     * @throws ThreadPauseException If the main thread can't be paused
      * 
      * @since 1.7.0
      */
-    public Window(@NotNull Renderer renderer, @NotNull String title, @NotNull Integer width, @NotNull Integer height, @NotNull Boolean maximized, @NotNull Boolean resizable) {
+    public Window(@NotNull Renderer renderer, @NotNull String title, @NotNull Integer width, @NotNull Integer height, @NotNull Boolean maximized, @NotNull Boolean resizable) throws ThreadPauseException {
         NullUtils.checkNulls(renderer, "renderer");
         NullUtils.checkNulls(title, "title");
         NullUtils.checkNulls(width, "width");
@@ -187,26 +194,27 @@ public class Window {
         } catch (InterruptedException e) {
             e.printStackTrace();
 
-            throw new RuntimeException("The main thread could not be properly paused");
+            throw new ThreadPauseException("The main thread could not be properly paused");
         }
     }
 
     /**
      * Initialize the window (Must be called from a GIGHM thread)
      * 
-     * @throws RuntimeException If the window is already initialized, the method is not called from a GIGHM thread, or glfw fails to create the window
+     * @throws AlreadyInitializedException If the window is already initialized
+     * @throws GLInitializeException If glfw fails to initialize or create the window
      * 
      * @since 1.0.0
      */
-    private void init() {
+    private void init() throws AlreadyInitializedException, GLInitializeException {
         if (this.initialized) {
-            throw new RuntimeException("The window is already initialized");
+            throw new AlreadyInitializedException("The window is already initialized");
         }
 
         glfwSetErrorCallback(GLFWErrorCallback.createPrint(System.err));
 
         if (!glfwInit()) {
-            throw new RuntimeException("Failed to initialize OpenGl and GLFW");
+            throw new GLInitializeException("Failed to initialize OpenGl and GLFW");
         }
 
         this.initialized = true;
@@ -215,12 +223,12 @@ public class Window {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_FOCUSED, GLFW_FALSE);
         glfwWindowHint(GLFW_MAXIMIZED, maximized ? GLFW_TRUE : GLFW_FALSE);
-        glfwWindowHint(GLFW_FOCUS_ON_SHOW, GLFW_TRUE);
         glfwWindowHint(GLFW_RESIZABLE, resizable ? GLFW_TRUE : GLFW_FALSE);
+        glfwWindowHint(GLFW_FOCUS_ON_SHOW, GLFW_TRUE);
 
         windowId = glfwCreateWindow(width, height, title, NULL, NULL);
-        if (windowId == NULL) {
-            throw new RuntimeException("Failed to initialize the GLFW window");
+        if (windowId.equals(NULL)) {
+            throw new GLInitializeException("Failed to initialize the GLFW window");
         }
 
         this.thread.setName("GIGHM-" + windowId);
@@ -229,7 +237,7 @@ public class Window {
             this.mainThread.notify();
         }
 
-        glfwSetKeyCallback(windowId, (window, key, scancode, action, mods) -> {
+        glfwSetKeyCallback(windowId, (window, key, scanCode, action, mods) -> {
             this.eventManager.emit(new KeyEvent(KeyCode.valueOfGLFWKey(key, KeyMod.isPressed(KeyMod.SHIFT, mods)), KeyAction.valueOfGLFWEvent(action), KeyMod.getPressed(mods)));
         });
 
@@ -245,12 +253,16 @@ public class Window {
             this.eventManager.emit(new MouseScrollEvent((int) x, (int) y));
         });
 
-        glfwSetWindowSizeCallback(windowId, (window, newwidth, newheight) -> {
-            this.width = newwidth;
-            this.height = newheight;
+        glfwSetWindowSizeCallback(windowId, (window, newWidth, newHeight) -> {
+            if (width == 0 || height == 0) {
+                glfwSetWindowShouldClose(windowId, true);
+            }
 
-            renderer.getCamera().setWidth((float) this.width);
-            renderer.getCamera().setHeight((float) this.height);
+            this.width = newWidth;
+            this.height = newHeight;
+
+            renderer.getCamera().setWidth(this.width);
+            renderer.getCamera().setHeight(this.height);
             renderer.getCamera().setAspect((float) (this.width / this.height));
 
             renderer.getCamera().recalculateProjection();
@@ -274,13 +286,15 @@ public class Window {
             }
         }, 1, 20, TimeUnit.MILLISECONDS);
 
-        MemoryStack stack = stackPush();
-        IntBuffer cWidth = stack.mallocInt(1);
-        IntBuffer cHeight = stack.mallocInt(1);
-        glfwGetWindowSize(windowId, cWidth, cHeight);
+        if (!this.maximized) {
+            MemoryStack stack = stackPush();
+            IntBuffer cWidth = stack.mallocInt(1);
+            IntBuffer cHeight = stack.mallocInt(1);
+            glfwGetWindowSize(windowId, cWidth, cHeight);
 
-        GLFWVidMode vid = glfwGetVideoMode(glfwGetPrimaryMonitor());
-        glfwSetWindowPos(windowId, (vid.width() - cWidth.get(0)) / 2, (vid.height() - cHeight.get(0)) / 2);
+            GLFWVidMode vid = glfwGetVideoMode(glfwGetPrimaryMonitor());
+            glfwSetWindowPos(windowId, (vid.width() - cWidth.get(0)) / 2, (vid.height() - cHeight.get(0)) / 2);
+        }
 
         glfwMakeContextCurrent(windowId);
         glfwSwapInterval(1);
@@ -354,17 +368,6 @@ public class Window {
     }
 
     /**
-     * Set the event manager used for listening to and broadcasting events
-     * 
-     * @param eventManager The event manager used for listening to and broadcasting events
-     * 
-     * @since 1.6.0
-     */
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    /**
      * Get the input manager used for getting user input
      * 
      * @return The input manager used for getting user input
@@ -373,17 +376,6 @@ public class Window {
      */
     public InputManager getInputManager() {
         return this.inputManager;
-    }
-
-    /**
-     * Set the input manager used for getting user input
-     * 
-     * @param inputManager The input manager used for getting user input
-     * 
-     * @since 1.5.0
-     */
-    public void setInputManager(InputManager inputManager) {
-        this.inputManager = inputManager;
     }
 
     /**
@@ -493,6 +485,22 @@ public class Window {
         this.resizable = resizable;
 
         glfwSetWindowAttrib(windowId, GLFW_RESIZABLE, resizable ? GLFW_TRUE : GLFW_FALSE);
+    }
+
+    /**
+     * Set the icon of the window
+     * 
+     * @param icon The icon of the window
+     * 
+     * @since 2.0.0
+     */
+    public void setIcon(Texture2D icon) {
+        GLFWImage image = GLFWImage.malloc();
+        image.set(icon.getWidth(), icon.getHeight(), icon.getRawData());
+        GLFWImage.Buffer images = GLFWImage.malloc(1);
+        images.put(0, image);
+
+        glfwSetWindowIcon(windowId, images);
     }
 
     /**

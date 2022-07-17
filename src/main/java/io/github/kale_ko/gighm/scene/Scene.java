@@ -2,6 +2,7 @@ package io.github.kale_ko.gighm.scene;
 
 import java.util.ArrayList;
 import java.util.List;
+import io.github.kale_ko.gighm.exception.InvalidModificationException;
 import io.github.kale_ko.gighm.util.NotNull;
 import io.github.kale_ko.gighm.util.NullUtils;
 import io.github.kale_ko.gighm.util.Nullable;
@@ -152,9 +153,11 @@ public class Scene {
      * 
      * @param object The objects to add
      * 
+     * @throws InvalidModificationException If the game object is already part of another scene
+     * 
      * @since 1.0.0
      */
-    public void addObjects(@NotNull GameObject object) {
+    public void addObjects(@NotNull GameObject object) throws InvalidModificationException {
         NullUtils.checkNulls(object, "object");
 
         if (object.getScene() == null) {
@@ -162,7 +165,7 @@ public class Scene {
 
             this.objects.add(object);
         } else {
-            throw new RuntimeException("You can't add a game object to multiple scenes");
+            throw new InvalidModificationException("You can't add a game object to multiple scenes");
         }
     }
 
