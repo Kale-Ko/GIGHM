@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import io.github.kale_ko.gighm.events.types.Event;
+import io.github.kale_ko.gighm.exception.InvalidDataException;
 import io.github.kale_ko.gighm.util.NotNull;
 import io.github.kale_ko.gighm.util.NullUtils;
 
@@ -43,7 +44,7 @@ public class EventManager {
             if (this.isAccepted(event)) {
                 this.consumer.accept((T) event);
             } else {
-                throw new RuntimeException("Can't pass event of type \"" + event.getClass().getName() + "\" to listener of type \"" + type.getName() + "\"");
+                throw new InvalidDataException("Can't pass event of type \"" + event.getClass().getName() + "\" to listener of type \"" + type.getName() + "\"");
             }
         }
 

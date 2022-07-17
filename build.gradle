@@ -64,10 +64,8 @@ tasks.register("buildFat", Jar) {
 
     manifest {
         attributes "Name": project.group.replace(".", "/") + "/" + project.archivesBaseName + "/",
-            "Main-Class": project.group + "." + project.archivesBaseName + ".tests.Renderer2DTest",
-            "Application-Name": project.name,
-            "Specification-Title": project.name,
-            "Specification-Version": project.version
+            "Main-Class": project.group + "." + project.archivesBaseName + ".tests.SimpleGame",
+            "Application-Name": project.name
     }
 }
 

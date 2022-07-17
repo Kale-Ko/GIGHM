@@ -158,7 +158,7 @@ public class MouseButton {
         NullUtils.checkNulls(id, "id");
 
         for (MouseButton code : values()) {
-            if (code.glfwButtonId == id) {
+            if (code.glfwButtonId.equals(id)) {
                 return code;
             }
         }

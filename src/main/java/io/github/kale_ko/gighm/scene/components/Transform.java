@@ -218,4 +218,15 @@ public class Transform extends Component {
     public @NotNull Matrix4f getMatrix() {
         return new Matrix4f().translate(this.position).rotate(this.rotation).scale(this.scale);
     }
+
+    /**
+     * Get a copy of the transform
+     * 
+     * @return A copy of the object
+     * 
+     * @since 2.0.0
+     */
+    public Transform copy() {
+        return new Transform(position, rotation, scale);
+    }
 }

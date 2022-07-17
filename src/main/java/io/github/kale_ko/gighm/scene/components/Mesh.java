@@ -1,6 +1,7 @@
 package io.github.kale_ko.gighm.scene.components;
 
 import java.awt.Color;
+import io.github.kale_ko.gighm.exception.InvalidDataException;
 import io.github.kale_ko.gighm.rendering.textures.Texture2D;
 import io.github.kale_ko.gighm.util.NotNull;
 import io.github.kale_ko.gighm.util.NullUtils;
@@ -93,9 +94,11 @@ public class Mesh extends Component {
      * @param uvs The uvs of the mesh
      * @param triangles The triangles of the mesh
      * 
+     * @throws InvalidDataException If the verticie size is not 2 or 3
+     * 
      * @since 1.0.0
      */
-    public Mesh(@NotNull Float[] vertices, @NotNull Integer verticeSize, @Nullable Texture2D texture, @Nullable Float[] uvs, @Nullable Integer[] triangles) {
+    public Mesh(@NotNull Float[] vertices, @NotNull Integer verticeSize, @Nullable Texture2D texture, @Nullable Float[] uvs, @Nullable Integer[] triangles) throws InvalidDataException {
         NullUtils.checkNulls(vertices, "vertices");
         NullUtils.checkNulls(verticeSize, "verticeSize");
 
@@ -108,7 +111,7 @@ public class Mesh extends Component {
         this.triangles = triangles;
 
         if (this.verticeSize != 2 && this.verticeSize != 3) {
-            throw new RuntimeException("Vertice size must be either 2 or 3");
+            throw new InvalidDataException("Vertice size must be either 2 or 3");
         }
     }
 
@@ -120,9 +123,28 @@ public class Mesh extends Component {
      * @param color The color of the mesh
      * @param triangles The triangles of the mesh
      * 
+     * @throws InvalidDataException If the verticie size is not 2 or 3
+     * 
      * @since 1.9.0
      */
-    public Mesh(@NotNull Float[] vertices, @NotNull Integer verticeSize, @Nullable Color color, @Nullable Integer[] triangles) {
+    public Mesh(@NotNull Float[] vertices, @NotNull Integer verticeSize, @Nullable Color color, @Nullable Integer[] triangles) throws InvalidDataException {
+        this(vertices, verticeSize, color, null, triangles);
+    }
+
+    /**
+     * Create a mesh
+     * 
+     * @param vertices The vertices of the mesh
+     * @param verticeSize How many numbers define a point in the mesh
+     * @param color The color of the mesh
+     * @param uvs The uvs of the mesh
+     * @param triangles The triangles of the mesh
+     * 
+     * @throws InvalidDataException If the verticie size is not 2 or 3
+     * 
+     * @since 1.9.0
+     */
+    public Mesh(@NotNull Float[] vertices, @NotNull Integer verticeSize, @Nullable Color color, @Nullable Float[] uvs, @Nullable Integer[] triangles) throws InvalidDataException {
         NullUtils.checkNulls(vertices, "vertices");
         NullUtils.checkNulls(verticeSize, "verticeSize");
 
@@ -131,10 +153,12 @@ public class Mesh extends Component {
 
         this.color = color;
 
+        this.uvs = uvs;
+
         this.triangles = triangles;
 
         if (this.verticeSize != 2 && this.verticeSize != 3) {
-            throw new RuntimeException("Vertice size must be either 2 or 3");
+            throw new InvalidDataException("Vertice size must be either 2 or 3");
         }
     }
 
@@ -219,5 +243,64 @@ public class Mesh extends Component {
         }
 
         return fullVertices;
+    }
+
+    /**
+     * Get a copy of the mesh
+     * 
+     * @return A copy of the object
+     * 
+     * @since 2.0.0
+     */
+    public Mesh copy() {
+        if (this.texture != null && this.uvs != null) {
+            return new Mesh(this.vertices, this.verticeSize, this.texture, this.uvs, this.triangles);
+        } else {
+            return new Mesh(this.vertices, this.verticeSize, this.color, this.triangles);
+        }
+    }
+
+    /**
+     * Get a copy of the mesh
+     * 
+     * @param color Overwrite the old color with this one
+     * 
+     * @return A copy of the object
+     * 
+     * @since 2.0.0
+     */
+    public Mesh copy(Color color) {
+        return new Mesh(this.vertices, this.verticeSize, color, this.triangles);
+    }
+
+    /**
+     * Get a copy of the mesh
+     * 
+     * @param texture Overwrite the old texture with this one
+     * 
+     * @return A copy of the object
+     * 
+     * @since 2.0.0
+     */
+    public Mesh copy(Texture2D texture) {
+        if (this.uvs != null) {
+            return new Mesh(this.vertices, this.verticeSize, texture, this.uvs, this.triangles);
+        } else {
+            return new Mesh(this.vertices, this.verticeSize, this.color, this.triangles);
+        }
+    }
+
+    /**
+     * Get a copy of the mesh
+     * 
+     * @param texture Overwrite the old texture with this one
+     * @param uvs Overwrite the old uvs with these one
+     * 
+     * @return A copy of the object
+     * 
+     * @since 2.0.0
+     */
+    public Mesh copy(Texture2D texture, Float[] uvs) {
+        return new Mesh(this.vertices, this.verticeSize, texture, uvs, this.triangles);
     }
 }

@@ -122,7 +122,7 @@ public class KeyAction {
         NullUtils.checkNulls(id, "id");
 
         for (KeyAction action : values()) {
-            if (action.glfwEventId == id) {
+            if (action.glfwEventId.equals(id)) {
                 return action;
             }
         }

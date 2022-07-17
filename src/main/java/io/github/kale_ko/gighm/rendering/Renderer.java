@@ -9,6 +9,10 @@ import java.util.HashMap;
 import java.util.Map;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL;
+import io.github.kale_ko.gighm.exception.AlreadyInitializedException;
+import io.github.kale_ko.gighm.exception.GLCompileException;
+import io.github.kale_ko.gighm.exception.IncorrectThreadException;
+import io.github.kale_ko.gighm.exception.NotInitializedException;
 import io.github.kale_ko.gighm.rendering.shaders.Shader;
 import io.github.kale_ko.gighm.rendering.textures.Texture2D;
 import io.github.kale_ko.gighm.scene.GameObject;
@@ -153,40 +157,42 @@ public class Renderer {
     /**
      * Initialize the renderer (Must be called from a {@link Window})
      * 
-     * @throws RuntimeException If the renderer is already initialized or the method is not called from the window
+     * @throws AlreadyInitializedException If the renderer is already initialized
+     * @throws IncorrectThreadException If the method is not called from the window
      * 
      * @since 1.0.0
      */
-    public void init() {
+    public void init() throws AlreadyInitializedException, IncorrectThreadException {
         if (!Thread.currentThread().getName().startsWith("GIGHM-")) {
-            throw new RuntimeException("You can only call this method from a Window");
+            throw new IncorrectThreadException("You can only call this method from a Window");
         }
 
         if (this.initialized) {
-            throw new RuntimeException("The renderer is already initialized");
+            throw new AlreadyInitializedException("The renderer is already initialized");
         }
 
         this.initialized = true;
 
         GL.createCapabilities();
-        glEnable(GL_DEPTH);
+        glEnable(GL_DEPTH_TEST);
         glEnable(GL_TEXTURE_2D);
     }
 
     /**
      * Render the scene to the window (Must be called from a {@link Window})
      * 
-     * @throws RuntimeException If the renderer not initialized or the method is not called from the window
+     * @throws NotInitializedException If the renderer is not initialized
+     * @throws IncorrectThreadException If the method is not called from the window
      * 
      * @since 1.0.0
      */
-    public void render() {
+    public void render() throws NotInitializedException, IncorrectThreadException {
         if (!Thread.currentThread().getName().startsWith("GIGHM-")) {
-            throw new RuntimeException("You can only call this method from a Window");
+            throw new IncorrectThreadException("You can only call this method from a Window");
         }
 
         if (!this.initialized) {
-            throw new RuntimeException("The renderer is not initialized");
+            throw new NotInitializedException("The renderer is not initialized");
         }
 
         glClearColor(((float) this.clearColor.getRed()) / 255f, ((float) this.clearColor.getGreen()) / 255f, ((float) this.clearColor.getBlue()) / 255f, 1.0f);
@@ -204,7 +210,7 @@ public class Renderer {
             if (glGetShaderi(vertexId, GL_COMPILE_STATUS) != GL_TRUE) {
                 System.err.println(glGetShaderInfoLog(vertexId));
 
-                throw new RuntimeException("Failed to compile vertex shader");
+                throw new GLCompileException("Failed to compile vertex shader");
             }
 
             Integer fragmentId = glCreateShader(GL_FRAGMENT_SHADER);
@@ -214,7 +220,7 @@ public class Renderer {
             if (glGetShaderi(fragmentId, GL_COMPILE_STATUS) != GL_TRUE) {
                 System.err.println(glGetShaderInfoLog(fragmentId));
 
-                throw new RuntimeException("Failed to compile fragment shader");
+                throw new GLCompileException("Failed to compile fragment shader");
             }
 
             glAttachShader(programId, vertexId);
@@ -227,13 +233,13 @@ public class Renderer {
             if (glGetProgrami(programId, GL_LINK_STATUS) != GL_TRUE) {
                 System.err.println(glGetProgramInfoLog(programId));
 
-                throw new RuntimeException("Failed to compile shader program");
+                throw new GLCompileException("Failed to compile shader program");
             }
             glValidateProgram(programId);
             if (glGetProgrami(programId, GL_VALIDATE_STATUS) != GL_TRUE) {
                 System.err.println(glGetProgramInfoLog(programId));
 
-                throw new RuntimeException("Failed to compile shader program");
+                throw new GLCompileException("Failed to compile shader program");
             }
         }
 
@@ -248,7 +254,7 @@ public class Renderer {
                     this.meshVertBuffers.put(mesh, vertId);
 
                     FloatBuffer vertBuffer = BufferUtils.createFloatBuffer(mesh.getVertices().length);
-                    vertBuffer.put(ArrayUtils.toPrimative(mesh.getVertices()));
+                    vertBuffer.put(ArrayUtils.toPrimitive(mesh.getVertices()));
                     vertBuffer.flip();
 
                     glBindBuffer(GL_ARRAY_BUFFER, vertId);
@@ -261,7 +267,7 @@ public class Renderer {
                         this.meshUvBuffers.put(mesh, uvId);
 
                         FloatBuffer uvBuffer = BufferUtils.createFloatBuffer(mesh.getUVs().length);
-                        uvBuffer.put(ArrayUtils.toPrimative(mesh.getUVs()));
+                        uvBuffer.put(ArrayUtils.toPrimitive(mesh.getUVs()));
                         uvBuffer.flip();
 
                         glBindBuffer(GL_ARRAY_BUFFER, uvId);
@@ -275,7 +281,7 @@ public class Renderer {
                         this.meshTriBuffers.put(mesh, triId);
 
                         IntBuffer triBuffer = BufferUtils.createIntBuffer(mesh.getTriangles().length);
-                        triBuffer.put(ArrayUtils.toPrimative(mesh.getTriangles()));
+                        triBuffer.put(ArrayUtils.toPrimitive(mesh.getTriangles()));
                         triBuffer.flip();
 
                         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, triId);
@@ -330,7 +336,11 @@ public class Renderer {
                     glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, NULL);
                 } else {
                     Integer colorLoc = glGetUniformLocation(this.shaderPrograms.get(shader), "color");
-                    glUniform3f(colorLoc, mesh.getColor().getRed(), mesh.getColor().getGreen(), mesh.getColor().getBlue());
+                    if (mesh.getColor() != null) {
+                        glUniform3f(colorLoc, mesh.getColor().getRed(), mesh.getColor().getGreen(), mesh.getColor().getBlue());
+                    } else {
+                        glUniform3f(colorLoc, 255, 255, 255);
+                    }
                 }
 
                 if (this.meshTriBuffers.containsKey(mesh)) {

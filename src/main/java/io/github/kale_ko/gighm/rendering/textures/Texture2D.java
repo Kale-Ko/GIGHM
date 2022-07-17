@@ -1,6 +1,7 @@
 package io.github.kale_ko.gighm.rendering.textures;
 
 import java.nio.ByteBuffer;
+import io.github.kale_ko.gighm.exception.InvalidDataException;
 import io.github.kale_ko.gighm.util.NotNull;
 import io.github.kale_ko.gighm.util.NullUtils;
 
@@ -41,11 +42,11 @@ public class Texture2D {
      * @param height The height of the texture
      * @param data The raw data of the texture
      * 
-     * @throws RuntimeException If the data is invalid
+     * @throws InvalidDataException If the data is invalid
      * 
      * @since 1.0.0
      */
-    public Texture2D(@NotNull Integer width, @NotNull Integer height, @NotNull ByteBuffer data) {
+    public Texture2D(@NotNull Integer width, @NotNull Integer height, @NotNull ByteBuffer data) throws InvalidDataException {
         NullUtils.checkNulls(width, "width");
         NullUtils.checkNulls(height, "height");
         NullUtils.checkNulls(data, "data");
@@ -56,7 +57,7 @@ public class Texture2D {
         this.data = data;
 
         if (data.capacity() / 4 != width * height && data.capacity() / 4 != width * height) {
-            throw new RuntimeException("");
+            throw new InvalidDataException("Data size does not match width/height");
         }
     }
 

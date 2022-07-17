@@ -1,12 +1,10 @@
 package io.github.kale_ko.gighm.tests;
 
 import java.io.IOException;
-import io.github.kale_ko.gighm.events.EventManager;
 import io.github.kale_ko.gighm.events.types.input.KeyEvent;
 import io.github.kale_ko.gighm.events.types.input.MouseButtonEvent;
 import io.github.kale_ko.gighm.events.types.input.MouseMoveEvent;
 import io.github.kale_ko.gighm.events.types.input.MouseScrollEvent;
-import io.github.kale_ko.gighm.input.InputManager;
 import io.github.kale_ko.gighm.rendering.Renderer;
 import io.github.kale_ko.gighm.rendering.Window;
 import io.github.kale_ko.gighm.rendering.shaders.Shader;
@@ -17,38 +15,30 @@ import io.github.kale_ko.gighm.scene.components.Camera;
 public class InputTest {
     public static void main(String[] args) {
         try {
-            Scene scene = new Scene("Main");
+            Scene scene = new Scene();
 
-            Camera camera = Camera.createOrthagraphic(1, 1, 256f);
+            Camera camera = Camera.createOrthographic(1, 1, 256f);
 
-            Shader shader = ShaderLoader.loadShader(InputTest.class.getResourceAsStream("/vertex.glsl"), InputTest.class.getResourceAsStream("/fragment.glsl"));
+            Shader shader = ShaderLoader.loadDefault();
             Renderer renderer = new Renderer(scene, camera, shader);
 
             Window window = new Window(renderer, "Input Test", 800, 600, false, true);
 
-            EventManager eventManager = new EventManager();
-            window.setEventManager(eventManager);
-
-            eventManager.addEventListener(KeyEvent.class, event -> {
+            window.getEventManager().addEventListener(KeyEvent.class, event -> {
                 System.out.println("KEY" + event.getAction() + ": " + event.getCode());
             });
 
-            eventManager.addEventListener(MouseButtonEvent.class, event -> {
+            window.getEventManager().addEventListener(MouseButtonEvent.class, event -> {
                 System.out.println("MOUSE" + event.getAction() + ": " + event.getButton());
             });
 
-            eventManager.addEventListener(MouseMoveEvent.class, event -> {
+            window.getEventManager().addEventListener(MouseMoveEvent.class, event -> {
                 System.out.println("MOUSEMOVE: " + event.getX() + ", " + event.getY());
             });
 
-            eventManager.addEventListener(MouseScrollEvent.class, event -> {
+            window.getEventManager().addEventListener(MouseScrollEvent.class, event -> {
                 System.out.println("MOUSESCROLL: " + event.getX() + ", " + event.getY());
             });
-
-            InputManager inputManager = new InputManager(eventManager);
-            window.setInputManager(inputManager);
-
-            window.setTitle("Input!");
         } catch (IOException e) {
             e.printStackTrace();
         }

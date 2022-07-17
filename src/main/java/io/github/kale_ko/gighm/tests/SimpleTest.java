@@ -20,8 +20,8 @@ public class SimpleTest {
             Scene scene = new Scene("Main"); // Create the main scene
 
             GameObject cameraObject = new GameObject("Camera"); // Create the camera object
-            Camera camera = Camera.createOrthagraphic(width, height, farPlane); // Create the 2D camera component
-            // OR createPerspective(fov, width / height, nearPlane, farPlane) for 3D;
+            Camera camera = Camera.createOrthographic(width, height, farPlane); // Create the 2D camera component
+            // OR createPerspective(fov, (float) width / (float) height, nearPlane, farPlane) for 3D;
             cameraObject.addComponent(camera); // Add the camera component to the camera object
             scene.addObjects(cameraObject); // Add the camera object into the scene
 

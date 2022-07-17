@@ -5,7 +5,7 @@ package io.github.kale_ko.gighm.util;
  * 
  * @author Kale Ko
  * 
- * @version 1.8.0
+ * @version 2.0.0
  * @since 1.8.0
  */
 public class ArrayUtils {
@@ -165,7 +165,7 @@ public class ArrayUtils {
      * 
      * @since 1.8.0
      */
-    public static @NotNull byte[] toPrimative(@NotNull Byte[] arr) {
+    public static @NotNull byte[] toPrimitive(@NotNull Byte[] arr) {
         NullUtils.checkNulls(arr, "arr");
 
         byte[] narr = new byte[arr.length];
@@ -186,7 +186,7 @@ public class ArrayUtils {
      * 
      * @since 1.8.0
      */
-    public static @NotNull short[] toPrimative(@NotNull Short[] arr) {
+    public static @NotNull short[] toPrimitive(@NotNull Short[] arr) {
         NullUtils.checkNulls(arr, "arr");
 
         short[] narr = new short[arr.length];
@@ -207,7 +207,7 @@ public class ArrayUtils {
      * 
      * @since 1.8.0
      */
-    public static @NotNull int[] toPrimative(@NotNull Integer[] arr) {
+    public static @NotNull int[] toPrimitive(@NotNull Integer[] arr) {
         NullUtils.checkNulls(arr, "arr");
 
         int[] narr = new int[arr.length];
@@ -228,7 +228,7 @@ public class ArrayUtils {
      * 
      * @since 1.8.0
      */
-    public static @NotNull double[] toPrimative(@NotNull Double[] arr) {
+    public static @NotNull double[] toPrimitive(@NotNull Double[] arr) {
         NullUtils.checkNulls(arr, "arr");
 
         double[] narr = new double[arr.length];
@@ -249,7 +249,7 @@ public class ArrayUtils {
      * 
      * @since 1.8.0
      */
-    public static @NotNull float[] toPrimative(@NotNull Float[] arr) {
+    public static @NotNull float[] toPrimitive(@NotNull Float[] arr) {
         NullUtils.checkNulls(arr, "arr");
 
         float[] narr = new float[arr.length];
@@ -270,7 +270,7 @@ public class ArrayUtils {
      * 
      * @since 1.8.0
      */
-    public static @NotNull boolean[] toPrimative(@NotNull Boolean[] arr) {
+    public static @NotNull boolean[] toPrimitive(@NotNull Boolean[] arr) {
         NullUtils.checkNulls(arr, "arr");
 
         boolean[] narr = new boolean[arr.length];
@@ -291,7 +291,7 @@ public class ArrayUtils {
      * 
      * @since 1.8.0
      */
-    public static @NotNull char[] toPrimative(@NotNull Character[] arr) {
+    public static @NotNull char[] toPrimitive(@NotNull Character[] arr) {
         NullUtils.checkNulls(arr, "arr");
 
         char[] narr = new char[arr.length];

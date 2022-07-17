@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import io.github.kale_ko.gighm.exception.InvalidModificationException;
 import io.github.kale_ko.gighm.scene.components.Component;
 import io.github.kale_ko.gighm.scene.components.Transform;
 import io.github.kale_ko.gighm.util.NotNull;
@@ -17,7 +18,7 @@ import io.github.kale_ko.gighm.util.Nullable;
  * 
  * @author Kale Ko
  * 
- * @version 1.7.0
+ * @version 2.0.0
  * @since 1.0.0
  */
 public class GameObject {
@@ -107,9 +108,11 @@ public class GameObject {
      * @param object The object to add
      * @param <T> The The type of the object to add
      * 
+     * @throws InvalidModificationException If the component is already part of another game object
+     * 
      * @since 1.0.0
      */
-    public <T extends Component> void addComponent(@NotNull T object) {
+    public <T extends Component> void addComponent(@NotNull T object) throws InvalidModificationException {
         NullUtils.checkNulls(object, "object");
 
         if (object.getGameObject() == null) {
@@ -117,7 +120,7 @@ public class GameObject {
 
             this.components.put(object.getClass(), object);
         } else {
-            throw new RuntimeException("You can't add a component to multiple game objects");
+            throw new InvalidModificationException("You can't add a component to multiple game objects");
         }
     }
 
@@ -160,12 +163,18 @@ public class GameObject {
      * @param clazz The type to remove
      * @param <T> The type to remove
      * 
+     * @throws InvalidModificationException If you try and remove a Transform
+     * 
      * @since 1.0.0
      */
-    public <T extends Component> void removeComponent(@NotNull Class<T> clazz) {
+    public <T extends Component> void removeComponent(@NotNull Class<T> clazz) throws InvalidModificationException {
         NullUtils.checkNulls(clazz, "clazz");
 
-        this.components.remove(clazz);
+        if (clazz.equals(Transform.class)) {
+            throw new InvalidModificationException("You can't remove an objects Transform");
+        } else {
+            this.components.remove(clazz);
+        }
     }
 
     /**

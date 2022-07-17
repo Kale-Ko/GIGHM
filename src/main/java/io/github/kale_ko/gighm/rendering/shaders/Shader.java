@@ -4,7 +4,7 @@ import io.github.kale_ko.gighm.util.NotNull;
 import io.github.kale_ko.gighm.util.NullUtils;
 
 /**
- * A shader used durring rendering
+ * A shader used durning rendering
  * 
  * @author Kale Ko
  * 
