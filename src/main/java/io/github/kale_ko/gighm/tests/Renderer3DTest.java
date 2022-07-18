@@ -35,21 +35,21 @@ public class Renderer3DTest {
             Renderer renderer = new Renderer(scene, camera, shader, new Color(0.8f, 0.8f, 0.8f));
 
             Window window = new Window(renderer, "3D Renderer", width, height, false, true);
-            window.setIcon(Texture2DLoader.loadTexture(Renderer2DTest.class.getResourceAsStream("/tests/kale.png")));
+            window.setIcon(Texture2DLoader.loadTexture(Renderer2DTest.class.getResourceAsStream("/assets/tests/kale.png")));
 
             window.getEventManager().addEventListener(RenderEvent.class, event -> {
                 System.out.println("FPS: " + Math.round(1 / event.getDelta()));
             });
 
             GameObject object1 = new GameObject();
-            Texture2D texture1 = Texture2DLoader.loadTexture(Renderer3DTest.class.getResourceAsStream("/tests/kale.png"));
+            Texture2D texture1 = Texture2DLoader.loadTexture(Renderer3DTest.class.getResourceAsStream("/assets/tests/kale.png"));
             Mesh mesh1 = PrimitiveObjects.CUBE.copy(texture1);
             object1.addComponent(mesh1);
             object1.getComponent(Transform.class).setPosition(new Vector3f(3, -6, 10));
             object1.getComponent(Transform.class).setScale(new Vector3f(3));
 
             GameObject object2 = new GameObject();
-            Texture2D texture2 = Texture2DLoader.loadTexture(Renderer3DTest.class.getResourceAsStream("/tests/noise.png"));
+            Texture2D texture2 = Texture2DLoader.loadTexture(Renderer3DTest.class.getResourceAsStream("/assets/tests/noise.png"));
             Mesh mesh2 = PrimitiveObjects.CUBE.copy(texture2);
             object2.addComponent(mesh2);
             object2.getComponent(Transform.class).setPosition(new Vector3f(5, 2, 10));

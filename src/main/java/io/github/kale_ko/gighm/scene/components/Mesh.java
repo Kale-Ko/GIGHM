@@ -128,23 +128,6 @@ public class Mesh extends Component {
      * @since 1.9.0
      */
     public Mesh(@NotNull Float[] vertices, @NotNull Integer verticeSize, @Nullable Color color, @Nullable Integer[] triangles) throws InvalidDataException {
-        this(vertices, verticeSize, color, null, triangles);
-    }
-
-    /**
-     * Create a mesh
-     * 
-     * @param vertices The vertices of the mesh
-     * @param verticeSize How many numbers define a point in the mesh
-     * @param color The color of the mesh
-     * @param uvs The uvs of the mesh
-     * @param triangles The triangles of the mesh
-     * 
-     * @throws InvalidDataException If the verticie size is not 2 or 3
-     * 
-     * @since 1.9.0
-     */
-    public Mesh(@NotNull Float[] vertices, @NotNull Integer verticeSize, @Nullable Color color, @Nullable Float[] uvs, @Nullable Integer[] triangles) throws InvalidDataException {
         NullUtils.checkNulls(vertices, "vertices");
         NullUtils.checkNulls(verticeSize, "verticeSize");
 
@@ -152,8 +135,6 @@ public class Mesh extends Component {
         this.verticeSize = verticeSize;
 
         this.color = color;
-
-        this.uvs = uvs;
 
         this.triangles = triangles;
 
