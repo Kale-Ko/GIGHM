@@ -38,7 +38,7 @@ public class SimpleGame {
             Shader shader = ShaderLoader.loadShader(ShaderLoader.class.getResourceAsStream("/vertex.glsl"), ShaderLoader.class.getResourceAsStream("/fragment.glsl"));
             Renderer renderer = new Renderer(scene, camera, shader, new Color(50, 50, 220));
 
-            Texture2D logoTexture = Texture2DLoader.loadTexture(Texture2DLoader.class.getResourceAsStream("/tests/kale.png"));
+            Texture2D logoTexture = Texture2DLoader.loadTexture(Texture2DLoader.class.getResourceAsStream("/assets/tests/kale.png"));
 
             Window window = new Window(renderer, "GIGHM Example Game", width, height, false, true);
             window.setIcon(logoTexture);
@@ -51,7 +51,8 @@ public class SimpleGame {
             scene.addObjects(cubeObject);
 
             window.getEventManager().addEventListener(TickEvent.class, (event) -> {
-                cubeObject.getComponent(Transform.class).getRotation().rotateXYZ(0.012f, 0.035f, 0.007f);
+                cubeObject.getComponent(Transform.class).getRotation().rotateLocalX(0.004f);
+                cubeObject.getComponent(Transform.class).getRotation().rotateY(0.035f);
             });
         } catch (IOException e) {
             e.printStackTrace();

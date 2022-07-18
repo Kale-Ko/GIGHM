@@ -3,10 +3,9 @@
 uniform bool hasSampler;
 
 uniform sampler2D sampler;
+in vec2 uv;
 
 uniform vec3 color;
-
-in vec2 uv;
 
 out vec4 fragColor;
 

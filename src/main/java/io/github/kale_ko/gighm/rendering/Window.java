@@ -254,7 +254,7 @@ public class Window {
         });
 
         glfwSetWindowSizeCallback(windowId, (window, newWidth, newHeight) -> {
-            if (width == 0 || height == 0) {
+            if (newWidth == 0 || newHeight == 0) {
                 glfwSetWindowShouldClose(windowId, true);
             }
 
