@@ -1,6 +1,7 @@
 package io.github.kale_ko.gighm.rendering.objects;
 
-import java.awt.Color;
+import java.io.IOException;
+import io.github.kale_ko.gighm.rendering.textures.Texture2DLoader;
 import io.github.kale_ko.gighm.scene.components.Mesh;
 
 /**
@@ -31,24 +32,33 @@ public class PrimitiveObjects {
      * @since 2.0.0
      */
     public static Mesh createPlane(Float size) {
-        return new Mesh(new Float[] {
-            -size, size,
-            size, size,
-            size, -size,
-            -size, -size
-        }, 2, new Color(255, 255, 255), new Float[] {
-            0f, 0f,
-            1f, 0f,
-            1f, 1f,
-            0f, 1f
-        }, new Integer[] {
-            0, 1, 2,
-            2, 3, 0
-        });
+        try {
+            return new Mesh(new Float[] {
+                -size, size,
+                size, size,
+                size, -size,
+
+                -size, size,
+                -size, -size,
+                size, -size
+            }, 2, Texture2DLoader.loadTexture(Texture2DLoader.class.getResourceAsStream("/assets/white.png")), new Float[] {
+                0f, 0f,
+                1f, 0f,
+                1f, 1f,
+
+                0f, 0f,
+                0f, 1f,
+                1f, 1f
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     /**
-     * Create a cube with a certain size (TODO Unfinished)
+     * Create a cube with a certain size
      * 
      * @param size The size of the cube
      * 
@@ -57,38 +67,120 @@ public class PrimitiveObjects {
      * @since 2.0.0
      */
     public static Mesh createCube(Float size) {
-        return new Mesh(new Float[] {
-            -size, size, size,
-            size, size, size,
-            size, -size, size,
-            -size, -size, size,
+        try {
+            return new Mesh(new Float[] {
+                // Front
+                -size, size, size,
+                size, size, size,
+                size, -size, size,
 
-            -size, size, -size,
-            size, size, -size,
-            size, -size, -size,
-            -size, -size, -size
-        }, 3, new Color(255, 255, 255), new Float[] {
-            0f, 0f,
-            1f, 0f,
-            1f, 1f,
-            0f, 1f,
+                -size, size, size,
+                -size, -size, size,
+                size, -size, size,
 
-            1f, 0f,
-            0f, 0f,
-            0f, 1f,
-            1f, 1f
-        }, new Integer[] { 
-            0, 1, 2,
-            2, 3, 0,
+                // Back
+                -size, size, -size,
+                size, size, -size,
+                size, -size, -size,
 
-            4, 5, 6,
-            6, 7, 4,
+                -size, size, -size,
+                -size, -size, -size,
+                size, -size, -size,
 
-            4, 7, 3,
-            0, 4, 3,
+                // Left
+                -size, -size, size,
+                -size, size, size,
+                -size, size, -size,
 
-            5, 6, 2,
-            1, 5, 2
-        });
+                -size, -size, size,
+                -size, -size, -size,
+                -size, size, -size,
+
+                // Right
+                size, -size, size,
+                size, size, size,
+                size, size, -size,
+
+                size, -size, size,
+                size, -size, -size,
+                size, size, -size,
+
+                // Top
+                -size, size, size,
+                size, size, size,
+                size, size, -size,
+
+                -size, size, size,
+                -size, size, -size,
+                size, size, -size,
+
+                // Bottom
+                -size, -size, size,
+                size, -size, size,
+                size, -size, -size,
+
+                -size, -size, size,
+                -size, -size, -size,
+                size, -size, -size
+            }, 3, Texture2DLoader.loadTexture(Texture2DLoader.class.getResourceAsStream("/assets/white.png")), new Float[] {
+                // Front
+                0f, 0f,
+                1f, 0f,
+                1f, 1f,
+
+                0f, 0f,
+                0f, 1f,
+                1f, 1f,
+
+                // Back
+                1f, 0f,
+                0f, 0f,
+                0f, 1f,
+
+                1f, 0f,
+                1f, 1f,
+                0f, 1f,
+
+                // Left
+                1f, 1f,
+                1f, 0f,
+                0f, 0f,
+
+                1f, 1f,
+                0f, 1f,
+                0f, 0f,
+
+                // Right
+                0f, 1f,
+                0f, 0f,
+                1f, 0f,
+
+                0f, 1f,
+                1f, 1f,
+                1f, 0f,
+
+                // Top
+                0f, 1f,
+                1f, 1f,
+                1f, 0f,
+
+                0f, 1f,
+                0f, 0f,
+                1f, 0f,
+
+                // Bottom
+                0f, 1f,
+                1f, 1f,
+                1f, 0f,
+
+                0f, 1f,
+                0f, 0f,
+                1f, 0f,
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }
