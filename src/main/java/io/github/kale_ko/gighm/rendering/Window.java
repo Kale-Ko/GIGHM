@@ -42,7 +42,7 @@ import io.github.kale_ko.gighm.util.Nullable;
  * 
  * @author Kale Ko
  * 
- * @version 1.8.0
+ * @version 2.1.0
  * @since 1.0.0
  */
 public class Window {
@@ -73,6 +73,13 @@ public class Window {
      * @since 1.0.0
      */
     private @NotNull String title;
+
+    /**
+     * The icon of the window
+     * 
+     * @since 2.1.0
+     */
+    private @Nullable Texture2D icon;
 
     /**
      * The width of the window
@@ -220,6 +227,9 @@ public class Window {
         this.initialized = true;
 
         glfwDefaultWindowHints();
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_FOCUSED, GLFW_FALSE);
         glfwWindowHint(GLFW_MAXIMIZED, maximized ? GLFW_TRUE : GLFW_FALSE);
@@ -307,10 +317,10 @@ public class Window {
         while (!glfwWindowShouldClose(windowId)) {
             renderer.render();
 
+            glfwSwapBuffers(windowId);
+
             Instant now = Instant.now();
             Float delta = (float) ((now.getEpochSecond() + ((double) now.getNano() / 1000000000)) - (lastRender.getEpochSecond() + ((double) lastRender.getNano() / 1000000000)));
-
-            this.eventManager.emit(new RenderEvent(delta));
 
             for (GameObject object : renderer.getScene().getObjects()) {
                 for (Component component : object.getComponents()) {
@@ -318,9 +328,9 @@ public class Window {
                 }
             }
 
-            lastRender = now;
+            this.eventManager.emit(new RenderEvent(delta));
 
-            glfwSwapBuffers(windowId);
+            lastRender = now;
 
             glfwPollEvents();
         }
@@ -341,7 +351,7 @@ public class Window {
      * 
      * @since 1.5.0
      */
-    public Renderer getRenderer() {
+    public @NotNull Renderer getRenderer() {
         return this.renderer;
     }
 
@@ -352,7 +362,9 @@ public class Window {
      * 
      * @since 1.5.0
      */
-    public void setRenderer(Renderer renderer) {
+    public void setRenderer(@NotNull Renderer renderer) {
+        NullUtils.checkNulls(renderer, "renderer");
+
         this.renderer = renderer;
     }
 
@@ -363,7 +375,7 @@ public class Window {
      * 
      * @since 1.6.0
      */
-    public EventManager getEventManager() {
+    public @NotNull EventManager getEventManager() {
         return this.eventManager;
     }
 
@@ -374,7 +386,7 @@ public class Window {
      * 
      * @since 1.5.0
      */
-    public InputManager getInputManager() {
+    public @NotNull InputManager getInputManager() {
         return this.inputManager;
     }
 
@@ -385,7 +397,7 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public String getTitle() {
+    public @NotNull String getTitle() {
         return this.title;
     }
 
@@ -396,10 +408,43 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public void setTitle(String title) {
+    public void setTitle(@NotNull String title) {
+        NullUtils.checkNulls(title, "title");
+
         this.title = title;
 
         glfwSetWindowTitle(windowId, title);
+    }
+
+    /**
+     * Get the icon of the window
+     * 
+     * @return The icon of the window
+     * 
+     * @since 2.1.0
+     */
+    public @Nullable Texture2D getIcon() {
+        return this.icon;
+    }
+
+    /**
+     * Set the icon of the window
+     * 
+     * @param icon The icon of the window
+     * 
+     * @since 2.0.0
+     */
+    public void setIcon(@NotNull Texture2D icon) {
+        NullUtils.checkNulls(icon, "icon");
+
+        this.icon = icon;
+
+        GLFWImage image = GLFWImage.malloc();
+        image.set(icon.getWidth(), icon.getHeight(), icon.getRawData());
+        GLFWImage.Buffer images = GLFWImage.malloc(1);
+        images.put(0, image);
+
+        glfwSetWindowIcon(windowId, images);
     }
 
     /**
@@ -409,7 +454,7 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public Integer getWidth() {
+    public @NotNull Integer getWidth() {
         return this.width;
     }
 
@@ -420,7 +465,7 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public Integer getHeight() {
+    public @NotNull Integer getHeight() {
         return this.height;
     }
 
@@ -432,7 +477,10 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public void setSize(Integer width, Integer height) {
+    public void setSize(@NotNull Integer width, @NotNull Integer height) {
+        NullUtils.checkNulls(width, "width");
+        NullUtils.checkNulls(height, "height");
+
         this.width = width;
         this.height = height;
 
@@ -446,7 +494,7 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public Boolean getMaximized() {
+    public @NotNull Boolean getMaximized() {
         return this.maximized;
     }
 
@@ -457,7 +505,9 @@ public class Window {
      * 
      * @since 1.8.0
      */
-    public void setMaximized(Boolean maximized) {
+    public void setMaximized(@NotNull Boolean maximized) {
+        NullUtils.checkNulls(maximized, "maximized");
+
         this.maximized = maximized;
 
         glfwSetWindowAttrib(windowId, GLFW_MAXIMIZED, maximized ? GLFW_TRUE : GLFW_FALSE);
@@ -470,7 +520,7 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public Boolean getResizable() {
+    public @NotNull Boolean getResizable() {
         return this.resizable;
     }
 
@@ -481,26 +531,12 @@ public class Window {
      * 
      * @since 1.8.0
      */
-    public void setResizable(Boolean resizable) {
+    public void setResizable(@NotNull Boolean resizable) {
+        NullUtils.checkNulls(resizable, "resizable");
+
         this.resizable = resizable;
 
         glfwSetWindowAttrib(windowId, GLFW_RESIZABLE, resizable ? GLFW_TRUE : GLFW_FALSE);
-    }
-
-    /**
-     * Set the icon of the window
-     * 
-     * @param icon The icon of the window
-     * 
-     * @since 2.0.0
-     */
-    public void setIcon(Texture2D icon) {
-        GLFWImage image = GLFWImage.malloc();
-        image.set(icon.getWidth(), icon.getHeight(), icon.getRawData());
-        GLFWImage.Buffer images = GLFWImage.malloc(1);
-        images.put(0, image);
-
-        glfwSetWindowIcon(windowId, images);
     }
 
     /**
@@ -510,7 +546,7 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public Boolean getInitialized() {
+    public @NotNull Boolean getInitialized() {
         return this.initialized;
     }
 
@@ -521,7 +557,7 @@ public class Window {
      * 
      * @since 1.0.0
      */
-    public Long getWindowId() {
+    public @Nullable Long getWindowId() {
         return this.windowId;
     }
 }
