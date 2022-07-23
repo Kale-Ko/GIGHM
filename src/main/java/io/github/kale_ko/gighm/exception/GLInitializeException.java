@@ -1,11 +1,14 @@
 package io.github.kale_ko.gighm.exception;
 
+import io.github.kale_ko.gighm.util.NotNull;
+import io.github.kale_ko.gighm.util.NullUtils;
+
 /**
  * Thrown if gl fails to initialize
  * 
  * @author Kale Ko
  * 
- * @version 2.0.0
+ * @version 2.1.0
  * @since 2.0.0
  */
 public class GLInitializeException extends RuntimeException {
@@ -16,7 +19,9 @@ public class GLInitializeException extends RuntimeException {
      * 
      * @since 2.0.0
      */
-    public GLInitializeException(String exception) {
+    public GLInitializeException(@NotNull String exception) {
         super(exception);
+
+        NullUtils.checkNulls(exception, "exception");
     }
 }

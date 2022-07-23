@@ -1,12 +1,12 @@
 package io.github.kale_ko.gighm.tests;
 
-import java.awt.Color;
 import java.io.IOException;
 import org.joml.Vector3f;
 import io.github.kale_ko.gighm.events.types.rendering.TickEvent;
 import io.github.kale_ko.gighm.rendering.Renderer;
 import io.github.kale_ko.gighm.rendering.Window;
 import io.github.kale_ko.gighm.rendering.objects.PrimitiveObjects;
+import io.github.kale_ko.gighm.rendering.objects.Skybox;
 import io.github.kale_ko.gighm.rendering.shaders.Shader;
 import io.github.kale_ko.gighm.rendering.shaders.ShaderLoader;
 import io.github.kale_ko.gighm.rendering.textures.Texture2D;
@@ -35,10 +35,12 @@ public class SimpleGame {
             cameraObject.getComponent(Transform.class).setPosition(new Vector3f(0, 0, -10));
             scene.addObjects(cameraObject);
 
-            Shader shader = ShaderLoader.loadShader(ShaderLoader.class.getResourceAsStream("/vertex.glsl"), ShaderLoader.class.getResourceAsStream("/fragment.glsl"));
-            Renderer renderer = new Renderer(scene, camera, shader, new Color(50, 50, 220));
-
             Texture2D logoTexture = Texture2DLoader.loadTexture(Texture2DLoader.class.getResourceAsStream("/assets/tests/kale.png"));
+            Texture2D skySideTexture = Texture2DLoader.loadTexture(Texture2DLoader.class.getResourceAsStream("/assets/tests/sky-sides.png"));
+            Texture2D skyTopTexture = Texture2DLoader.loadTexture(Texture2DLoader.class.getResourceAsStream("/assets/tests/sky-top.png"));
+
+            Shader shader = ShaderLoader.loadShader(ShaderLoader.class.getResourceAsStream("/vertex.glsl"), ShaderLoader.class.getResourceAsStream("/fragment.glsl"));
+            Renderer renderer = new Renderer(scene, camera, shader, new Skybox(skySideTexture, skySideTexture, skySideTexture, skySideTexture, skyTopTexture, skyTopTexture));
 
             Window window = new Window(renderer, "GIGHM Example Game", width, height, false, true);
             window.setIcon(logoTexture);

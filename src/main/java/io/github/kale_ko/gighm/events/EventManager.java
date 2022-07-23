@@ -13,7 +13,7 @@ import io.github.kale_ko.gighm.util.NullUtils;
  * 
  * @author Kale Ko
  * 
- * @version 1.6.0
+ * @version 2.1.0
  * @since 1.6.0
  */
 public class EventManager {
@@ -22,14 +22,14 @@ public class EventManager {
      * 
      * @author Kale Ko
      * 
-     * @version 1.6.0
+     * @version 2.1.0
      * @since 1.6.0
      */
-    private class EventLister<T extends Event> {
+    protected class EventLister<T extends Event> {
         public @NotNull Class<T> type;
         public @NotNull Consumer<T> consumer;
 
-        private EventLister(@NotNull Class<T> type, @NotNull Consumer<T> consumer) {
+        protected EventLister(@NotNull Class<T> type, @NotNull Consumer<T> consumer) {
             NullUtils.checkNulls(type, "type");
             NullUtils.checkNulls(consumer, "consumer");
 
@@ -41,14 +41,14 @@ public class EventManager {
         public void accept(@NotNull Event event) {
             NullUtils.checkNulls(event, "event");
 
-            if (this.isAccepted(event)) {
+            if (this.canAccept(event)) {
                 this.consumer.accept((T) event);
             } else {
                 throw new InvalidDataException("Can't pass event of type \"" + event.getClass().getName() + "\" to listener of type \"" + type.getName() + "\"");
             }
         }
 
-        public Boolean isAccepted(@NotNull Event event) {
+        public Boolean canAccept(@NotNull Event event) {
             NullUtils.checkNulls(event, "event");
 
             return this.type.isInstance(event);
@@ -60,14 +60,14 @@ public class EventManager {
      * 
      * @since 1.6.0
      */
-    private @NotNull Integer usedIds = 0;
+    protected @NotNull Integer usedIds = 0;
 
     /**
      * The map of registered event listeners
      * 
      * @since 1.6.0
      */
-    private @NotNull Map<Integer, EventLister<? extends Event>> listeners = new HashMap<Integer, EventLister<? extends Event>>();
+    protected @NotNull Map<Integer, EventLister<? extends Event>> listeners = new HashMap<Integer, EventLister<? extends Event>>();
 
     /**
      * Emit an event to all listeners of the event type
@@ -80,7 +80,7 @@ public class EventManager {
         NullUtils.checkNulls(event, "event");
 
         for (EventLister<? extends Event> listener : this.listeners.values()) {
-            if (listener.isAccepted(event)) {
+            if (listener.canAccept(event)) {
                 listener.accept(event);
             }
         }
