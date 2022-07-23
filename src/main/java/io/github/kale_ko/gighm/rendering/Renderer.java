@@ -234,54 +234,54 @@ public class Renderer {
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        if (this.skybox != null) {
-            glDisable(GL_DEPTH_TEST);
+        if (!this.shaderPrograms.containsKey(shader)) {
+            Integer programId = glCreateProgram();
+            this.shaderPrograms.put(shader, programId);
 
-            if (!this.shaderPrograms.containsKey(shader)) {
-                Integer programId = glCreateProgram();
-                this.shaderPrograms.put(shader, programId);
+            Integer vertexId = glCreateShader(GL_VERTEX_SHADER);
+            this.shaderVertexShaders.put(shader, vertexId);
+            glShaderSource(vertexId, shader.getVertexSource());
+            glCompileShader(vertexId);
+            if (glGetShaderi(vertexId, GL_COMPILE_STATUS) != GL_TRUE) {
+                System.err.println(glGetShaderInfoLog(vertexId));
 
-                Integer vertexId = glCreateShader(GL_VERTEX_SHADER);
-                this.shaderVertexShaders.put(shader, vertexId);
-                glShaderSource(vertexId, shader.getVertexSource());
-                glCompileShader(vertexId);
-                if (glGetShaderi(vertexId, GL_COMPILE_STATUS) != GL_TRUE) {
-                    System.err.println(glGetShaderInfoLog(vertexId));
-
-                    throw new GLCompileException("Failed to compile vertex shader");
-                }
-
-                Integer fragmentId = glCreateShader(GL_FRAGMENT_SHADER);
-                this.shaderFragmentShaders.put(shader, fragmentId);
-                glShaderSource(fragmentId, shader.getFragmentSource());
-                glCompileShader(fragmentId);
-                if (glGetShaderi(fragmentId, GL_COMPILE_STATUS) != GL_TRUE) {
-                    System.err.println(glGetShaderInfoLog(fragmentId));
-
-                    throw new GLCompileException("Failed to compile fragment shader");
-                }
-
-                glAttachShader(programId, vertexId);
-                glAttachShader(programId, fragmentId);
-
-                glBindAttribLocation(programId, 0, "vertices");
-                glBindAttribLocation(programId, 1, "uvs");
-
-                glLinkProgram(programId);
-                if (glGetProgrami(programId, GL_LINK_STATUS) != GL_TRUE) {
-                    System.err.println(glGetProgramInfoLog(programId));
-
-                    throw new GLCompileException("Failed to compile shader program");
-                }
-                glValidateProgram(programId);
-                if (glGetProgrami(programId, GL_VALIDATE_STATUS) != GL_TRUE) {
-                    System.err.println(glGetProgramInfoLog(programId));
-
-                    throw new GLCompileException("Failed to compile shader program");
-                }
+                throw new GLCompileException("Failed to compile vertex shader");
             }
 
-            glUseProgram(this.shaderPrograms.get(shader));
+            Integer fragmentId = glCreateShader(GL_FRAGMENT_SHADER);
+            this.shaderFragmentShaders.put(shader, fragmentId);
+            glShaderSource(fragmentId, shader.getFragmentSource());
+            glCompileShader(fragmentId);
+            if (glGetShaderi(fragmentId, GL_COMPILE_STATUS) != GL_TRUE) {
+                System.err.println(glGetShaderInfoLog(fragmentId));
+
+                throw new GLCompileException("Failed to compile fragment shader");
+            }
+
+            glAttachShader(programId, vertexId);
+            glAttachShader(programId, fragmentId);
+
+            glBindAttribLocation(programId, 0, "vertices");
+            glBindAttribLocation(programId, 1, "uvs");
+
+            glLinkProgram(programId);
+            if (glGetProgrami(programId, GL_LINK_STATUS) != GL_TRUE) {
+                System.err.println(glGetProgramInfoLog(programId));
+
+                throw new GLCompileException("Failed to compile shader program");
+            }
+            glValidateProgram(programId);
+            if (glGetProgrami(programId, GL_VALIDATE_STATUS) != GL_TRUE) {
+                System.err.println(glGetProgramInfoLog(programId));
+
+                throw new GLCompileException("Failed to compile shader program");
+            }
+        }
+
+        glUseProgram(this.shaderPrograms.get(shader));
+
+        if (this.skybox != null) {
+            glDisable(GL_DEPTH_TEST);
 
             Float size = this.camera.getNear() * 2;
             Mesh[] meshes = new Mesh[] {
