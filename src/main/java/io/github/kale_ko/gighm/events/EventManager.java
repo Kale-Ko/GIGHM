@@ -26,9 +26,28 @@ public class EventManager {
      * @since 1.6.0
      */
     protected class EventLister<T extends Event> {
+        /**
+         * The type of the listener
+         * 
+         * @since 1.6.0
+         */
         public @NotNull Class<T> type;
+
+        /**
+         * The consumer that runs when the event is called
+         * 
+         * @since 1.6.0
+         */
         public @NotNull Consumer<T> consumer;
 
+        /**
+         * Create an event listener object (Only used Internally)
+         * 
+         * @param type The type of the listener
+         * @param consumer The consumer that runs when the event is called
+         * 
+         * @since 1.6.0
+         */
         protected EventLister(@NotNull Class<T> type, @NotNull Consumer<T> consumer) {
             NullUtils.checkNulls(type, "type");
             NullUtils.checkNulls(consumer, "consumer");
@@ -37,8 +56,17 @@ public class EventManager {
             this.consumer = consumer;
         }
 
+        /**
+         * Call the consumer with the passed event
+         * 
+         * @param event The event to pass
+         * 
+         * @throws InvalidDataException If the event is of an unacceptable type
+         * 
+         * @since 1.6.0
+         */
         @SuppressWarnings("unchecked")
-        public void accept(@NotNull Event event) {
+        public void accept(@NotNull Event event) throws InvalidDataException {
             NullUtils.checkNulls(event, "event");
 
             if (this.canAccept(event)) {
@@ -48,6 +76,15 @@ public class EventManager {
             }
         }
 
+        /**
+         * Check if this event listener can accept an event
+         * 
+         * @param event The event to check
+         * 
+         * @return Weather the passed event is acceptable
+         * 
+         * @since 1.6.0
+         */
         public Boolean canAccept(@NotNull Event event) {
             NullUtils.checkNulls(event, "event");
 
