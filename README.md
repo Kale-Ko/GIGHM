@@ -1,14 +1,12 @@
 # GIGHM
 
-GIGHM is a game engine written in Java using GLFW that supports both 2D and 3D.
+GIGHM is a Java game engine based on GLFW library that supports both 2D and 3D rendering.
 
 ## Features
 
-Currently GIGHM supports rendering scenes of game objects with custom transforms, meshes, and textures.
-
-There is an event system so you can listen for key presses, renders, etc and an input system which supports checking if keys are pressed or buttons are clicked, and also allows getting the mouse pos and scroll.
-
-It also has an extendable component system for more easily writing custom logic for game objects and is [fully documented](https://gighm.kaleko.ga/docs/)!
+- Supports rendering scenes that contain game objects with custom transforms, meshes, and textures.
+- Contains an input listener system that can catch keys and buttons' presses, renders events, and supports getting mouse position and scroll events.
+- Has an extendable component system for more easily writing custom logic for game objects with [complete documentation here](https://gighm.kaleko.ga/docs/)!.
 
 ## Setup
 
