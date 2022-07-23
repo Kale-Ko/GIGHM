@@ -16,7 +16,7 @@ import io.github.kale_ko.gighm.util.NullUtils;
  * 
  * @author Kale Ko
  * 
- * @version 1.7.0
+ * @version 2.1.0
  * @since 1.2.0
  */
 public class InputManager {
@@ -25,7 +25,7 @@ public class InputManager {
      * 
      * @since 1.7.0
      */
-    private @NotNull EventManager eventManager;
+    protected @NotNull EventManager eventManager;
 
     /**
      * The list of keys currently down

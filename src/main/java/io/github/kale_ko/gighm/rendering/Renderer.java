@@ -3,18 +3,24 @@ package io.github.kale_ko.gighm.rendering;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import java.awt.Color;
+import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Map;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL;
 import io.github.kale_ko.gighm.exception.AlreadyInitializedException;
 import io.github.kale_ko.gighm.exception.GLCompileException;
 import io.github.kale_ko.gighm.exception.IncorrectThreadException;
 import io.github.kale_ko.gighm.exception.NotInitializedException;
+import io.github.kale_ko.gighm.rendering.objects.Skybox;
 import io.github.kale_ko.gighm.rendering.shaders.Shader;
+import io.github.kale_ko.gighm.rendering.shaders.ShaderLoader;
 import io.github.kale_ko.gighm.rendering.textures.Texture2D;
+import io.github.kale_ko.gighm.rendering.textures.Texture2DLoader;
 import io.github.kale_ko.gighm.scene.GameObject;
 import io.github.kale_ko.gighm.scene.Scene;
 import io.github.kale_ko.gighm.scene.components.Camera;
@@ -53,6 +59,13 @@ public class Renderer {
      * @since 1.0.0
      */
     private @NotNull Shader shader;
+
+    /**
+     * The skybox to clear the background with
+     * 
+     * @since 2.1.0
+     */
+    private @NotNull Skybox skybox;
 
     /**
      * The color to clear the background with
@@ -118,6 +131,28 @@ public class Renderer {
     private @NotNull Map<Texture2D, Integer> textures = new HashMap<Texture2D, Integer>();
 
     /**
+     * A map of skybox textures to their gl texture ids (Only used internally)
+     * 
+     * @since 1.3.0
+     */
+    private @NotNull Map<Texture2D[], Integer> skyBoxTextures = new HashMap<Texture2D[], Integer>();
+
+    /**
+     * A map of skybox textures to their gl texture ids (Only used internally)
+     * 
+     * @since 2.1.0
+     */
+    private static @NotNull Shader SKYBOX_SHADER;
+
+    static {
+        try {
+            SKYBOX_SHADER = ShaderLoader.loadShader(ShaderLoader.class.getResourceAsStream("/vertex-skybox.glsl"), ShaderLoader.class.getResourceAsStream("/fragment-skybox.glsl"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Create a renderer
      * 
      * @param scene The scene to be rendered
@@ -128,6 +163,31 @@ public class Renderer {
      */
     public Renderer(@NotNull Scene scene, @NotNull Camera camera, @NotNull Shader shader) {
         this(scene, camera, shader, new Color(0, 0, 0));
+    }
+
+    /**
+     * Create a renderer
+     * 
+     * @param scene The scene to be rendered
+     * @param camera The camera to render from
+     * @param shader The shader to use while rendering
+     * @param skybox The skybox to clear the background with
+     * 
+     * @since 2.1.0
+     */
+    public Renderer(@NotNull Scene scene, @NotNull Camera camera, @NotNull Shader shader, @NotNull Skybox skybox) {
+        NullUtils.checkNulls(scene, "scene");
+        NullUtils.checkNulls(camera, "camera");
+        NullUtils.checkNulls(shader, "shader");
+        NullUtils.checkNulls(skybox, "skybox");
+
+        this.scene = scene;
+        this.camera = camera;
+
+        this.shader = shader;
+
+        this.clearColor = new Color(0, 0, 0);
+        this.skybox = skybox;
     }
 
     /**
@@ -198,6 +258,268 @@ public class Renderer {
         glClearColor(((float) this.clearColor.getRed()) / 255f, ((float) this.clearColor.getGreen()) / 255f, ((float) this.clearColor.getBlue()) / 255f, 1.0f);
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        if (this.skybox != null) {
+            glDisable(GL_DEPTH_TEST);
+
+            if (!this.shaderPrograms.containsKey(SKYBOX_SHADER)) {
+                Integer programId = glCreateProgram();
+                this.shaderPrograms.put(SKYBOX_SHADER, programId);
+
+                Integer vertexId = glCreateShader(GL_VERTEX_SHADER);
+                this.shaderVertexShaders.put(SKYBOX_SHADER, vertexId);
+                glShaderSource(vertexId, SKYBOX_SHADER.getVertexSource());
+                glCompileShader(vertexId);
+                if (glGetShaderi(vertexId, GL_COMPILE_STATUS) != GL_TRUE) {
+                    System.err.println(glGetShaderInfoLog(vertexId));
+
+                    throw new GLCompileException("Failed to compile vertex shader");
+                }
+
+                Integer fragmentId = glCreateShader(GL_FRAGMENT_SHADER);
+                this.shaderFragmentShaders.put(SKYBOX_SHADER, fragmentId);
+                glShaderSource(fragmentId, SKYBOX_SHADER.getFragmentSource());
+                glCompileShader(fragmentId);
+                if (glGetShaderi(fragmentId, GL_COMPILE_STATUS) != GL_TRUE) {
+                    System.err.println(glGetShaderInfoLog(fragmentId));
+
+                    throw new GLCompileException("Failed to compile fragment shader");
+                }
+
+                glAttachShader(programId, vertexId);
+                glAttachShader(programId, fragmentId);
+
+                glBindAttribLocation(programId, 0, "vertices");
+                glBindAttribLocation(programId, 1, "uvs");
+
+                glLinkProgram(programId);
+                if (glGetProgrami(programId, GL_LINK_STATUS) != GL_TRUE) {
+                    System.err.println(glGetProgramInfoLog(programId));
+
+                    throw new GLCompileException("Failed to compile shader program");
+                }
+                glValidateProgram(programId);
+                if (glGetProgrami(programId, GL_VALIDATE_STATUS) != GL_TRUE) {
+                    System.err.println(glGetProgramInfoLog(programId));
+
+                    throw new GLCompileException("Failed to compile shader program");
+                }
+            }
+
+            glUseProgram(this.shaderPrograms.get(SKYBOX_SHADER));
+
+            Float size = this.camera.getNear() * 2;
+            Mesh mesh = null;
+            try {
+                mesh = new Mesh(new Float[] {
+                    // Front
+                    -size, size, size,
+                    size, size, size,
+                    size, -size, size,
+
+                    -size, size, size,
+                    -size, -size, size,
+                    size, -size, size,
+
+                    // Back
+                    -size, size, -size,
+                    size, size, -size,
+                    size, -size, -size,
+
+                    -size, size, -size,
+                    -size, -size, -size,
+                    size, -size, -size,
+
+                    // Left
+                    -size, -size, size,
+                    -size, size, size,
+                    -size, size, -size,
+
+                    -size, -size, size,
+                    -size, -size, -size,
+                    -size, size, -size,
+
+                    // Right
+                    size, -size, size,
+                    size, size, size,
+                    size, size, -size,
+
+                    size, -size, size,
+                    size, -size, -size,
+                    size, size, -size,
+
+                    // Top
+                    -size, size, size,
+                    size, size, size,
+                    size, size, -size,
+
+                    -size, size, size,
+                    -size, size, -size,
+                    size, size, -size,
+
+                    // Bottom
+                    -size, -size, size,
+                    size, -size, size,
+                    size, -size, -size,
+
+                    -size, -size, size,
+                    -size, -size, -size,
+                    size, -size, -size
+                }, 3, Texture2DLoader.loadTexture(Texture2DLoader.class.getResourceAsStream("/assets/white.png")), new Float[] {
+                    // Front
+                    0f, 0f, 0f,
+                    1f, 0f, 0f,
+                    1f, 1f, 0f,
+
+                    0f, 0f, 0f,
+                    0f, 1f, 0f,
+                    1f, 1f, 0f,
+
+                    // Back
+                    1f, 0f, 0f,
+                    0f, 0f, 0f,
+                    0f, 1f, 0f,
+
+                    1f, 0f, 0f,
+                    1f, 1f, 0f,
+                    0f, 1f, 0f,
+
+                    // Left
+                    1f, 1f, 0f,
+                    1f, 0f, 0f,
+                    0f, 0f, 0f,
+
+                    1f, 1f, 0f,
+                    0f, 1f, 0f,
+                    0f, 0f, 0f,
+
+                    // Right
+                    0f, 1f, 0f,
+                    0f, 0f, 0f,
+                    1f, 0f, 0f,
+
+                    0f, 1f, 0f,
+                    1f, 1f, 0f,
+                    1f, 0f, 0f,
+
+                    // Top
+                    0f, 1f, 0f,
+                    1f, 1f, 0f,
+                    1f, 0f, 0f,
+
+                    0f, 1f, 0f,
+                    0f, 0f, 0f,
+                    1f, 0f, 0f,
+
+                    // Bottom
+                    0f, 1f, 0f,
+                    1f, 1f, 0f,
+                    1f, 0f, 0f,
+
+                    0f, 1f, 0f,
+                    0f, 0f, 0f,
+                    1f, 0f, 0f
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (!this.meshVertBuffers.containsKey(mesh)) {
+                Integer vertId = glGenBuffers();
+                this.meshVertBuffers.put(mesh, vertId);
+
+                FloatBuffer vertBuffer = BufferUtils.createFloatBuffer(mesh.getVertices().length);
+                vertBuffer.put(ArrayUtils.toPrimitive(mesh.getVertices()));
+                vertBuffer.flip();
+
+                glBindBuffer(GL_ARRAY_BUFFER, vertId);
+                glBufferData(GL_ARRAY_BUFFER, vertBuffer, GL_STATIC_DRAW);
+
+                glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+                if (mesh.getUVs() != null) {
+                    Integer uvId = glGenBuffers();
+                    this.meshUvBuffers.put(mesh, uvId);
+
+                    FloatBuffer uvBuffer = BufferUtils.createFloatBuffer(mesh.getUVs().length);
+                    uvBuffer.put(ArrayUtils.toPrimitive(mesh.getUVs()));
+                    uvBuffer.flip();
+
+                    glBindBuffer(GL_ARRAY_BUFFER, uvId);
+                    glBufferData(GL_ARRAY_BUFFER, uvBuffer, GL_STATIC_DRAW);
+
+                    glBindBuffer(GL_ARRAY_BUFFER, 0);
+                }
+
+                if (mesh.getTriangles() != null) {
+                    Integer triId = glGenBuffers();
+                    this.meshTriBuffers.put(mesh, triId);
+
+                    IntBuffer triBuffer = BufferUtils.createIntBuffer(mesh.getTriangles().length);
+                    triBuffer.put(ArrayUtils.toPrimitive(mesh.getTriangles()));
+                    triBuffer.flip();
+
+                    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, triId);
+                    glBufferData(GL_ELEMENT_ARRAY_BUFFER, triBuffer, GL_STATIC_DRAW);
+
+                    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+                }
+            }
+
+            Texture2D[] textures = new Texture2D[] { this.skybox.right, this.skybox.left, this.skybox.top, this.skybox.bottom, this.skybox.front, this.skybox.back };
+
+            if (!this.skyBoxTextures.containsKey(textures)) {
+                Integer textureId = glGenTextures();
+                this.skyBoxTextures.put(textures, textureId);
+                glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
+
+                glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+                glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+                for (Integer i = 0; i < 6; i++) {
+                    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, textures[i].getWidth(), textures[i].getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, textures[i].getRawData());
+                }
+            }
+
+            Integer loc = glGetUniformLocation(this.shaderPrograms.get(SKYBOX_SHADER), "sampler");
+            glUniform1i(loc, this.skyBoxTextures.get(textures));
+
+            glActiveTexture(GL_TEXTURE0 + this.skyBoxTextures.get(textures));
+            glBindTexture(GL_TEXTURE_CUBE_MAP, this.skyBoxTextures.get(textures));
+
+            Integer projectionLoc = glGetUniformLocation(this.shaderPrograms.get(SKYBOX_SHADER), "projection");
+            FloatBuffer projectionBuffer = BufferUtils.createFloatBuffer(16);
+            camera.getProjection().mul(new Matrix4f().translate(new Vector3f(-camera.getGameObject().getComponent(Transform.class).getPosition().x, -camera.getGameObject().getComponent(Transform.class).getPosition().y, -camera.getGameObject().getComponent(Transform.class).getPosition().z))).get(projectionBuffer);
+            glUniformMatrix4fv(projectionLoc, false, projectionBuffer);
+
+            glEnableVertexAttribArray(0);
+            glEnableVertexAttribArray(1);
+
+            glBindBuffer(GL_ARRAY_BUFFER, this.meshVertBuffers.get(mesh));
+            glVertexAttribPointer(0, mesh.getVerticeSize(), GL_FLOAT, false, 0, NULL);
+
+            if (this.meshUvBuffers.containsKey(mesh)) {
+                glBindBuffer(GL_ARRAY_BUFFER, this.meshUvBuffers.get(mesh));
+                glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, NULL);
+            }
+
+            if (this.meshTriBuffers.containsKey(mesh)) {
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this.meshTriBuffers.get(mesh));
+
+                glDrawElements(GL_TRIANGLES, mesh.getTriangles().length, GL_UNSIGNED_INT, 0);
+
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+            } else {
+                glDrawArrays(GL_TRIANGLES, 0, mesh.getVertices().length / mesh.getVerticeSize());
+            }
+
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+            glDisableVertexAttribArray(0);
+            glDisableVertexAttribArray(1);
+        }
+
+        glEnable(GL_DEPTH_TEST);
 
         if (!this.shaderPrograms.containsKey(shader)) {
             Integer programId = glCreateProgram();
@@ -455,6 +777,30 @@ public class Renderer {
         NullUtils.checkNulls(color, "color");
 
         this.clearColor = color;
+    }
+
+    /**
+     * Get the skybox to clear the background with
+     * 
+     * @return The skybox to clear the background with
+     * 
+     * @since 2.1.0
+     */
+    public @NotNull Skybox getSkybox() {
+        return this.skybox;
+    }
+
+    /**
+     * Set the skybox to clear the background with
+     * 
+     * @param skybox Set the skybox to clear the background with
+     * 
+     * @since 2.1.0
+     */
+    public void setSkybox(@NotNull Skybox skybox) {
+        NullUtils.checkNulls(skybox, "skybox");
+
+        this.skybox = skybox;
     }
 
     /**
