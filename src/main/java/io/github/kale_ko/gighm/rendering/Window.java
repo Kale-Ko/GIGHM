@@ -2,6 +2,7 @@ package io.github.kale_ko.gighm.rendering;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import java.nio.IntBuffer;
@@ -276,6 +277,12 @@ public class Window {
             renderer.getCamera().setAspect((float) (this.width / this.height));
 
             renderer.getCamera().recalculateProjection();
+
+            glViewport(0, 0, this.width, this.height);
+
+            renderer.render();
+
+            glfwSwapBuffers(windowId);
         });
 
         glfwSetWindowMaximizeCallback(windowId, (window, maximized) -> {
@@ -315,6 +322,8 @@ public class Window {
 
         Instant lastRender = Instant.now();
         while (!glfwWindowShouldClose(windowId)) {
+            glViewport(0, 0, this.width, this.height);
+
             renderer.render();
 
             glfwSwapBuffers(windowId);
