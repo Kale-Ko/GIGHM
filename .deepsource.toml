@@ -1,5 +1,15 @@
 version = 1
 
+exclude_patterns = [
+  "gradle/**",
+  "gradlew",
+  "gradlew.bat"
+]
+
+[[analyzers]]
+name = "secrets"
+enabled = true
+
 [[analyzers]]
 name = "java"
 enabled = true
