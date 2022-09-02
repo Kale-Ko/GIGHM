@@ -256,19 +256,27 @@ public class Window {
         }
 
         glfwSetKeyCallback(windowId, (window, key, scanCode, action, mods) -> {
-            this.eventManager.emit(new KeyEvent(KeyCode.valueOfGLFWKey(key, KeyMod.isPressed(KeyMod.SHIFT, mods)), KeyAction.valueOfGLFWEvent(action), KeyMod.getPressed(mods)));
+            if (glfwGetWindowAttrib(windowId, GLFW_FOCUSED) == GLFW_TRUE) {
+                this.eventManager.emit(new KeyEvent(KeyCode.valueOfGLFWKey(key, KeyMod.isPressed(KeyMod.SHIFT, mods)), KeyAction.valueOfGLFWEvent(action), KeyMod.getPressed(mods)));
+            }
         });
 
         glfwSetMouseButtonCallback(windowId, (window, button, action, mods) -> {
-            this.eventManager.emit(new MouseButtonEvent(MouseButton.valueOfGLFWButton(button), MouseButtonAction.valueOfGLFWEvent(action), KeyMod.getPressed(mods)));
+            if (glfwGetWindowAttrib(windowId, GLFW_FOCUSED) == GLFW_TRUE) {
+                this.eventManager.emit(new MouseButtonEvent(MouseButton.valueOfGLFWButton(button), MouseButtonAction.valueOfGLFWEvent(action), KeyMod.getPressed(mods)));
+            }
         });
 
         glfwSetCursorPosCallback(windowId, (window, x, y) -> {
-            this.eventManager.emit(new MouseMoveEvent((int) x, (int) y));
+            if (glfwGetWindowAttrib(windowId, GLFW_FOCUSED) == GLFW_TRUE) {
+                this.eventManager.emit(new MouseMoveEvent((int) x, (int) y));
+            }
         });
 
         glfwSetScrollCallback(windowId, (window, x, y) -> {
-            this.eventManager.emit(new MouseScrollEvent((int) x, (int) y));
+            if (glfwGetWindowAttrib(windowId, GLFW_FOCUSED) == GLFW_TRUE) {
+                this.eventManager.emit(new MouseScrollEvent((int) x, (int) y));
+            }
         });
 
         glfwSetWindowSizeCallback(windowId, (window, newWidth, newHeight) -> {
