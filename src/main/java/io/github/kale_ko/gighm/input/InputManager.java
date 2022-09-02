@@ -5,6 +5,7 @@ import java.util.List;
 import io.github.kale_ko.gighm.events.EventManager;
 import io.github.kale_ko.gighm.events.types.input.KeyEvent;
 import io.github.kale_ko.gighm.events.types.input.MouseButtonEvent;
+import io.github.kale_ko.gighm.events.types.input.MouseMoveDeltaEvent;
 import io.github.kale_ko.gighm.events.types.input.MouseMoveEvent;
 import io.github.kale_ko.gighm.events.types.input.MouseScrollEvent;
 import io.github.kale_ko.gighm.events.types.rendering.RenderEvent;
@@ -273,6 +274,8 @@ public class InputManager {
      * @since 1.2.0
      */
     public void resetDelta() {
+        this.eventManager.emit(new MouseMoveDeltaEvent(this.mouseX, this.mouseY, this.mouseDeltaX, this.mouseDeltaY));
+
         this.mouseDeltaX = 0;
         this.mouseDeltaY = 0;
 
