@@ -11,6 +11,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import org.joml.Vector2f;
+import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -24,6 +26,7 @@ import io.github.kale_ko.gighm.events.types.rendering.RenderEvent;
 import io.github.kale_ko.gighm.events.types.rendering.TickEvent;
 import io.github.kale_ko.gighm.exception.AlreadyInitializedException;
 import io.github.kale_ko.gighm.exception.GLInitializeException;
+import io.github.kale_ko.gighm.exception.InvalidDataException;
 import io.github.kale_ko.gighm.exception.ThreadPauseException;
 import io.github.kale_ko.gighm.input.InputManager;
 import io.github.kale_ko.gighm.input.KeyAction;
@@ -182,6 +185,10 @@ public class Window {
         this.width = width;
         this.height = height;
 
+        if (this.width < 640 || this.height < 480) {
+            throw new InvalidDataException("Width or height is too small. Must be greater than (640, 480)");
+        }
+
         this.maximized = maximized;
         this.resizable = resizable;
 
@@ -302,6 +309,9 @@ public class Window {
                 }
             }
         }, 1, 20, TimeUnit.MILLISECONDS);
+
+        glfwSetWindowSizeLimits(windowId, 640, 480, GLFW_DONT_CARE, GLFW_DONT_CARE);
+        glfwSetWindowAspectRatio(windowId, this.width, this.height);
 
         if (!this.maximized) {
             MemoryStack stack = stackPush();
@@ -457,25 +467,56 @@ public class Window {
     }
 
     /**
-     * Get the current width of the window
+     * Set the current position of the window
      * 
-     * @return The current width of the window
+     * @param position The new position of the window
      * 
-     * @since 1.0.0
+     * @since 2.2.0
      */
-    public @NotNull Integer getWidth() {
-        return this.width;
+    public void setPosition(@NotNull Vector2i position) {
+        NullUtils.checkNulls(position, "position");
+
+        glfwSetWindowPos(this.windowId, position.x, position.y);
     }
 
     /**
-     * Get the current height of the window
+     * Set the current position of the window
      * 
-     * @return The current height of the window
+     * @param x The new x of the window
+     * @param y The new y of the window
      * 
-     * @since 1.0.0
+     * @since 2.2.0
      */
-    public @NotNull Integer getHeight() {
-        return this.height;
+    public void setPosition(@NotNull Integer x, @NotNull Integer y) {
+        this.setPosition(new Vector2i(x, y));
+    }
+
+    /**
+     * Get the current size of the window
+     * 
+     * @return The current size of the window
+     * 
+     * @since 2.2.0
+     */
+    public @NotNull Vector2i getSize() {
+        return new Vector2i(this.width, this.height);
+    }
+
+    /**
+     * Set the current size of the window
+     * 
+     * @param size The new size of the window
+     * 
+     * @since 2.2.0
+     */
+    public void setSize(@NotNull Vector2i size) {
+        NullUtils.checkNulls(size, "size");
+
+        this.width = size.x;
+        this.height = size.y;
+
+        glfwSetWindowSize(this.windowId, size.x, size.y);
+        glfwSetWindowAspectRatio(windowId, size.x, size.y);
     }
 
     /**
@@ -487,13 +528,54 @@ public class Window {
      * @since 1.0.0
      */
     public void setSize(@NotNull Integer width, @NotNull Integer height) {
-        NullUtils.checkNulls(width, "width");
-        NullUtils.checkNulls(height, "height");
+        this.setSize(new Vector2i(width, height));
+    }
 
-        this.width = width;
-        this.height = height;
+    /**
+     * Get the current aspect ratio of the window
+     * 
+     * @return The current aspect ratio of the window
+     * 
+     * @since 2.2.0
+     */
+    public @NotNull Vector2f getAspect() {
+        Float aspectX = ((float) this.width) / ((float) this.height);
+        Float aspectY = ((float) this.height) / ((float) this.width);
 
-        glfwSetWindowSize(windowId, width, height);
+        if (aspectX < aspectY) {
+            aspectY *= 1 / aspectX;
+            aspectX *= 1 / aspectX;
+        } else {
+            aspectY *= 1 / aspectY;
+            aspectX *= 1 / aspectY;
+        }
+
+        return new Vector2f(aspectX, aspectY);
+    }
+
+    /**
+     * Set the current aspect ratio of the window
+     * 
+     * @param aspect The new aspect of the window
+     * 
+     * @since 2.2.0
+     */
+    public void setAspect(@NotNull Vector2i aspect) {
+        NullUtils.checkNulls(aspect, "aspect");
+
+        glfwSetWindowAspectRatio(windowId, aspect.x, aspect.y);
+    }
+
+    /**
+     * Set the current aspect ratio of the window
+     * 
+     * @param aspectX The new aspect of the window
+     * @param aspectY The new aspect of the window
+     * 
+     * @since 2.2.0
+     */
+    public void setAspect(@NotNull Integer aspectX, @NotNull Integer aspectY) {
+        this.setAspect(new Vector2i(aspectX, aspectY));
     }
 
     /**
