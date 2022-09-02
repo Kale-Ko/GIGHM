@@ -336,10 +336,10 @@ public class Camera extends Component {
     public @NotNull Matrix4f getProjection() {
         Matrix4f target = new Matrix4f();
 
-        Matrix4f position = new Matrix4f().setTranslation(this.getGameObject().getComponent(Transform.class).getPosition());
-        Matrix4f rotation = new Matrix4f().set(this.getGameObject().getComponent(Transform.class).getRotation());
+        Matrix4f position = new Matrix4f().translate(this.getGameObject().getComponent(Transform.class).getPosition());
+        Matrix4f rotation = new Matrix4f().rotate(this.getGameObject().getComponent(Transform.class).getRotation());
 
-        target = projection.mul(position, target).mul(rotation);
+        target = projection.mul(rotation, target).mul(position);
 
         return target;
     }
