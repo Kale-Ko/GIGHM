@@ -195,6 +195,7 @@ public class Window {
         this.mainThread = Thread.currentThread();
 
         this.thread = new Thread(new Runnable() {
+            @Override
             public void run() {
                 init();
             }
@@ -307,6 +308,7 @@ public class Window {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
         ScheduledFuture<?> handle = scheduler.scheduleAtFixedRate(new Runnable() {
+            @Override
             public void run() {
                 eventManager.emit(new TickEvent());
 
