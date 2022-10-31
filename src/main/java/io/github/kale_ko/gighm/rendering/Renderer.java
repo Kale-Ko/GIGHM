@@ -284,7 +284,7 @@ public class Renderer {
             glDisable(GL_DEPTH_TEST);
 
             Float size = this.camera.getNear() * 2;
-            Mesh[] meshes = new Mesh[] {
+            Mesh[] skyboxMeshes = new Mesh[] {
                 new Mesh(new Float[] {
                     -size, size, size,
                     size, size, size,
@@ -389,7 +389,7 @@ public class Renderer {
                 })
             };
 
-            for (Mesh mesh : meshes) {
+            for (Mesh mesh : skyboxMeshes) {
                 if (!this.meshVertBuffers.containsKey(mesh)) {
                     Integer vertId = glGenBuffers();
                     this.meshVertBuffers.put(mesh, vertId);

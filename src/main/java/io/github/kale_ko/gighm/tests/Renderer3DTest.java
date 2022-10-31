@@ -29,7 +29,7 @@ public class Renderer3DTest {
             Camera camera = Camera.createPerspective(90f, (float) width / (float) height, 0.01f, 512f);
             cameraObject.addComponent(camera);
             cameraObject.getComponent(Transform.class).setPosition(new Vector3f(0, 0, -20));
-            scene.addObjects(cameraObject);
+            scene.addObject(cameraObject);
 
             Shader shader = ShaderLoader.loadDefault();
             Renderer renderer = new Renderer(scene, camera, shader, new Color(0.8f, 0.8f, 0.8f));
@@ -55,8 +55,8 @@ public class Renderer3DTest {
             object2.getComponent(Transform.class).setPosition(new Vector3f(5, 2, 10));
             object2.getComponent(Transform.class).setScale(new Vector3f(1));
 
-            scene.addObjects(object1);
-            scene.addObjects(object2);
+            scene.addObject(object1);
+            scene.addObject(object2);
         } catch (IOException e) {
             e.printStackTrace();
         }
