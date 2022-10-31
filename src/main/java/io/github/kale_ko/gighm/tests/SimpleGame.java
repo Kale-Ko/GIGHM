@@ -33,7 +33,7 @@ public class SimpleGame {
             Camera camera = Camera.createPerspective(fov, (float) width / (float) height, near, far);
             cameraObject.addComponent(camera);
             cameraObject.getComponent(Transform.class).setPosition(new Vector3f(0, 0, -10));
-            scene.addObjects(cameraObject);
+            scene.addObject(cameraObject);
 
             Texture2D logoTexture = Texture2DLoader.loadTexture(Texture2DLoader.class.getResourceAsStream("/assets/tests/kale.png"));
             Texture2D skySideTexture = Texture2DLoader.loadTexture(Texture2DLoader.class.getResourceAsStream("/assets/tests/sky-sides.png"));
@@ -50,7 +50,7 @@ public class SimpleGame {
             cubeObject.addComponent(cubeMesh);
             cubeObject.getComponent(Transform.class).setPosition(new Vector3f(0, 0, 0));
             cubeObject.getComponent(Transform.class).setScale(new Vector3f(5, 5, 5));
-            scene.addObjects(cubeObject);
+            scene.addObject(cubeObject);
 
             window.getEventManager().addEventListener(TickEvent.class, (event) -> {
                 cubeObject.getComponent(Transform.class).getRotation().rotateLocalX(0.004f);

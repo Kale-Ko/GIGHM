@@ -23,7 +23,7 @@ public class SimpleTest {
             Camera camera = Camera.createOrthographic(width, height, farPlane); // Create the 2D camera component
             // OR createPerspective(fov, (float) width / (float) height, nearPlane, farPlane) for 3D;
             cameraObject.addComponent(camera); // Add the camera component to the camera object
-            scene.addObjects(cameraObject); // Add the camera object into the scene
+            scene.addObject(cameraObject); // Add the camera object into the scene
 
             Shader shader = ShaderLoader.loadDefault(); // Load the default shader
             Renderer renderer = new Renderer(scene, camera, shader); // Create the renderer with the scene, camera, and shader

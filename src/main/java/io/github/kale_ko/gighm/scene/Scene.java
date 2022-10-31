@@ -71,7 +71,7 @@ public class Scene {
      * @since 1.0.0
      */
     public @NotNull List<GameObject> getObjects() {
-        return this.objects;
+        return new ArrayList<GameObject>(this.objects);
     }
 
     /**
@@ -149,15 +149,15 @@ public class Scene {
     }
 
     /**
-     * Add an objects to the scene
+     * Add an object to the scene
      * 
-     * @param object The objects to add
+     * @param object The object to add
      * 
      * @throws InvalidModificationException If the game object is already part of another scene
      * 
      * @since 1.0.0
      */
-    public void addObjects(@NotNull GameObject object) throws InvalidModificationException {
+    public void addObject(@NotNull GameObject object) throws InvalidModificationException {
         NullUtils.checkNulls(object, "object");
 
         if (object.getScene() == null) {
@@ -170,13 +170,13 @@ public class Scene {
     }
 
     /**
-     * Remove an objects from the scene
+     * Remove an object from the scene
      * 
-     * @param object The objects to remove
+     * @param object The object to remove
      * 
      * @since 1.0.0
      */
-    public void removeObjects(@NotNull GameObject object) {
+    public void removeObject(@NotNull GameObject object) {
         NullUtils.checkNulls(object, "object");
 
         this.objects.remove(object);

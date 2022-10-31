@@ -99,7 +99,7 @@ public class GameObject {
      * @since 1.7.0
      */
     public @NotNull List<Component> getComponents() {
-        return new ArrayList<>(this.components.values());
+        return new ArrayList<Component>(this.components.values());
     }
 
     /**
