@@ -270,7 +270,9 @@ public class Window {
 
         glfwSetCursorPosCallback(windowId, (window, x, y) -> {
             if (glfwGetWindowAttrib(windowId, GLFW_FOCUSED) == GLFW_TRUE) {
-                this.eventManager.emit(new MouseMoveEvent((int) x, (int) y));
+                if (x >= 0 && x <= this.width && y >= 0 && y <= this.height) {
+                    this.eventManager.emit(new MouseMoveEvent((int) x, (int) y));
+                }
             }
         });
 
