@@ -47,7 +47,7 @@ tasks.withType(JavaCompile) {
 jar {
     manifest {
         attributes "Name": project.group.replace(".", "/") + "/" + project.archivesBaseName + "/"
-    }   
+    }
 }
 
 tasks.register("buildFat", Jar) {
@@ -64,7 +64,7 @@ tasks.register("buildFat", Jar) {
 
     manifest {
         attributes "Name": project.group.replace(".", "/") + "/" + project.archivesBaseName + "/",
-            "Main-Class": project.group + "." + project.archivesBaseName + ".tests.SimpleGame",
+            "Main-Class": project.group + "." + project.archivesBaseName + ".tests.ExampleScene",
             "Application-Name": project.name
     }
 }
