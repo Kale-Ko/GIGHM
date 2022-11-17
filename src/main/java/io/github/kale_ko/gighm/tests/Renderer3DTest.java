@@ -34,7 +34,7 @@ public class Renderer3DTest {
             Shader shader = ShaderLoader.loadDefault();
             Renderer renderer = new Renderer(scene, camera, shader, new Color(0.8f, 0.8f, 0.8f));
 
-            Window window = new Window(renderer, "3D Renderer", width, height, false, true);
+            Window window = new Window(renderer, "GIGHM - 3D Renderer", width, height, false, true);
             window.setIcon(Texture2DLoader.loadTexture(Renderer2DTest.class.getResourceAsStream("/assets/tests/kale.png")));
 
             window.getEventManager().addEventListener(RenderEvent.class, event -> {
