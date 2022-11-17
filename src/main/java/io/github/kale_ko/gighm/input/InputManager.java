@@ -128,8 +128,10 @@ public class InputManager {
         });
 
         this.eventManager.addEventListener(MouseMoveEvent.class, (event) -> {
-            this.mouseDeltaX += event.getX() - mouseX;
-            this.mouseDeltaY += event.getY() - mouseY;
+            if (this.mouseX != -1 && this.mouseY != -1) {
+                this.mouseDeltaX += event.getX() - this.mouseX;
+                this.mouseDeltaY += event.getY() - this.mouseY;
+            }
 
             this.mouseX = event.getX();
             this.mouseY = event.getY();
