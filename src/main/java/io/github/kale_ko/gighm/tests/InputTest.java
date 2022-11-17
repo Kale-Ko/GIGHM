@@ -22,7 +22,7 @@ public class InputTest {
             Shader shader = ShaderLoader.loadDefault();
             Renderer renderer = new Renderer(scene, camera, shader);
 
-            Window window = new Window(renderer, "Input Test", 800, 600, false, true);
+            Window window = new Window(renderer, "GIGHM - Input/Events", 800, 600, false, true);
 
             window.getEventManager().addEventListener(KeyEvent.class, event -> {
                 System.out.println("KEY" + event.getAction() + ": " + event.getCode());

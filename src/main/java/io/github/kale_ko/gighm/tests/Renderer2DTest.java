@@ -34,7 +34,7 @@ public class Renderer2DTest {
             Shader shader = ShaderLoader.loadDefault();
             Renderer renderer = new Renderer(scene, camera, shader, new Color(0.8f, 0.8f, 0.8f));
 
-            Window window = new Window(renderer, "2D Renderer", width, height, false, true);
+            Window window = new Window(renderer, "GIGHM - 2D Renderer", width, height, false, true);
             window.setIcon(Texture2DLoader.loadTexture(Renderer2DTest.class.getResourceAsStream("/assets/tests/kale.png")));
 
             window.getEventManager().addEventListener(RenderEvent.class, event -> {
@@ -50,7 +50,7 @@ public class Renderer2DTest {
 
             GameObject object2 = new GameObject();
             Texture2D texture2 = Texture2DLoader.loadTexture(Renderer2DTest.class.getResourceAsStream("/assets/tests/kale.png"));
-            Mesh mesh2 = PrimitiveObjects.PLANE.copy(texture2);
+            Mesh mesh2 = PrimitiveObjects.CIRCLE.copy(texture2);
             object2.addComponent(mesh2);
             object2.getComponent(Transform.class).setPosition(new Vector3f(-85, 30, 10));
             object2.getComponent(Transform.class).setScale(new Vector3f(100));
