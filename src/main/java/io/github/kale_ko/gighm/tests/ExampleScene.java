@@ -7,7 +7,7 @@ import io.github.kale_ko.gighm.events.types.input.MouseMoveDeltaEvent;
 import io.github.kale_ko.gighm.input.MouseButtonAction;
 import io.github.kale_ko.gighm.rendering.Renderer;
 import io.github.kale_ko.gighm.rendering.Window;
-import io.github.kale_ko.gighm.rendering.objects.PrimitiveObjects;
+import io.github.kale_ko.gighm.rendering.objects.PrimitiveMeshes;
 import io.github.kale_ko.gighm.rendering.objects.Skybox;
 import io.github.kale_ko.gighm.rendering.shaders.Shader;
 import io.github.kale_ko.gighm.rendering.shaders.ShaderLoader;
@@ -52,7 +52,7 @@ public class ExampleScene {
             window.setIcon(logoTexture);
 
             GameObject cubeObject = new GameObject("Cube");
-            Mesh cubeMesh = PrimitiveObjects.CUBE.copy(logoTexture);
+            Mesh cubeMesh = PrimitiveMeshes.CUBE.copy(logoTexture);
             cubeObject.addComponent(cubeMesh);
             cubeObject.getComponent(Transform.class).setPosition(new Vector3f(0, 1, 0));
             cubeObject.getComponent(Transform.class).setScale(new Vector3f(5, 5, 5));
