@@ -2,7 +2,7 @@ package io.github.kale_ko.gighm.rendering;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL33.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import java.nio.IntBuffer;
