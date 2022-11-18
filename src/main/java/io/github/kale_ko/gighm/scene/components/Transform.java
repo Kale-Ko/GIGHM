@@ -8,7 +8,7 @@ import io.github.kale_ko.gighm.util.NotNull;
 import io.github.kale_ko.gighm.util.NullUtils;
 
 /**
- * An objects transform (Position, rotation, and scale)
+ * An object's transform (Position, rotation, and scale)
  * 
  * @author Kale Ko
  * 

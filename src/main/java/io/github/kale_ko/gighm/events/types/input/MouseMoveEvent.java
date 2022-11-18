@@ -10,7 +10,7 @@ import io.github.kale_ko.gighm.util.NullUtils;
  * 
  * @author Kale Ko
  * 
- * @version 1.6.0
+ * @version 2.4.0
  * @since 1.6.0
  */
 public class MouseMoveEvent extends Event {
@@ -19,14 +19,14 @@ public class MouseMoveEvent extends Event {
      * 
      * @since 1.6.0
      */
-    private @NotNull Integer x;
+    protected @NotNull Integer x;
 
     /**
      * The y position of the mouse (Relative to the window position)
      * 
      * @since 1.6.0
      */
-    private @NotNull Integer y;
+    protected @NotNull Integer y;
 
     /**
      * Create a mouse move event

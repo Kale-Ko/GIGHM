@@ -4,7 +4,7 @@ import io.github.kale_ko.gighm.util.NotNull;
 import io.github.kale_ko.gighm.util.NullUtils;
 
 /**
- * Thrown if gl fails to compile a shader
+ * Thrown if OpenGL fails to compile a shader
  * 
  * @author Kale Ko
  * 

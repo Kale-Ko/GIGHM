@@ -10,7 +10,7 @@ import io.github.kale_ko.gighm.util.NullUtils;
  * 
  * @author Kale Ko
  * 
- * @version 1.7.0
+ * @version 2.4.0
  * @since 1.6.0
  */
 public class MouseScrollEvent extends CancellableEvent {
@@ -19,14 +19,14 @@ public class MouseScrollEvent extends CancellableEvent {
      * 
      * @since 1.6.0
      */
-    private @NotNull Integer x;
+    protected @NotNull Integer x;
 
     /**
      * The delta y of the scroll
      * 
      * @since 1.6.0
      */
-    private @NotNull Integer y;
+    protected @NotNull Integer y;
 
     /**
      * Create a mouse scroll event
