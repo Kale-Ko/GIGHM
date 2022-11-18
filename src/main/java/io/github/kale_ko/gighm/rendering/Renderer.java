@@ -1,6 +1,6 @@
 package io.github.kale_ko.gighm.rendering;
 
-import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL33.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import java.awt.Color;
 import java.nio.FloatBuffer;
