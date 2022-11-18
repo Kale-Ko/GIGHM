@@ -10,7 +10,7 @@ import io.github.kale_ko.gighm.util.NullUtils;
  * 
  * @author Kale Ko
  * 
- * @version 2.2.0
+ * @version 2.4.0
  * @since 2.2.0
  */
 public class MouseMoveDeltaEvent extends MouseMoveEvent {
@@ -19,14 +19,14 @@ public class MouseMoveDeltaEvent extends MouseMoveEvent {
      * 
      * @since 2.2.0
      */
-    private @NotNull Integer deltaX;
+    protected @NotNull Integer deltaX;
 
     /**
      * The amount the mouse has moved on the y axis
      * 
      * @since 2.2.0
      */
-    private @NotNull Integer deltaY;
+    protected @NotNull Integer deltaY;
 
     /**
      * Create a mouse move delta event

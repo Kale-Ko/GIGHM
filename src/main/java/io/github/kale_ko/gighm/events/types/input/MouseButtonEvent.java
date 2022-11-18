@@ -14,7 +14,7 @@ import io.github.kale_ko.gighm.util.NullUtils;
  * 
  * @author Kale Ko
  * 
- * @version 1.8.0
+ * @version 2.4.0
  * @since 1.6.0
  */
 public class MouseButtonEvent extends CancellableEvent {
@@ -23,21 +23,21 @@ public class MouseButtonEvent extends CancellableEvent {
      * 
      * @since 1.6.0
      */
-    private @NotNull MouseButton button;
+    protected @NotNull MouseButton button;
 
     /**
      * The action being performed (Press, Release)
      * 
      * @since 1.6.0
      */
-    private @NotNull MouseButtonAction action;
+    protected @NotNull MouseButtonAction action;
 
     /**
      * The key mods being held
      * 
      * @since 1.8.0
      */
-    private @NotNull List<KeyMod> mods;
+    protected @NotNull List<KeyMod> mods;
 
     /**
      * Create a mouse button event

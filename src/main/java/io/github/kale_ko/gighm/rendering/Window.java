@@ -310,17 +310,21 @@ public class Window {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
         ScheduledFuture<?> handle = scheduler.scheduleAtFixedRate(new Runnable() {
+            private Integer tickNumber = 1;
+
             @Override
             public void run() {
-                eventManager.emit(new TickEvent());
+                eventManager.emit(new TickEvent(tickNumber));
 
                 for (GameObject object : renderer.getScene().getObjects()) {
                     for (Component component : object.getComponents()) {
-                        component.tick();
+                        component.tick(tickNumber);
                     }
                 }
+
+                tickNumber++;
             }
-        }, 1, 20, TimeUnit.MILLISECONDS);
+        }, 1, 40, TimeUnit.MILLISECONDS);
 
         glfwSetWindowSizeLimits(windowId, 640, 480, GLFW_DONT_CARE, GLFW_DONT_CARE);
         glfwSetWindowAspectRatio(windowId, this.width, this.height);

@@ -14,7 +14,7 @@ import io.github.kale_ko.gighm.util.NullUtils;
  * 
  * @author Kale Ko
  * 
- * @version 1.6.0
+ * @version 2.4.0
  * @since 1.6.0
  */
 public class KeyEvent extends CancellableEvent {
@@ -23,21 +23,21 @@ public class KeyEvent extends CancellableEvent {
      * 
      * @since 1.6.0
      */
-    private @NotNull KeyCode code;
+    protected @NotNull KeyCode code;
 
     /**
      * The action being performed (Press, Release, Repeat)
      * 
      * @since 1.6.0
      */
-    private @NotNull KeyAction action;
+    protected @NotNull KeyAction action;
 
     /**
      * The key mods being held
      * 
      * @since 1.6.0
      */
-    private @NotNull List<KeyMod> mods;
+    protected @NotNull List<KeyMod> mods;
 
     /**
      * Create a key event

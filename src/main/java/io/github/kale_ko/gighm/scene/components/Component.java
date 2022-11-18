@@ -68,6 +68,21 @@ public abstract class Component {
     /**
      * Called at the same time as {@link TickEvent}
      * 
+     * @param tickNumber The tick number (Times ticked)
+     * 
+     * @since 2.4.0
+     */
+    public void tick(Integer tickNumber) {
+        NullUtils.checkNulls(tickNumber, "tickNumber");
+
+        this.tick();
+    }
+
+    /**
+     * Called at the same time as {@link TickEvent}
+     * 
+     * @deprecated Use {@link #tick(Integer)}
+     * 
      * @since 1.7.0
      */
     public void tick() {}

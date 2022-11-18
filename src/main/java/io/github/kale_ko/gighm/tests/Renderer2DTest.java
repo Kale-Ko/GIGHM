@@ -6,7 +6,7 @@ import org.joml.Vector3f;
 import io.github.kale_ko.gighm.events.types.rendering.RenderEvent;
 import io.github.kale_ko.gighm.rendering.Renderer;
 import io.github.kale_ko.gighm.rendering.Window;
-import io.github.kale_ko.gighm.rendering.objects.PrimitiveObjects;
+import io.github.kale_ko.gighm.rendering.objects.PrimitiveMeshes;
 import io.github.kale_ko.gighm.rendering.shaders.Shader;
 import io.github.kale_ko.gighm.rendering.shaders.ShaderLoader;
 import io.github.kale_ko.gighm.rendering.textures.Texture2D;
@@ -43,27 +43,27 @@ public class Renderer2DTest {
 
             GameObject object1 = new GameObject();
             Texture2D texture1 = Texture2DLoader.loadTexture(Renderer2DTest.class.getResourceAsStream("/assets/tests/kale.png"));
-            Mesh mesh1 = PrimitiveObjects.PLANE.copy(texture1);
+            Mesh mesh1 = PrimitiveMeshes.PLANE.copy(texture1);
             object1.addComponent(mesh1);
             object1.getComponent(Transform.class).setPosition(new Vector3f(125, -65, 10));
             object1.getComponent(Transform.class).setScale(new Vector3f(160));
 
             GameObject object2 = new GameObject();
             Texture2D texture2 = Texture2DLoader.loadTexture(Renderer2DTest.class.getResourceAsStream("/assets/tests/kale.png"));
-            Mesh mesh2 = PrimitiveObjects.CIRCLE.copy(texture2);
+            Mesh mesh2 = PrimitiveMeshes.CIRCLE.copy(texture2);
             object2.addComponent(mesh2);
             object2.getComponent(Transform.class).setPosition(new Vector3f(-85, 30, 10));
             object2.getComponent(Transform.class).setScale(new Vector3f(100));
 
             GameObject object3 = new GameObject();
             Texture2D texture3 = Texture2DLoader.loadTexture(Renderer2DTest.class.getResourceAsStream("/assets/tests/noise.png"));
-            Mesh mesh3 = PrimitiveObjects.PLANE.copy(texture3);
+            Mesh mesh3 = PrimitiveMeshes.PLANE.copy(texture3);
             object3.addComponent(mesh3);
             object3.getComponent(Transform.class).setPosition(new Vector3f(45, 240, 10));
             object3.getComponent(Transform.class).setScale(new Vector3f(80));
 
             GameObject object4 = new GameObject();
-            Mesh mesh4 = PrimitiveObjects.PLANE.copy(new Color(255, 100, 120));
+            Mesh mesh4 = PrimitiveMeshes.PLANE.copy(new Color(255, 100, 120));
             object4.addComponent(mesh4);
             object4.getComponent(Transform.class).setPosition(new Vector3f(-45, -180, 10));
             object4.getComponent(Transform.class).setScale(new Vector3f(70));

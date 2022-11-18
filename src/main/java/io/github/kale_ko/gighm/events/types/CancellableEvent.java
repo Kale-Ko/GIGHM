@@ -8,7 +8,7 @@ import io.github.kale_ko.gighm.util.NullUtils;
  * 
  * @author Kale Ko
  * 
- * @version 1.7.0
+ * @version 2.4.0
  * @since 1.6.0
  */
 public abstract class CancellableEvent extends Event {
@@ -17,7 +17,16 @@ public abstract class CancellableEvent extends Event {
      * 
      * @since 1.6.0
      */
-    private @NotNull Boolean cancelled;
+    protected @NotNull Boolean cancelled;
+
+    /**
+     * Create an event
+     * 
+     * @since 2.4.0
+     */
+    protected CancellableEvent() {
+        super();
+    }
 
     /**
      * Get weather the event is cancelled or not

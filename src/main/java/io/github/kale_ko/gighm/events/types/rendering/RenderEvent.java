@@ -10,7 +10,7 @@ import io.github.kale_ko.gighm.util.NullUtils;
  * 
  * @author Kale Ko
  * 
- * @version 1.9.0
+ * @version 2.4.0
  * @since 1.6.0
  */
 public class RenderEvent extends Event {
@@ -19,7 +19,7 @@ public class RenderEvent extends Event {
      * 
      * @since 1.6.0
      */
-    private @NotNull Float delta;
+    protected @NotNull Float delta;
 
     /**
      * Create a render event
