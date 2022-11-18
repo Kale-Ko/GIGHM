@@ -4,7 +4,7 @@ import io.github.kale_ko.gighm.util.NotNull;
 import io.github.kale_ko.gighm.util.NullUtils;
 
 /**
- * Thrown if gl fails to initialize
+ * Thrown if OpenGL fails to initialize
  * 
  * @author Kale Ko
  * 
