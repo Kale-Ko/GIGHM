@@ -11,7 +11,7 @@ import io.github.kale_ko.gighm.scene.components.Mesh;
  * 
  * @author Kale Ko
  * 
- * @version 2.3.0
+ * @version 2.4.0
  * @since 2.0.0
  */
 public class PrimitiveMeshes {
@@ -23,7 +23,7 @@ public class PrimitiveMeshes {
     public static final Mesh
         PLANE = createPlane(0.5f),
         CUBE = createCube(0.5f),
-        CIRCLE = createCircle(0.5f, 64);
+        CIRCLE = createCircle(1f, 64);
 
     /**
      * Create a plane with a certain size
@@ -188,29 +188,29 @@ public class PrimitiveMeshes {
     }
 
     /**
-     * Create a circle with a certain size and quality
+     * Create a circle with a certain radius and quality
      * 
-     * @param size The size of the circle
+     * @param radius The radius of the circle
      * @param quality The quality of the circle
      * 
-     * @return A new circle mesh with the specified size
+     * @return A new circle mesh with the specified radius
      * 
      * @since 2.3.0
      */
-    public static Mesh createCircle(Float size, Integer quality) {
+    public static Mesh createCircle(Float radius, Integer quality) {
         try {
             List<Float> points = new ArrayList<Float>();
             List<Float> uvs = new ArrayList<Float>();
 
             for (Integer i = 0; i < quality; i++) {
-                points.add((float) Math.cos(((Math.PI * 2) / quality) * i));
-                points.add((float) Math.sin(((Math.PI * 2) / quality) * i));
+                points.add((float) Math.cos(((Math.PI * 2) / quality) * i) * radius);
+                points.add((float) Math.sin(((Math.PI * 2) / quality) * i) * radius);
 
                 points.add(0f);
                 points.add(0f);
 
-                points.add((float) Math.cos(((Math.PI * 2) / quality) * (i + 1)));
-                points.add((float) Math.sin(((Math.PI * 2) / quality) * (i + 1)));
+                points.add((float) Math.cos(((Math.PI * 2) / quality) * (i + 1)) * radius);
+                points.add((float) Math.sin(((Math.PI * 2) / quality) * (i + 1)) * radius);
 
                 uvs.add(Math.abs((float) Math.cos(((Math.PI * 2) / quality) * i) / 2 + 0.5f));
                 uvs.add(Math.abs(-(float) Math.sin(((Math.PI * 2) / quality) * i) / 2 + 0.5f));
