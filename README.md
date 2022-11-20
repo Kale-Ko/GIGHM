@@ -60,7 +60,7 @@ cameraObject.addComponent(camera); // Add the camera component to the camera obj
 scene.addObject(cameraObject); // Add the camera object into the scene
 
 Shader shader = ShaderLoader.loadDefault(); // Load the default shader
-Renderer renderer = new Renderer(scene, camera, shader); // Create the renderer with the scene, camera, and shader
+Renderer renderer = new Renderer(scene, camera, shader, new Color(50, 50, 200)); // Create the renderer with the scene, camera, shader, and a sky color
 
 Window window = new Window(renderer, "GIGHM - Simple Demo", width, height); // Create the window with the render
 
