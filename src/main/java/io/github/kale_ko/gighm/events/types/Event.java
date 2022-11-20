@@ -1,7 +1,5 @@
 package io.github.kale_ko.gighm.events.types;
 
-import java.util.Random;
-
 /**
  * An abstract event object
  * 
@@ -12,7 +10,7 @@ import java.util.Random;
  */
 public abstract class Event {
     /** @hidden */
-    private static Random random = new Random();
+    private static Long events = 0l;
 
     /**
      * The unique id of the event
@@ -27,7 +25,7 @@ public abstract class Event {
      * @since 2.4.0
      */
     protected Event() {
-        this.eventId = random.nextLong(Long.MAX_VALUE);
+        this.eventId = events++;
     }
 
     /**
