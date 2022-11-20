@@ -1,5 +1,6 @@
 package io.github.kale_ko.gighm.events.types.input;
 
+import io.github.kale_ko.gighm.events.types.Event;
 import io.github.kale_ko.gighm.input.InputManager;
 import io.github.kale_ko.gighm.util.NotNull;
 import io.github.kale_ko.gighm.util.NullUtils;
@@ -13,7 +14,21 @@ import io.github.kale_ko.gighm.util.NullUtils;
  * @version 2.4.0
  * @since 2.2.0
  */
-public class MouseMoveDeltaEvent extends MouseMoveEvent {
+public class MouseMoveDeltaEvent extends Event {
+    /**
+     * The x position of the mouse inside the window
+     * 
+     * @since 1.6.0
+     */
+    protected @NotNull Integer x;
+
+    /**
+     * The y position of the mouse inside the window
+     * 
+     * @since 1.6.0
+     */
+    protected @NotNull Integer y;
+
     /**
      * The amount the mouse has moved on the x axis
      * 
@@ -31,21 +46,46 @@ public class MouseMoveDeltaEvent extends MouseMoveEvent {
     /**
      * Create a mouse move delta event
      * 
-     * @param x The x position of the mouse (Relative to the window position)
-     * @param y The y position of the mouse (Relative to the window position)
+     * @param x The x position of the mouse inside the window
+     * @param y The y position of the mouse inside the window
      * @param deltaX The amount the mouse has moved on the x axis
      * @param deltaY The amount the mouse has moved on the y axis
      * 
      * @since 2.2.0
      */
     public MouseMoveDeltaEvent(@NotNull Integer x, @NotNull Integer y, @NotNull Integer deltaX, @NotNull Integer deltaY) {
-        super(x, y);
-
+        NullUtils.checkNulls(x, "x");
+        NullUtils.checkNulls(y, "y");
         NullUtils.checkNulls(deltaX, "deltaX");
         NullUtils.checkNulls(deltaY, "deltaY");
 
+        this.x = x;
+        this.y = y;
+
         this.deltaX = deltaX;
         this.deltaY = deltaY;
+    }
+
+    /**
+     * Get the x position of the mouse inside the window
+     * 
+     * @return The x position of the mouse inside the window
+     * 
+     * @since 1.6.0
+     */
+    public @NotNull Integer getX() {
+        return this.x;
+    }
+
+    /**
+     * Get the y position of the mouse inside the window
+     * 
+     * @return The y position of the mouse inside the window
+     * 
+     * @since 1.6.0
+     */
+    public @NotNull Integer getY() {
+        return this.y;
     }
 
     /**

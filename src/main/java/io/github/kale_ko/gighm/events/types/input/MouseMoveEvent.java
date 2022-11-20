@@ -15,14 +15,14 @@ import io.github.kale_ko.gighm.util.NullUtils;
  */
 public class MouseMoveEvent extends Event {
     /**
-     * The x position of the mouse (Relative to the window position)
+     * The x position of the mouse inside the window
      * 
      * @since 1.6.0
      */
     protected @NotNull Integer x;
 
     /**
-     * The y position of the mouse (Relative to the window position)
+     * The y position of the mouse inside the window
      * 
      * @since 1.6.0
      */
@@ -31,8 +31,8 @@ public class MouseMoveEvent extends Event {
     /**
      * Create a mouse move event
      * 
-     * @param x The x position of the mouse (Relative to the window position)
-     * @param y The y position of the mouse (Relative to the window position)
+     * @param x The x position of the mouse inside the window
+     * @param y The y position of the mouse inside the window
      * 
      * @since 1.6.0
      */
@@ -45,9 +45,9 @@ public class MouseMoveEvent extends Event {
     }
 
     /**
-     * Get the x position of the mouse (Relative to the window position)
+     * Get the x position of the mouse inside the window
      * 
-     * @return The x position of the mouse (Relative to the window position)
+     * @return The x position of the mouse inside the window
      * 
      * @since 1.6.0
      */
@@ -56,9 +56,9 @@ public class MouseMoveEvent extends Event {
     }
 
     /**
-     * Get the y position of the mouse (Relative to the window position)
+     * Get the y position of the mouse inside the window
      * 
-     * @return The y position of the mouse (Relative to the window position)
+     * @return The y position of the mouse inside the window
      * 
      * @since 1.6.0
      */
