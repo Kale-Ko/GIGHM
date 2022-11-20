@@ -30,7 +30,7 @@ public class PrimitiveMeshes {
      * 
      * @param size The size of the plane
      * 
-     * @return A new plane with the specified size
+     * @return A new plane mesh with the specified size
      * 
      * @since 2.0.0
      */
@@ -65,7 +65,7 @@ public class PrimitiveMeshes {
      * 
      * @param size The size of the cube
      * 
-     * @return A new cube with the specified size
+     * @return A new cube mesh with the specified size
      * 
      * @since 2.0.0
      */
@@ -193,7 +193,7 @@ public class PrimitiveMeshes {
      * @param size The size of the circle
      * @param quality The quality of the circle
      * 
-     * @return A new circle with the specified size
+     * @return A new circle mesh with the specified size
      * 
      * @since 2.3.0
      */
