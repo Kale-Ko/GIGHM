@@ -65,7 +65,7 @@ public class ExampleScene {
             window.getEventManager().addEventListener(MouseMoveDeltaEvent.class, (event) -> {
                 if (mouseDown) {
                     cameraObject.getComponent(Transform.class).getRotation().rotateY(event.getDeltaX() * sensitivity);
-                    cameraObject.getComponent(Transform.class).getRotation().rotateX(event.getDeltaY() * sensitivity);
+                    cameraObject.getComponent(Transform.class).getRotation().rotateLocalX(event.getDeltaY() * sensitivity);
                 }
             });
         } catch (IOException e) {
