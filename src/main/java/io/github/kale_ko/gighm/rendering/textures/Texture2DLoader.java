@@ -20,6 +20,13 @@ import io.github.kale_ko.gighm.util.NullUtils;
  */
 public class Texture2DLoader {
     /**
+     * Create a texture 2d loader
+     * 
+     * @since 2.0.0
+     */
+    private Texture2DLoader() {}
+
+    /**
      * Load a shader from file
      * 
      * @param path The file to load the data from

@@ -20,6 +20,8 @@ public class EventManager {
     /**
      * An event listener object (Only used Internally)
      * 
+     * @param <T> The type of event that is being listened to
+     * 
      * @author Kale Ko
      * 
      * @version 2.1.0
@@ -91,6 +93,13 @@ public class EventManager {
             return this.type.isInstance(event);
         }
     }
+
+    /**
+     * Create an event manager
+     * 
+     * @since 1.6.0
+     */
+    public EventManager() {}
 
     /**
      * The amount of listener ids already in use
