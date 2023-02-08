@@ -18,6 +18,13 @@ import io.github.kale_ko.gighm.util.NullUtils;
  */
 public class ShaderLoader {
     /**
+     * Create a shader loader
+     * 
+     * @since 2.0.0
+     */
+    private ShaderLoader() {}
+
+    /**
      * Load a shader from file
      * 
      * @param vertexPath The file to load the vertex data from
