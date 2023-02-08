@@ -16,6 +16,13 @@ import io.github.kale_ko.gighm.scene.components.Mesh;
  */
 public class PrimitiveMeshes {
     /**
+     * Create primitive meshes
+     * 
+     * @since 2.0.0
+     */
+    private PrimitiveMeshes() {}
+
+    /**
      * Meshes for a few primitive shapes
      * 
      * @since 2.0.0

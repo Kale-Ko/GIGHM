@@ -10,6 +10,13 @@ package io.github.kale_ko.gighm.util;
  */
 public class ArrayUtils {
     /**
+     * Create an array utils
+     * 
+     * @since 1.8.0
+     */
+    private ArrayUtils() {}
+
+    /**
      * Transform an array from a primitive type to a wrapper type
      * 
      * @param arr The array to transform

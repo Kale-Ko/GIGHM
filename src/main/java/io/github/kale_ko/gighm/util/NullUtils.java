@@ -10,6 +10,13 @@ package io.github.kale_ko.gighm.util;
  */
 public class NullUtils {
     /**
+     * Create an array utils
+     * 
+     * @since 1.8.0
+     */
+    private NullUtils() {}
+
+    /**
      * Check if an object is null without throwing an error
      * 
      * @param object The object to check
