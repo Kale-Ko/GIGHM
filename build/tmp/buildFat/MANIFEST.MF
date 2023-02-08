@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Name: io/github/kale_ko/gighm/
+Main-Class: io.github.kale_ko.gighm.tests.ExampleScene
+Application-Name: GIGHM
+
