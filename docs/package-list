@@ -10,4 +10,5 @@ io.github.kale_ko.gighm.rendering.shaders
 io.github.kale_ko.gighm.rendering.textures
 io.github.kale_ko.gighm.scene
 io.github.kale_ko.gighm.scene.components
+io.github.kale_ko.gighm.tests
 io.github.kale_ko.gighm.util
