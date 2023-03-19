@@ -1,6 +1,6 @@
 plugins {
-    id 'java'
-    id 'maven-publish'
+    id "java"
+    id "maven-publish"
 }
 
 sourceCompatibility = JavaVersion.toVersion(project.java_version)
@@ -10,122 +10,91 @@ archivesBaseName = "gighm"
 group = "io.github.kale_ko"
 version = project.project_version
 
-configurations {
-    depencancy
-    depencancy.canBeResolved = true
-
-    implementation {
-        extendsFrom depencancy
-    }
-}
-
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    depencancy platform("org.lwjgl:lwjgl-bom:${project.lwjgl_version}")
-    depencancy "org.lwjgl:lwjgl"
-    depencancy "org.lwjgl:lwjgl-opengl"
-    depencancy "org.lwjgl:lwjgl-glfw"
-    // depencancy "org.lwjgl:lwjgl-openal"
+    implementation platform("org.lwjgl:lwjgl-bom:${project.lwjgl_version}")
+    implementation "org.lwjgl:lwjgl"
+    implementation "org.lwjgl:lwjgl-opengl"
+    implementation "org.lwjgl:lwjgl-glfw"
 
     project.lwjgl_natives.split(",").each {
-        depencancy "org.lwjgl:lwjgl::${it}"
-        depencancy "org.lwjgl:lwjgl-opengl::${it}"
-        depencancy "org.lwjgl:lwjgl-glfw::${it}"
-        // depencancy "org.lwjgl:lwjgl-openal::${it}"
+        implementation "org.lwjgl:lwjgl::${it}"
+        implementation "org.lwjgl:lwjgl-opengl::${it}"
+        implementation "org.lwjgl:lwjgl-glfw::${it}"
     }
 
-    depencancy "org.joml:joml:${project.joml_version}"
+    implementation "org.joml:joml:${project.joml_version}"
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
 }
 
 tasks.withType(JavaCompile) {
+    sourceCompatibility = JavaVersion.toVersion(project.java_version)
+    targetCompatibility = JavaVersion.toVersion(project.java_version)
+
     options.encoding = "UTF-8"
 }
 
 jar {
-    manifest {
-        attributes "Name": project.group.replace(".", "/") + "/" + project.archivesBaseName + "/"
-    }
-}
-
-tasks.register("buildFat", Jar) {
-    dependsOn tasks.build
-
     sourceCompatibility = JavaVersion.toVersion(project.java_version)
     targetCompatibility = JavaVersion.toVersion(project.java_version)
 
-    duplicatesStrategy = "exclude"
-    classifier = "fat"
-
-    from files(project.sourceSets.main.output)
-    from files(project.configurations.depencancy.collect { it.isDirectory() ? it : zipTree(it) })
-
     manifest {
-        attributes "Name": project.group.replace(".", "/") + "/" + project.archivesBaseName + "/",
-            "Main-Class": project.group + "." + project.archivesBaseName + ".tests.ExampleScene",
-            "Application-Name": project.name
+        attributes "Name": "io/github/kale_ko/gighm/",
+            "Specification-Title": "GIGHM",
+            "Specification-Version": project.version,
+            "Specification-Vendor": "Kale-Ko",
+            "Implementation-Title": "io.github.kale_ko.gighm",
+            "Implementation-Version": project.version,
+            "Implementation-Vendor": "Kale-Ko",
+            "Sealed": true
     }
 }
 
-tasks.register("buildSources", Jar) {
-    dependsOn tasks.build
-
+tasks.register("fatJar", Jar) {
     sourceCompatibility = JavaVersion.toVersion(project.java_version)
     targetCompatibility = JavaVersion.toVersion(project.java_version)
 
-    duplicatesStrategy = "exclude"
-    classifier = "sources"
-
+    archiveClassifier = "fat"
     manifest {
-        attributes "Name": project.group.replace(".", "/") + "/" + project.archivesBaseName + "/"
+        attributes "Main-Class": "io.github.kale_ko.gighm.tests.ExampleScene",
+            "Name": "io/github/kale_ko/gighm/",
+            "Specification-Title": "GIGHM",
+            "Specification-Version": project.version,
+            "Specification-Vendor": "Kale-Ko",
+            "Implementation-Title": "io.github.kale_ko.gighm",
+            "Implementation-Version": project.version,
+            "Implementation-Vendor": "Kale-Ko",
+            "Sealed": true
     }
 
-    from project.sourceSets.main.allJava
+    duplicatesStrategy = "exclude"
+    from(sourceSets.main.output)
+    from(configurations.runtimeClasspath.collect { it.isDirectory() ? null : zipTree(it) })
 }
 
-tasks.register("genJavaDocs", Javadoc) {
-    dependsOn tasks.build
+build {
+    finalizedBy tasks.fatJar
+}
 
-    source = sourceSets.main.allJava
-    classpath = sourceSets.main.runtimeClasspath
-
+javadoc {
     title = project.name + " " + project.version
 
-    mkdir "./build"
-    mkdir "./build/docs"
-    file("./build/docs/overview.html").text = "<html><body><p class=\"overview\">" + project.project_description + "</p></body></html>"
+    doFirst {
+        mkdir "./build/"
+        mkdir "./build/docs/"
+        file("./build/docs/overview.html").text = "<html><body><p class=\"overview\">" + project.project_description + "</p></body></html>"
+    }
 
     options {
         overview "build/docs/overview.html"
-        encoding "utf-8"
     }
-
-    exclude "**/tests/*.java"
-}
-
-tasks.register("buildJavaDocs", Jar) {
-    dependsOn tasks.genJavaDocs
-
-    sourceCompatibility = JavaVersion.toVersion(project.java_version)
-    targetCompatibility = JavaVersion.toVersion(project.java_version)
-
-    duplicatesStrategy = "exclude"
-    classifier = "javadoc"
-
-    manifest {
-        attributes "Name": project.group.replace(".", "/") + "/" + project.archivesBaseName + "/"
-    }
-
-    from tasks.genJavaDocs
-}
-
-tasks.register("buildAll") {
-    dependsOn tasks.jar
-    dependsOn tasks.buildFat
-    dependsOn tasks.buildSources
-    dependsOn tasks.buildJavaDocs
 }
 
 publishing {
@@ -148,9 +117,9 @@ publishing {
             version = project.version
 
             artifact tasks.jar
-            artifact tasks.buildFat
-            artifact tasks.buildJavaDocs
-            artifact tasks.buildSources
+            artifact tasks.fatJar
+            artifact tasks.sourcesJar
+            artifact tasks.javadocJar
 
             pom.withXml {
                 def node = asNode()
@@ -178,9 +147,7 @@ publishing {
                 def dependencyManagmentNode = node.appendNode("dependencyManagement")
                 def dependenciesManagmentNode = dependencyManagmentNode.appendNode("dependencies")
 
-                configurations.depencancy.resolvedConfiguration.getFirstLevelModuleDependencies().each {
-                    def depend = it
-
+                configurations.runtimeClasspath.resolvedConfiguration.getFirstLevelModuleDependencies().each {
                     if (it.moduleName != "lwjgl-bom") {
                         def dependencyNode = dependenciesNode.appendNode("dependency")
 
@@ -190,8 +157,8 @@ publishing {
 
                             project.lwjgl_natives.split(",").each {
                                 def subDependencyNode = dependenciesNode.appendNode("dependency")
-                                subDependencyNode.appendNode("groupId", depend.moduleGroup)
-                                subDependencyNode.appendNode("artifactId", depend.moduleName)
+                                subDependencyNode.appendNode("groupId", it.moduleGroup)
+                                subDependencyNode.appendNode("artifactId", it.moduleName)
                                 subDependencyNode.appendNode("classifier", it)
                             }
                         } else {
@@ -201,12 +168,19 @@ publishing {
                         }
                     } else {
                         def dependencyNode = dependenciesManagmentNode.appendNode("dependency")
-                        dependencyNode.appendNode("groupId", depend.moduleGroup)
-                        dependencyNode.appendNode("artifactId", depend.moduleName)
-                        dependencyNode.appendNode("version", depend.moduleVersion)
+                        dependencyNode.appendNode("groupId", it.moduleGroup)
+                        dependencyNode.appendNode("artifactId", it.moduleName)
+                        dependencyNode.appendNode("version", it.moduleVersion)
                         dependencyNode.appendNode("scope", "import")
                         dependencyNode.appendNode("type", "pom")
                     }
+                }
+
+                configurations.compileClasspath.resolvedConfiguration.getFirstLevelModuleDependencies().each {
+                    def dependencyNode = dependenciesNode.appendNode("dependency")
+                    dependencyNode.appendNode("groupId", it.moduleGroup)
+                    dependencyNode.appendNode("artifactId", it.moduleName)
+                    dependencyNode.appendNode("version", it.moduleVersion)
                 }
             }
         }
