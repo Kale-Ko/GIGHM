@@ -155,10 +155,11 @@ publishing {
                             dependencyNode.appendNode("groupId", it.moduleGroup)
                             dependencyNode.appendNode("artifactId", it.moduleName)
 
+                            def it2 = it
                             project.lwjgl_natives.split(",").each {
                                 def subDependencyNode = dependenciesNode.appendNode("dependency")
-                                subDependencyNode.appendNode("groupId", it.moduleGroup)
-                                subDependencyNode.appendNode("artifactId", it.moduleName)
+                                subDependencyNode.appendNode("groupId", it2.moduleGroup)
+                                subDependencyNode.appendNode("artifactId", it2.moduleName)
                                 subDependencyNode.appendNode("classifier", it)
                             }
                         } else {
