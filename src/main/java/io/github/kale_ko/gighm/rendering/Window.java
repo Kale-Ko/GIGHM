@@ -2,7 +2,7 @@ package io.github.kale_ko.gighm.rendering;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL33.*;
+import static org.lwjgl.opengl.GL33C.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import java.nio.IntBuffer;
@@ -114,6 +114,13 @@ public class Window {
     private @NotNull Boolean resizable;
 
     /**
+     * Weather the window should auto show
+     * 
+     * @since 2.5.0
+     */
+    private @NotNull Boolean autoShow;
+
+    /**
      * Weather the window is initialized
      * 
      * @since 1.0.0
@@ -172,12 +179,32 @@ public class Window {
      * @since 1.7.0
      */
     public Window(@NotNull Renderer renderer, @NotNull String title, @NotNull Integer width, @NotNull Integer height, @NotNull Boolean maximized, @NotNull Boolean resizable) throws ThreadPauseException {
+        this(renderer, title, width, height, maximized, resizable, true);
+    }
+
+    /**
+     * Create a window
+     * 
+     * @param renderer The renderer being used by the window
+     * @param title The title of the window
+     * @param width The width of the window
+     * @param height The height of the window
+     * @param maximized Weather the window should be maximized
+     * @param resizable Weather the window should be resizable
+     * @param autoShow Weather the window should automatically show
+     * 
+     * @throws ThreadPauseException If the main thread can't be paused
+     * 
+     * @since 1.7.0
+     */
+    public Window(@NotNull Renderer renderer, @NotNull String title, @NotNull Integer width, @NotNull Integer height, @NotNull Boolean maximized, @NotNull Boolean resizable, @NotNull Boolean autoShow) throws ThreadPauseException {
         NullUtils.checkNulls(renderer, "renderer");
         NullUtils.checkNulls(title, "title");
         NullUtils.checkNulls(width, "width");
         NullUtils.checkNulls(height, "height");
         NullUtils.checkNulls(maximized, "maximized");
         NullUtils.checkNulls(resizable, "resizable");
+        NullUtils.checkNulls(autoShow, "autoShow");
 
         this.renderer = renderer;
 
@@ -191,6 +218,7 @@ public class Window {
 
         this.maximized = maximized;
         this.resizable = resizable;
+        this.autoShow = autoShow;
 
         this.mainThread = Thread.currentThread();
 
@@ -243,7 +271,6 @@ public class Window {
         glfwWindowHint(GLFW_FOCUSED, GLFW_FALSE);
         glfwWindowHint(GLFW_MAXIMIZED, maximized ? GLFW_TRUE : GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, resizable ? GLFW_TRUE : GLFW_FALSE);
-        glfwWindowHint(GLFW_FOCUS_ON_SHOW, GLFW_TRUE);
 
         windowId = glfwCreateWindow(width, height, title, NULL, NULL);
         if (windowId.equals(NULL)) {
@@ -308,7 +335,6 @@ public class Window {
         });
 
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-
         ScheduledFuture<?> handle = scheduler.scheduleAtFixedRate(new Runnable() {
             private Integer tickNumber = 1;
 
@@ -342,7 +368,10 @@ public class Window {
         glfwMakeContextCurrent(windowId);
         glfwSwapInterval(1);
 
-        glfwShowWindow(windowId);
+        if (this.autoShow) {
+            glfwShowWindow(windowId);
+            glfwFocusWindow(windowId);
+        }
 
         renderer.init();
 
@@ -644,6 +673,24 @@ public class Window {
         this.resizable = resizable;
 
         glfwSetWindowAttrib(windowId, GLFW_RESIZABLE, resizable ? GLFW_TRUE : GLFW_FALSE);
+    }
+
+    /**
+     * Show the window
+     * 
+     * @since 2.5.0
+     */
+    public void show() {
+        glfwShowWindow(windowId);
+    }
+
+    /**
+     * Hide the window
+     * 
+     * @since 2.5.0
+     */
+    public void hide() {
+        glfwHideWindow(windowId);
     }
 
     /**
