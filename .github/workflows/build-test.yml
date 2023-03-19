@@ -27,4 +27,4 @@ jobs:
       - name: Build All
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: buildAll
+          arguments: build
