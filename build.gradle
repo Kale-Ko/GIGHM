@@ -92,6 +92,10 @@ javadoc {
         file("./build/docs/overview.html").text = "<html><body><p class=\"overview\">" + project.project_description + "</p></body></html>"
     }
 
+    exclude {
+        "src/main/java/io/github/kale_ko/gighm/tests/**"
+    }
+
     options {
         overview "build/docs/overview.html"
     }
